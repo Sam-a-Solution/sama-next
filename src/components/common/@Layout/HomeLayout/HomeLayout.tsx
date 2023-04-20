@@ -1,31 +1,25 @@
 import React from 'react';
 
-import { Container, ContainerProps } from '@chakra-ui/react';
-
-import { LAYOUT } from '@constants/layout';
-
-import HomeHeader from './_fragments/HomeHeader';
+import { Flex, FlexProps } from '@chakra-ui/react';
 
 interface HomeLayoutProps {
   header?: JSX.Element;
   footer?: JSX.Element;
   content?: JSX.Element;
-  containerProps?: ContainerProps;
+  flexProps?: FlexProps;
 }
 
 const HomeLayout = ({
   //
-  header = <HomeHeader />,
+  header,
   footer,
-  containerProps,
   content,
+  flexProps,
 }: HomeLayoutProps) => {
   return (
     <>
       {header}
-      <Container pt={LAYOUT.HEADER.HEIGHT} {...containerProps}>
-        {content}
-      </Container>
+      <Flex {...flexProps}>{content}</Flex>
       {footer}
     </>
   );
