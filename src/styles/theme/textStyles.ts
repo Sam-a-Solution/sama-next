@@ -14,6 +14,11 @@ const textStyles = {
     fontWeight: 700,
     lineHeight: { base: '28px', sm: '26px', md: '27px' },
   },
+  TitleSmall: {
+    fontSize: '12px',
+    fontWeight: 700,
+    lineHeight: '18px',
+  },
   TextLarge: {
     fontSize: { base: '20px', sm: '20px', md: '26px' },
     fontWeight: 400,
