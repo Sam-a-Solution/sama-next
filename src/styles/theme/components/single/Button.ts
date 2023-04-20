@@ -161,12 +161,20 @@ const variantUnstyled = defineStyle({
   p: '0',
 });
 
+const variantDisabled = defineStyle({
+  bg: 'gray.400',
+  color: 'white',
+  m: '0',
+  p: '0',
+});
+
 const variants = {
   ghost: variantGhost,
   outline: variantOutline,
   solid: variantSolid,
   link: variantLink,
   unstyled: variantUnstyled,
+  disabled: variantDisabled,
 };
 
 const baseStyle = defineStyle({
