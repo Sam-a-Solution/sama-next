@@ -37,10 +37,32 @@ type CustomColors = {
 
 const colors: CustomColors = {
   primary: {
-    default_gen: '#4850FF',
+    default: {
+      50: '#E0F7ED',
+      100: '#B7EDD6',
+      200: '#8EE3BF',
+      300: '#65D9A8',
+      400: '#3CCF91',
+      500: '#2BAD76',
+      600: '#21845A',
+      700: '#175B3E',
+      800: '#0D3222',
+      900: '#020A07',
+    },
   },
   secondary: {
-    default_gen: '#7B61FF',
+    default: {
+      50: '#F2FFF9',
+      100: '#D2F7E3',
+      200: '#A7EFC8',
+      300: '#7BE8AD',
+      400: '#50E092',
+      500: '#26D777',
+      600: '#1EAC5F',
+      700: '#178047',
+      800: '#0F552F',
+      900: '#072A17',
+    },
   },
   tertiary: {
     default: {
@@ -133,8 +155,16 @@ const colors: CustomColors = {
   },
   dim: {
     default: {
-      primary: '#1A1A1A80',
-      secondary: '#1A1A1A33',
+      50: 'rgba(26, 26, 26, 0.5)',
+      20: 'rgba(26, 26, 26, 0.2)',
+    },
+  },
+  alert: {
+    default: {
+      'warning.100': '#FFE2E2',
+      'warning.500': '#FF6060',
+      'success.100': '#A0CCFF',
+      'success.500': '#3E97FF',
     },
   },
 };
