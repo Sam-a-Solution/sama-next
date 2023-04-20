@@ -25,10 +25,10 @@ function MyApp({ Component, pageProps }: any) {
 
   return (
     <React.Fragment>
-      <ToggleColorModeButton />
+      {/* <ToggleColorModeButton /> */}
       <Component {...pageProps} />
       <ReactQueryDevtools initialIsOpen={false} />
-      <TokDocsDevTools />
+      {/* <TokDocsDevTools /> */}
     </React.Fragment>
   );
 }
