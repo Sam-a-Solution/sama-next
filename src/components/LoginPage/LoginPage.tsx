@@ -1,83 +1,60 @@
-import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useState } from 'react';
 
-import {
-  Box,
-  Center,
-  Code,
-  HStack,
-  ListItem,
-  Text,
-  UnorderedList,
-  VStack,
-} from '@chakra-ui/react';
+import { Box, Button, Checkbox, Flex, Text, VStack } from '@chakra-ui/react';
 
-import SocialButton from '@components/common/SocialButton';
-
-import { socialOAuthUrl } from '@utils/social';
-
-const SOCIAL_LIST = ['kakao', 'naver', 'facebook', 'google', 'apple'] as const;
+import AuthCheckbox from './_fragments/AuthCheckbox';
+import AuthLabelInput from './_fragments/AuthLabelInput';
 
 function LoginPage() {
-  const router = useRouter();
-  const { returnUrl } = router.query;
-
+  const [isDisabled] = useState(true);
   return (
-    <Center flexDirection="column">
-      <Box p="20px" flexDirection="column">
-        <Box>
-          로그인 한 유저 Block: <Code color="primary.500">withUnAuthGard</Code>
-          <Box px="20px">
-            <Text>예시</Text>
-            <UnorderedList fontSize="14px" px="20px">
-              <ListItem>로그인 페이지</ListItem>
-              <ListItem>회원가입 페이지</ListItem>
-            </UnorderedList>
-          </Box>
-        </Box>
-        <Box>
-          로그인 안 한 유저 Block: <Code color="primary.500">withAuthGard</Code>
-          <Box px="20px">
-            <Text>예시</Text>
-            <UnorderedList fontSize="14px" px="20px">
-              <ListItem>마이 페이지</ListItem>
-              <ListItem>주문 페이지</ListItem>
-            </UnorderedList>
-          </Box>
-        </Box>
+    <Flex
+      w="100%"
+      h="100vh"
+      justifyContent="center"
+      alignItems="center"
+      bg="#FAFAFA"
+    >
+      <Box
+        p="60px 50px"
+        bg="white"
+        border="1px solid"
+        borderColor="gray.200"
+        borderRadius="15px"
+      >
+        <VStack w="402px" gap="18px" mb="40px">
+          <Text textStyle="TitleLarge">로그인</Text>
+          <AuthLabelInput
+            label="아이디"
+            placeholderText="아이디를 입력하세요."
+            flexProps={{
+              mt: '0 !important',
+            }}
+          />
+          <AuthLabelInput
+            label="비밀번호"
+            placeholderText="비밀번호를 입력하세요."
+            flexProps={{
+              mt: '0 !important',
+            }}
+          />
+          <Flex w="100%" gap="24px" mt="0 !important">
+            <AuthCheckbox labelText="아이디 저장" />
+            <AuthCheckbox labelText="로그인 상태 유지" />
+          </Flex>
+        </VStack>
+        <Button
+          w="100%"
+          size="lg"
+          variant={isDisabled ? 'disabled' : 'none'}
+          colorScheme={'primary'}
+          borderRadius="5px"
+          isDisabled={isDisabled}
+        >
+          <Text textStyle="Button">로그인</Text>
+        </Button>
       </Box>
-
-      <VStack w="100%">
-        {SOCIAL_LIST.map((social) => {
-          const socialLogin = socialOAuthUrl[social];
-          return (
-            <SocialButton
-              key={social}
-              data={{
-                social,
-                link: socialLogin(returnUrl?.toString()),
-              }}
-              size="md"
-            />
-          );
-        })}
-      </VStack>
-      <HStack justifyContent="center" mt="80px">
-        {SOCIAL_LIST.map((social) => {
-          const socialLogin = socialOAuthUrl[social];
-          return (
-            <SocialButton
-              key={social}
-              data={{
-                social,
-                link: socialLogin(returnUrl?.toString()),
-              }}
-              size="sm"
-            />
-          );
-        })}
-      </HStack>
-    </Center>
+    </Flex>
   );
 }
 
