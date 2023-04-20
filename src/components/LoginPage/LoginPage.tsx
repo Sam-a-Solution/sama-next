@@ -26,6 +26,7 @@ function LoginPage() {
           <Text textStyle="TitleLarge">로그인</Text>
           <AuthLabelInput
             label="아이디"
+            type="text"
             placeholderText="아이디를 입력하세요."
             flexProps={{
               mt: '0 !important',
@@ -34,6 +35,7 @@ function LoginPage() {
           <AuthLabelInput
             label="비밀번호"
             placeholderText="비밀번호를 입력하세요."
+            type="password"
             flexProps={{
               mt: '0 !important',
             }}
