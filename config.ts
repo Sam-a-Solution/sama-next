@@ -15,4 +15,6 @@ export const CONFIG = {
   FACEBOOK_PIXEL_KEY: process.env.NEXT_PUBLIC_FACEBOOK_PIXEL_KEY,
   KAKAO_PIXEL_KEY: process.env.NEXT_PUBLIC_KAKAO_PIXEL_KEY,
   GA_KEY: process.env.NEXT_PUBLIC_GA_KEY,
+  /** For: MAP */
+  GOOGLE_MAP_KEY: process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY,
 } as const;
