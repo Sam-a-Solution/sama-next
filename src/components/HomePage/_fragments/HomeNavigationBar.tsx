@@ -5,6 +5,7 @@ import { Flex, Highlight, Text } from '@chakra-ui/react';
 import useModals from '@hooks/useModals';
 
 import AlignCenterFlex from '@components/common/@Flex/AlignCenterFlex';
+import EmergencyStatusManagement from '@components/common/@Modal/EmergencyStatusManagement';
 import WorkStatusManagement from '@components/common/@Modal/WorkStatusManagement';
 
 import {
@@ -84,8 +85,14 @@ function HomeNavigationBar({
 
           <AlignCenterFlex w="100%">
             {/* TODO: 비상상황관리 모달 열기 */}
-            <Flex w="100%" gap="8px" alignItems="center">
-              <EmergencyIcon w="24px" h="24px" cursor="pointer" />
+            <Flex
+              w="100%"
+              gap="8px"
+              alignItems="center"
+              cursor="pointer"
+              onClick={() => openModal(EmergencyStatusManagement)}
+            >
+              <EmergencyIcon w="24px" h="24px" />
               {isOpenNavbar && (
                 <Text textStyle="TitleSmall" color="black">
                   비상상황 관리
