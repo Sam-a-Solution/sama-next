@@ -2,7 +2,10 @@ import React from 'react';
 
 import { Flex, Highlight, Text } from '@chakra-ui/react';
 
+import useModals from '@hooks/useModals';
+
 import AlignCenterFlex from '@components/common/@Flex/AlignCenterFlex';
+import WorkStatusManagement from '@components/common/@Modal/WorkStatusManagement';
 
 import {
   AccountIcon,
@@ -23,6 +26,7 @@ function HomeNavigationBar({
   onCloseNavbar,
   onOpenNavbar,
 }: HomeNavigationBarProps) {
+  const { openModal } = useModals();
   return (
     <Flex
       position="fixed"
@@ -62,8 +66,14 @@ function HomeNavigationBar({
         <Flex w="100%" flexDir="column" gap="10px">
           <AlignCenterFlex w="100%">
             {/* TODO: 작업현황관리 모달 열기 */}
-            <Flex w="100%" gap="8px" alignItems="center">
-              <WorkManagementIcon w="24px" h="24px" cursor="pointer" />
+            <Flex
+              w="100%"
+              gap="8px"
+              alignItems="center"
+              cursor="pointer"
+              onClick={() => openModal(WorkStatusManagement)}
+            >
+              <WorkManagementIcon w="24px" h="24px" />
               {isOpenNavbar && (
                 <Text textStyle="TitleSmall" color="black">
                   작업 현황 관리
