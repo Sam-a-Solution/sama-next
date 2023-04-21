@@ -13,6 +13,7 @@ import {
   Tr,
 } from '@chakra-ui/react';
 
+import StatusBadge from '@components/common/@Badge/StatusBadge';
 import CustomTd from '@components/common/@Table/CustomTd';
 import CustomTh from '@components/common/@Table/CustomTh';
 
@@ -144,28 +145,7 @@ function RightFloatList({
                   </Text>
                 </CustomTd>
                 <CustomTd w="80px">
-                  <Badge
-                    w="50px"
-                    h="26px"
-                    py="4px"
-                    bg={
-                      item.status === '운전'
-                        ? 'secondary.100'
-                        : item.status === '비상'
-                        ? '#FFE2E2'
-                        : 'gray.500'
-                    }
-                    color={
-                      item.status === '운전'
-                        ? 'primary.500'
-                        : item.status === '비상'
-                        ? '#FF6060'
-                        : 'white'
-                    }
-                    borderRadius="30px"
-                  >
-                    {item.status}
-                  </Badge>
+                  <StatusBadge status={item.status} />
                 </CustomTd>
               </Tr>
             ))}
