@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 
 import {
+  Flex,
   FormControl,
   FormControlProps,
   FormErrorMessage,
@@ -54,23 +55,31 @@ const FormHelper = ({
 
   return (
     <FormControl isInvalid={!!errorText} {...basisProps}>
-      {!!label && (
-        <FormLabel fontWeight="bold" mb="20px" {...labelProps}>
-          {label}
-        </FormLabel>
-      )}
-      {children}
-      {isShowErrorText && (
-        <FormErrorMessage {...errorTextProps}>{errorText}</FormErrorMessage>
-      )}
-      {isShowSuccessText && (
-        <FormHelperText color="custom.primary" {...successTextProps}>
-          {successText}
-        </FormHelperText>
-      )}
-      {isShowHelper && (
-        <FormHelperText {...helperTextProps}>{helperText}</FormHelperText>
-      )}
+      <Flex h="50px" alignItems="center" gap="12px">
+        {!!label && (
+          <FormLabel
+            w="100px !important"
+            textStyle="Title"
+            color="primary.500"
+            fontWeight="700 !important"
+            {...labelProps}
+          >
+            {label}
+          </FormLabel>
+        )}
+        {children}
+        {isShowErrorText && (
+          <FormErrorMessage {...errorTextProps}>{errorText}</FormErrorMessage>
+        )}
+        {isShowSuccessText && (
+          <FormHelperText color="custom.primary" {...successTextProps}>
+            {successText}
+          </FormHelperText>
+        )}
+        {isShowHelper && (
+          <FormHelperText {...helperTextProps}>{helperText}</FormHelperText>
+        )}
+      </Flex>
     </FormControl>
   );
 };
