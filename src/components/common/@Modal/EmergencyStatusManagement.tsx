@@ -22,6 +22,7 @@ import StatusBadge from '../@Badge/StatusBadge';
 import CustomTable from '../@Table/CustomTable';
 import CustomTd from '../@Table/CustomTd';
 import CustomTh from '../@Table/CustomTh';
+import ModalContainer from './ModalContainer';
 
 import { EmergencyIcon } from 'generated/icons/MyIcons';
 
@@ -63,119 +64,120 @@ function EmergencyStatusManagement({
 }: EmergencyStatusManagementProps) {
   const [list, setList] = React.useState(emergencyStatusList.slice(0, 10));
   return (
-    <Modal {...props}>
-      <ModalOverlay />
-      <ModalContent minW="1280px">
-        <ModalHeader p="20px 30px">
-          <Flex justifyContent="space-between">
-            <Flex alignItems="center" gap="8px">
-              <Flex
-                w="40px"
-                h="40px"
-                justifyContent="center"
-                alignItems="center"
-                bg="secondary.50"
-                borderRadius="30px"
-              >
-                <EmergencyIcon w="24px" h="24px" />
-              </Flex>
-              <Text textStyle="TitleLarge" color="black">
-                비상 상황 관리
-              </Text>
+    <ModalContainer
+      header={
+        <Flex justifyContent="space-between">
+          <Flex alignItems="center" gap="8px">
+            <Flex
+              w="40px"
+              h="40px"
+              justifyContent="center"
+              alignItems="center"
+              bg="secondary.50"
+              borderRadius="30px"
+            >
+              <EmergencyIcon w="24px" h="24px" />
             </Flex>
-            <CloseButton onClick={props.onClose} />
+            <Text textStyle="TitleLarge" color="black">
+              비상 상황 관리
+            </Text>
           </Flex>
-        </ModalHeader>
-        <ModalBody p="0" mt="10px">
-          <TableContainer>
-            <CustomTable>
-              <Thead>
-                <Tr h="40px" bg="gray.200">
-                  <CustomTh w="120px">
-                    <Text textStyle="TitleSmall" color="gray.700">
-                      순번
+          <CloseButton onClick={props.onClose} />
+        </Flex>
+      }
+      body={
+        <TableContainer>
+          <CustomTable>
+            <Thead>
+              <Tr h="40px" bg="gray.200">
+                <CustomTh w="120px">
+                  <Text textStyle="TitleSmall" color="gray.700">
+                    순번
+                  </Text>
+                </CustomTh>
+                <CustomTh w="200px">
+                  <Text textStyle="TitleSmall" color="gray.700">
+                    운전자
+                  </Text>
+                </CustomTh>
+                <CustomTh w="200px">
+                  <Text textStyle="TitleSmall" color="gray.700">
+                    차종
+                  </Text>
+                </CustomTh>
+                <CustomTh w="120px">
+                  <Text textStyle="TitleSmall" color="gray.700">
+                    현재상태
+                  </Text>
+                </CustomTh>
+                <CustomTh w="250px">
+                  <Text textStyle="TitleSmall" color="gray.700">
+                    작업 시작 시간
+                  </Text>
+                </CustomTh>
+                <CustomTh w="250px">
+                  <Text textStyle="TitleSmall" color="gray.700">
+                    작업 종료 시간
+                  </Text>
+                </CustomTh>
+                <CustomTh w="140px">
+                  <Text textStyle="TitleSmall" color="gray.700">
+                    비상상황 해제
+                  </Text>
+                </CustomTh>
+              </Tr>
+            </Thead>
+            <Tbody display="inline-block">
+              {list.map((item) => (
+                <Tr key={item.id} h="60px">
+                  <CustomTd w="120px">
+                    <Text textStyle="Text" color="black">
+                      {item.id}
                     </Text>
-                  </CustomTh>
-                  <CustomTh w="200px">
-                    <Text textStyle="TitleSmall" color="gray.700">
-                      운전자
+                  </CustomTd>
+                  <CustomTd w="200px">
+                    <Text textStyle="Text" color="black">
+                      {item.drivder}
                     </Text>
-                  </CustomTh>
-                  <CustomTh w="200px">
-                    <Text textStyle="TitleSmall" color="gray.700">
-                      차종
+                  </CustomTd>
+                  <CustomTd w="200px">
+                    <Text textStyle="Text" color="black">
+                      {item.carType}
                     </Text>
-                  </CustomTh>
-                  <CustomTh w="120px">
-                    <Text textStyle="TitleSmall" color="gray.700">
-                      현재상태
+                  </CustomTd>
+                  <CustomTd w="120px">
+                    <StatusBadge status={item.status} />
+                  </CustomTd>
+                  <CustomTd w="250px">
+                    <Text textStyle="Text" color="black">
+                      {item.startTime || '-'}
                     </Text>
-                  </CustomTh>
-                  <CustomTh w="250px">
-                    <Text textStyle="TitleSmall" color="gray.700">
-                      작업 시작 시간
+                  </CustomTd>
+                  <CustomTd w="250px">
+                    <Text textStyle="Text" color="black">
+                      {item.endTime || '-'}
                     </Text>
-                  </CustomTh>
-                  <CustomTh w="250px">
-                    <Text textStyle="TitleSmall" color="gray.700">
-                      작업 종료 시간
-                    </Text>
-                  </CustomTh>
-                  <CustomTh w="140px">
-                    <Text textStyle="TitleSmall" color="gray.700">
-                      비상상황 해제
-                    </Text>
-                  </CustomTh>
+                  </CustomTd>
+                  <CustomTd w="140px">
+                    <Button w="80px" h="30px" isDisabled={item.check}>
+                      해제
+                    </Button>
+                  </CustomTd>
                 </Tr>
-              </Thead>
-              <Tbody display="inline-block">
-                {list.map((item) => (
-                  <Tr key={item.id} h="60px">
-                    <CustomTd w="120px">
-                      <Text textStyle="Text" color="black">
-                        {item.id}
-                      </Text>
-                    </CustomTd>
-                    <CustomTd w="200px">
-                      <Text textStyle="Text" color="black">
-                        {item.drivder}
-                      </Text>
-                    </CustomTd>
-                    <CustomTd w="200px">
-                      <Text textStyle="Text" color="black">
-                        {item.carType}
-                      </Text>
-                    </CustomTd>
-                    <CustomTd w="120px">
-                      <StatusBadge status={item.status} />
-                    </CustomTd>
-                    <CustomTd w="250px">
-                      <Text textStyle="Text" color="black">
-                        {item.startTime || '-'}
-                      </Text>
-                    </CustomTd>
-                    <CustomTd w="250px">
-                      <Text textStyle="Text" color="black">
-                        {item.endTime || '-'}
-                      </Text>
-                    </CustomTd>
-                    <CustomTd w="140px">
-                      <Button w="80px" h="30px" isDisabled={item.check}>
-                        해제
-                      </Button>
-                    </CustomTd>
-                  </Tr>
-                ))}
-              </Tbody>
-              <Tfoot>
-                {/* TODO: 페이지네이션 구현 */}
-                <Text>페이지네이션</Text>
-              </Tfoot>
-            </CustomTable>
-          </TableContainer>
-        </ModalBody>
-      </ModalContent>
-    </Modal>
+              ))}
+            </Tbody>
+            <Tfoot>
+              {/* TODO: 페이지네이션 구현 */}
+              <Text>페이지네이션</Text>
+            </Tfoot>
+          </CustomTable>
+        </TableContainer>
+      }
+      modalContentProps={{
+        minW: '1280px',
+      }}
+      {...props}
+    />
   );
 }
 
