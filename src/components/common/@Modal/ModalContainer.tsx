@@ -6,6 +6,8 @@ import {
   ModalBodyProps,
   ModalContent,
   ModalContentProps,
+  ModalFooter,
+  ModalFooterProps,
   ModalHeader,
   ModalHeaderProps,
   ModalOverlay,
@@ -15,17 +17,21 @@ import {
 interface ModalContainerProps extends Omit<ModalProps, 'children'> {
   header: React.ReactNode;
   body: React.ReactNode;
+  footer?: React.ReactNode;
   modalContentProps?: ModalContentProps;
   modalHeaderProps?: ModalHeaderProps;
   modalBodyProps?: ModalBodyProps;
+  modalFooterProps?: ModalFooterProps;
 }
 
 function ModalContainer({
   header,
   body,
+  footer,
   modalContentProps,
   modalBodyProps,
   modalHeaderProps,
+  modalFooterProps,
   ...props
 }: ModalContainerProps) {
   return (
@@ -39,6 +45,7 @@ function ModalContainer({
       >
         <ModalHeader {...modalHeaderProps}>{header}</ModalHeader>
         <ModalBody {...modalBodyProps}>{body}</ModalBody>
+        {footer && <ModalFooter {...modalFooterProps}>{footer}</ModalFooter>}
       </ModalContent>
     </Modal>
   );
