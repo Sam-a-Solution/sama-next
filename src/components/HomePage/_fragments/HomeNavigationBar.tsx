@@ -44,7 +44,6 @@ function HomeNavigationBar({
     >
       <Flex flexDir="column" gap="40px">
         <AlignCenterFlex w="100%">
-          {/* TODO: 사이드 네비게이션 펼치기 */}
           <Flex alignItems="center" gap="23px">
             <MenuIcon
               w="24px"
@@ -86,7 +85,6 @@ function HomeNavigationBar({
           </AlignCenterFlex>
 
           <AlignCenterFlex w="100%">
-            {/* TODO: 비상상황관리 모달 열기 */}
             <Flex
               w="100%"
               gap="8px"
@@ -104,7 +102,6 @@ function HomeNavigationBar({
           </AlignCenterFlex>
 
           <AlignCenterFlex w="100%">
-            {/* TODO: 작업자 계정 추가 모달 열기 */}
             <Flex
               w="100%"
               gap="8px"
