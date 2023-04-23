@@ -6,6 +6,7 @@ import useModals from '@hooks/useModals';
 
 import AlignCenterFlex from '@components/common/@Flex/AlignCenterFlex';
 import EmergencyStatusManagement from '@components/common/@Modal/EmergencyStatusManagement';
+import Logout from '@components/common/@Modal/Logout';
 import WorkStatusManagement from '@components/common/@Modal/WorkStatusManagement';
 import WorkerAccount from '@components/common/@Modal/WorkerAccount';
 
@@ -122,7 +123,12 @@ function HomeNavigationBar({
         </Flex>
       </Flex>
       <AlignCenterFlex w="100%">
-        <Flex w="100%" gap="8px" alignItems="center">
+        <Flex
+          w="100%"
+          gap="8px"
+          alignItems="center"
+          onClick={() => openModal(Logout)}
+        >
           <LogoutIcon w="24px" h="24px" cursor="pointer" />
           {isOpenNavbar && (
             <Text textStyle="TitleSmall" color="black">
