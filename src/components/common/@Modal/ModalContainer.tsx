@@ -35,7 +35,7 @@ function ModalContainer({
   ...props
 }: ModalContainerProps) {
   return (
-    <Modal {...props}>
+    <Modal isCentered {...props}>
       <ModalOverlay />
       <ModalContent
         background="white"
