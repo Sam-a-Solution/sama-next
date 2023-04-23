@@ -13,11 +13,14 @@ import {
   Tr,
 } from '@chakra-ui/react';
 
+import useModals from '@hooks/useModals';
+
 import StatusBadge from '../@Badge/StatusBadge';
 import CustomTable from '../@Table/CustomTable';
 import CustomTd from '../@Table/CustomTd';
 import CustomTh from '../@Table/CustomTh';
 import ModalContainer from './ModalContainer';
+import Report from './Report';
 
 import { WorkManagementIcon } from 'generated/icons/MyIcons';
 
@@ -55,6 +58,7 @@ const WorkStatusList = Array.from({ length: 40 }, (_, i) => ({
 interface WorkStatusManagementProps extends Omit<ModalProps, 'children'> {}
 
 function WorkStatusManagement({ ...props }: WorkStatusManagementProps) {
+  const { openModal } = useModals();
   const [list, setList] = useState(WorkStatusList.slice(0, 10));
   return (
     <ModalContainer
@@ -152,6 +156,8 @@ function WorkStatusManagement({ ...props }: WorkStatusManagementProps) {
                       h="30px"
                       variant="outline"
                       colorScheme="primary"
+                      // TODO: prop으로 작업 내용 id 넘겨주기
+                      onClick={() => openModal(Report)}
                     >
                       작업 내용
                     </Button>
