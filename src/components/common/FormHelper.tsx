@@ -9,6 +9,7 @@ import {
   FormHelperText,
   FormLabel,
   FormLabelProps,
+  Text,
   TextProps,
 } from '@chakra-ui/react';
 
@@ -58,13 +59,16 @@ const FormHelper = ({
       <Flex h="50px" alignItems="center" gap="12px">
         {!!label && (
           <FormLabel
-            w="100px !important"
-            textStyle="Title"
-            color="primary.500"
-            fontWeight="700 !important"
+            margin="0 !important"
+            // w="100px !important"
+            // color="primary.500"
+            // fontWeight="700"
             {...labelProps}
           >
-            {label}
+            {/* <Text >{label}</Text> */}
+            <Text w="100px" textStyle="Title" color="primary.500">
+              {label}
+            </Text>
           </FormLabel>
         )}
         {children}
