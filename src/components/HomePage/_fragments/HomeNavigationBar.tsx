@@ -5,8 +5,8 @@ import { Flex, Highlight, Text } from '@chakra-ui/react';
 import useModals from '@hooks/useModals';
 
 import AlignCenterFlex from '@components/common/@Flex/AlignCenterFlex';
+import CustomConfirmAlert from '@components/common/@Modal/@Alert/CustomConfirmAlert';
 import EmergencyStatusManagement from '@components/common/@Modal/EmergencyStatusManagement';
-import Logout from '@components/common/@Modal/Logout';
 import WorkStatusManagement from '@components/common/@Modal/WorkStatusManagement';
 import WorkerAccount from '@components/common/@Modal/WorkerAccount';
 
@@ -124,7 +124,19 @@ function HomeNavigationBar({
           w="100%"
           gap="8px"
           alignItems="center"
-          onClick={() => openModal(Logout)}
+          onClick={() =>
+            openModal(CustomConfirmAlert, {
+              auxProps: {
+                title: '로그아웃',
+                content: '로그아웃 하시겠습니까?',
+                cancelText: '취소',
+                submitText: '로그아웃',
+                onSubmit: () => {
+                  alert('로그아웃 API 연동');
+                },
+              },
+            })
+          }
         >
           <LogoutIcon w="24px" h="24px" cursor="pointer" />
           {isOpenNavbar && (

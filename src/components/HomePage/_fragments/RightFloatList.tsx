@@ -24,7 +24,7 @@ interface RightFloatListProps {
   onCloseList: () => void;
 }
 
-const heavyEquipmentList = Array.from({ length: 20 }, (_, i) => ({
+const heavyEquipmentList = Array.from({ length: 30 }, (_, i) => ({
   id: i,
   driver: ['김운전', '이운전', '박운전'][Math.floor(Math.random() * 3)],
   carType: [
@@ -105,7 +105,12 @@ function RightFloatList({
                 </CustomTh>
               </Tr>
             </Thead>
-            <Tbody minH="570px" overflowY="auto" display="inline-block">
+            <Tbody
+              minH="578px"
+              maxH="calc(100vh - 234px)"
+              overflowY="auto"
+              display="inline-block"
+            >
               {heavyEquipmentList.map((item, index) => (
                 <Tr key={item.id} h="36px">
                   <CustomTd w="60px">
@@ -131,7 +136,7 @@ function RightFloatList({
             </Tbody>
           </Table>
         </TableContainer>
-        <TableContainer>
+        <TableContainer w="100%" position="fixed" bottom="0">
           <Flex
             h="30px"
             justifyContent="center"
