@@ -6,11 +6,6 @@ import { Box, Center } from '@chakra-ui/react';
 
 import animationData from '../../../public/loading.json';
 
-interface LoadingProps {
-  width?: number;
-  height?: number;
-}
-
 const Loading = ({ width = '100px', height = '100px' }) => {
   const lottieRef = useRef<HTMLDivElement>(null);
 
