@@ -1,11 +1,17 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 import { CONFIG } from '@config';
 
 import { Box, BoxProps, Text, useDisclosure } from '@chakra-ui/react';
 
-import { GoogleMap, useLoadScript } from '@react-google-maps/api';
+import { Status, Wrapper } from '@googlemaps/react-wrapper';
+import {
+  GoogleMap,
+  LoadScriptNext,
+  useLoadScript,
+} from '@react-google-maps/api';
 
+import CustomMap from './_fragments/CustomMap';
 import HomeNavigationBar from './_fragments/HomeNavigationBar';
 import RightFloatList from './_fragments/RightFloatList';
 
@@ -38,7 +44,7 @@ function HomePageContent({ ...basisProps }: HomePageContentProps) {
 
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: CONFIG.GOOGLE_MAP_KEY as string,
-    version: '3.47',
+    version: '3.52.6',
   });
 
   const [map, setMap] = React.useState<google.maps.Map | null>(null);
@@ -55,6 +61,15 @@ function HomePageContent({ ...basisProps }: HomePageContentProps) {
     setMap(null);
   }, []);
 
+  // useEffect(() => {
+  //   if (mapRef.current) {
+  //     new window.google.maps.Map(mapRef.current, {
+  //       center,
+  //       zoom: 10,
+  //     });
+  //   }
+  // }, []);
+
   if (!isLoaded) return <Text>로딩중</Text>;
 
   return (
@@ -64,8 +79,10 @@ function HomePageContent({ ...basisProps }: HomePageContentProps) {
         onOpenNavbar={onOpenNavbar}
         onCloseNavbar={onCloseNavbar}
       />
-      {/* <Box ref={mapRef} w="100vw" h="100vh" position="fixed" bg="red" /> */}
-      {isLoaded ? (
+      <Wrapper apiKey={CONFIG.GOOGLE_MAP_KEY as string}>
+        <CustomMap />
+      </Wrapper>
+      {/* {isLoaded ? (
         <GoogleMap
           mapContainerStyle={containerStyle}
           center={center}
@@ -74,12 +91,11 @@ function HomePageContent({ ...basisProps }: HomePageContentProps) {
           onUnmount={onUnmount}
           // options={{ mapId: CONFIG.GOOGLE_MAP_KEY }}
         >
-          {/* Child components, such as markers, info windows, etc. */}
           <></>
         </GoogleMap>
       ) : (
         <></>
-      )}
+      )} */}
       <RightFloatList
         isOpenList={isOpenList}
         onOpenList={onOpenList}
