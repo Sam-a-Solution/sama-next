@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { Box, Button, Checkbox, Flex, Text, VStack } from '@chakra-ui/react';
+import { Box, Button, Flex, Text, VStack } from '@chakra-ui/react';
 
 import AuthCheckbox from './_fragments/AuthCheckbox';
 import AuthLabelInput from './_fragments/AuthLabelInput';

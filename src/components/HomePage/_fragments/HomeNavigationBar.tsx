@@ -124,6 +124,7 @@ function HomeNavigationBar({
           w="100%"
           gap="8px"
           alignItems="center"
+          cursor="pointer"
           onClick={() =>
             openModal(CustomConfirmAlert, {
               auxProps: {
