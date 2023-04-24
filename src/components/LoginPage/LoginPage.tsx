@@ -14,6 +14,8 @@ function LoginPage() {
   const router = useRouter();
   const methods = useLoginForm();
 
+  const [disabled, setDisabled] = React.useState(false);
+
   const { mutate: createLoginMutate } = useUserLoginCreateMutation({
     options: {
       onSuccess: (data) => {
@@ -22,6 +24,7 @@ function LoginPage() {
         router.push('/');
       },
       onError: (error) => {
+        setDisabled(true);
         if (error.response?.status === 404) {
           methods.setError('nickname', {
             type: 'validate',
@@ -74,6 +77,12 @@ function LoginPage() {
     }
     if (passwordValue && !methods.formState.errors.password) {
       methods.clearErrors('password');
+    }
+    if (
+      !methods.formState.errors.nickname &&
+      !methods.formState.errors.password
+    ) {
+      setDisabled(false);
     }
   }, [nicknameValue, passwordValue, methods]);
 
@@ -130,7 +139,7 @@ function LoginPage() {
             size="lg"
             colorScheme={'primary'}
             borderRadius="5px"
-            isDisabled={isDisabled}
+            isDisabled={isDisabled || disabled}
             _disabled={{
               bg: 'gray.400',
               border: 'none',
