@@ -34,9 +34,11 @@ function Report({ ...props }: ReportProps) {
           </Button>
         </Flex>
       }
+      // TODO: 스크롤 처리
       modalContentProps={{
         minW: '574px',
-        maxH: '600px',
+        maxH: '800px',
+        position: 'relative',
       }}
       modalHeaderProps={{
         p: '19px 30px',
@@ -44,7 +46,13 @@ function Report({ ...props }: ReportProps) {
       modalBodyProps={{
         p: '0 30px',
         h: '300px',
-        overflowY: 'scroll',
+        overflow: 'auto',
+      }}
+      modalFooterProps={{
+        position: 'sticky',
+        bottom: '0',
+        bg: 'white',
+        zIndex: 'sticky',
       }}
       {...props}
     />

@@ -19,6 +19,8 @@ import StatusBadge from '../@Badge/StatusBadge';
 import CustomTable from '../@Table/CustomTable';
 import CustomTd from '../@Table/CustomTd';
 import CustomTh from '../@Table/CustomTh';
+import CustomAlert from './@Alert/CustomAlert';
+import CustomConfirmAlert from './@Alert/CustomConfirmAlert';
 import ModalContainer from './ModalContainer';
 import Report from './Report';
 
@@ -186,7 +188,43 @@ function WorkStatusManagement({ ...props }: WorkStatusManagementProps) {
                       <Button
                         w="80px"
                         h="30px"
-                        colorScheme={item.check ? 'gray' : 'primary'}
+                        bg={item.check ? 'gray.500' : 'primary.500'}
+                        border={item.check ? 'none' : '1px solid'}
+                        _hover={{
+                          bg: item.check ? 'gray.600' : 'primary.600',
+                        }}
+                        _active={{
+                          bg: item.check ? 'gray.700' : 'primary.700',
+                        }}
+                        color="white"
+                        onClick={
+                          item.check
+                            ? undefined
+                            : () =>
+                                openModal(CustomConfirmAlert, {
+                                  auxProps: {
+                                    title: '관리자 확인',
+                                    content: `해당 작업 내용을 확인하시겠습니까?${'\n'}확인 후에는 수정이 불가능합니다.`,
+                                    cancelText: '취소',
+                                    submitText: '확인',
+                                    onSubmit: () => {
+                                      openModal(CustomAlert, {
+                                        auxProps: {
+                                          title: '관리자 확인 완료',
+                                          content: '작업 확인 완료했습니다.',
+                                          submitText: '확인',
+                                          onSubmit: () => {
+                                            alert(
+                                              '관리자 확인 완료되었습니다.',
+                                            );
+                                          },
+                                        },
+                                      });
+                                    },
+                                  },
+                                })
+                        }
+                        isDisabled={item.check}
                       >
                         확인
                       </Button>
