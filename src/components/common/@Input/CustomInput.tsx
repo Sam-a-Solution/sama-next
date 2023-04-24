@@ -4,7 +4,7 @@ import { Input, InputProps } from '@chakra-ui/react';
 
 interface CustomInputProps extends InputProps {}
 
-function CustomInput({ ...basisProps }: CustomInputProps) {
+function CustomInput({ ...basisProps }: CustomInputProps, ref: React.Ref<any>) {
   return (
     <Input
       h="50px"
@@ -20,6 +20,7 @@ function CustomInput({ ...basisProps }: CustomInputProps) {
         outline: 'none',
       }}
       _focus={{
+        borderColor: 'black',
         outline: 'none',
       }}
       _focusVisible={{
@@ -31,4 +32,4 @@ function CustomInput({ ...basisProps }: CustomInputProps) {
   );
 }
 
-export default CustomInput;
+export default React.forwardRef(CustomInput);
