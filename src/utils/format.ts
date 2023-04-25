@@ -109,3 +109,9 @@ export const formatExamTime = (SECONDS: number) => {
   }
   return `${seconds}초`;
 };
+
+export function formatPhoneNumber(number: string) {
+  const regex = /^(\d{3})(\d{4})(\d{4})$/;
+  const formattedNumber = number.replace(regex, '$1-$2-$3');
+  return formattedNumber;
+}

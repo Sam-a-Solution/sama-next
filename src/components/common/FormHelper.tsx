@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 
 import {
+  Box,
   Flex,
   FormControl,
   FormControlProps,
@@ -11,6 +12,7 @@ import {
   FormLabelProps,
   Text,
   TextProps,
+  VStack,
 } from '@chakra-ui/react';
 
 interface FormHelperProps extends FormControlProps {
@@ -55,8 +57,8 @@ const FormHelper = ({
   const isShowHelper = !!helperText && !isShowErrorText && !isShowErrorText;
 
   return (
-    <FormControl isInvalid={!!errorText} {...basisProps}>
-      <Flex h="50px" alignItems="center" gap="12px">
+    <FormControl mt="0 !important" isInvalid={!!errorText} {...basisProps}>
+      <Flex alignItems="center" gap="12px">
         {!!label && (
           <FormLabel
             margin="0 !important"
@@ -71,18 +73,30 @@ const FormHelper = ({
             </Text>
           </FormLabel>
         )}
-        {children}
-        {isShowErrorText && (
-          <FormErrorMessage {...errorTextProps}>{errorText}</FormErrorMessage>
-        )}
-        {isShowSuccessText && (
-          <FormHelperText color="custom.primary" {...successTextProps}>
-            {successText}
-          </FormHelperText>
-        )}
-        {isShowHelper && (
-          <FormHelperText {...helperTextProps}>{helperText}</FormHelperText>
-        )}
+        <VStack w="100%" gap="10px" alignItems="flex-start">
+          <Box w="100%" h="50px">
+            {children}
+          </Box>
+          {isShowErrorText && (
+            <FormErrorMessage mt="0 !important" {...errorTextProps}>
+              {errorText}
+            </FormErrorMessage>
+          )}
+          {isShowSuccessText && (
+            <FormHelperText
+              mt="0 !important"
+              color="alert.success.500"
+              {...successTextProps}
+            >
+              {successText}
+            </FormHelperText>
+          )}
+          {isShowHelper && (
+            <FormHelperText mt="0 !important" {...helperTextProps}>
+              {helperText}
+            </FormHelperText>
+          )}
+        </VStack>
       </Flex>
     </FormControl>
   );
