@@ -1,31 +1,15 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
+
+import GoogleMapReact from 'google-map-react';
 
 import { CONFIG } from '@config';
 
-import { Box, BoxProps, Text, useDisclosure } from '@chakra-ui/react';
+import { Box, BoxProps, useDisclosure } from '@chakra-ui/react';
 
-import { Status, Wrapper } from '@googlemaps/react-wrapper';
-import {
-  GoogleMap,
-  LoadScriptNext,
-  useLoadScript,
-} from '@react-google-maps/api';
-
-import CustomMap from './_fragments/CustomMap';
 import HomeNavigationBar from './_fragments/HomeNavigationBar';
 import RightFloatList from './_fragments/RightFloatList';
 
 interface HomePageContentProps extends BoxProps {}
-
-const containerStyle = {
-  width: '100vw',
-  height: '100vh',
-};
-
-const center = {
-  lat: -3.745,
-  lng: -38.523,
-};
 
 function HomePageContent({ ...basisProps }: HomePageContentProps) {
   const {
@@ -40,38 +24,6 @@ function HomePageContent({ ...basisProps }: HomePageContentProps) {
     onClose: onCloseList,
   } = useDisclosure();
 
-  const mapRef = useRef<HTMLDivElement>(null);
-
-  const { isLoaded, loadError } = useLoadScript({
-    googleMapsApiKey: CONFIG.GOOGLE_MAP_KEY as string,
-    version: '3.52.6',
-  });
-
-  const [map, setMap] = React.useState<google.maps.Map | null>(null);
-
-  const onLoad = React.useCallback(function callback(map: google.maps.Map) {
-    // This is just an example of getting and using the map instance!!! don't just blindly copy!
-    const bounds = new window.google.maps.LatLngBounds(center);
-    map.fitBounds(bounds);
-
-    setMap(map);
-  }, []);
-
-  const onUnmount = React.useCallback(function callback() {
-    setMap(null);
-  }, []);
-
-  // useEffect(() => {
-  //   if (mapRef.current) {
-  //     new window.google.maps.Map(mapRef.current, {
-  //       center,
-  //       zoom: 10,
-  //     });
-  //   }
-  // }, []);
-
-  if (!isLoaded) return <Text>로딩중</Text>;
-
   return (
     <Box position="relative" {...basisProps}>
       <HomeNavigationBar
@@ -79,23 +31,23 @@ function HomePageContent({ ...basisProps }: HomePageContentProps) {
         onOpenNavbar={onOpenNavbar}
         onCloseNavbar={onCloseNavbar}
       />
-      <Wrapper apiKey={CONFIG.GOOGLE_MAP_KEY as string}>
-        <CustomMap />
-      </Wrapper>
-      {/* {isLoaded ? (
-        <GoogleMap
-          mapContainerStyle={containerStyle}
-          center={center}
-          zoom={10}
-          onLoad={onLoad}
-          onUnmount={onUnmount}
-          // options={{ mapId: CONFIG.GOOGLE_MAP_KEY }}
-        >
-          <></>
-        </GoogleMap>
-      ) : (
-        <></>
-      )} */}
+      <Box w="100vw" h="100vh">
+        <GoogleMapReact
+          options={{
+            mapTypeId: 'satellite',
+          }}
+          bootstrapURLKeys={{ key: CONFIG.GOOGLE_MAP_KEY as string }}
+          defaultCenter={{ lat: 37.5665, lng: 126.978 }}
+          defaultZoom={11}
+          //   center: {
+          //   lat: 10.99835602,
+          //   lng: 77.01502627
+          // },
+          // zoom: 11
+          // yesIWantToUseGoogleMapApiInternals
+          // onGoogleApiLoaded={({ map, maps }) => handleApiLoaded(map, maps)}
+        ></GoogleMapReact>
+      </Box>
       <RightFloatList
         isOpenList={isOpenList}
         onOpenList={onOpenList}

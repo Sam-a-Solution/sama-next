@@ -1,7 +1,9 @@
-import React from 'react';
+import { useRouter } from 'next/router';
+import React, { useCallback } from 'react';
 
 import { Flex, Highlight, Text } from '@chakra-ui/react';
 
+import { useLogin } from '@hooks/auth/useLogin';
 import useModals from '@hooks/useModals';
 
 import AlignCenterFlex from '@components/common/@Flex/AlignCenterFlex';
@@ -10,6 +12,7 @@ import EmergencyStatusManagement from '@components/common/@Modal/EmergencyStatus
 import WorkStatusManagement from '@components/common/@Modal/WorkStatusManagement';
 import WorkerAccount from '@components/common/@Modal/WorkerAccount';
 
+import { useUserLogoutCreateMutation } from 'generated/apis/User/User.query';
 import {
   AccountIcon,
   EmergencyIcon,
@@ -29,7 +32,40 @@ function HomeNavigationBar({
   onCloseNavbar,
   onOpenNavbar,
 }: HomeNavigationBarProps) {
+  const router = useRouter();
+
   const { openModal } = useModals();
+  const { logout } = useLogin();
+  const { mutate: createLogoutMutate } = useUserLogoutCreateMutation({
+    options: {
+      onSuccess: (data) => {
+        console.log({ data });
+        logout();
+        router.push('/login');
+      },
+      onError: (error) => {
+        console.dir(error);
+      },
+    },
+  });
+
+  const handleLogout = useCallback(() => {
+    openModal(CustomConfirmAlert, {
+      auxProps: {
+        title: '로그아웃',
+        content: '로그아웃 하시겠습니까?',
+        cancelText: '취소',
+        submitText: '로그아웃',
+        onSubmit: () => {
+          createLogoutMutate({
+            data: {
+              uid: undefined,
+            },
+          });
+        },
+      },
+    });
+  }, [openModal, createLogoutMutate]);
   return (
     <Flex
       position="fixed"
@@ -125,19 +161,7 @@ function HomeNavigationBar({
           gap="8px"
           alignItems="center"
           cursor="pointer"
-          onClick={() =>
-            openModal(CustomConfirmAlert, {
-              auxProps: {
-                title: '로그아웃',
-                content: '로그아웃 하시겠습니까?',
-                cancelText: '취소',
-                submitText: '로그아웃',
-                onSubmit: () => {
-                  alert('로그아웃 API 연동');
-                },
-              },
-            })
-          }
+          onClick={handleLogout}
         >
           <LogoutIcon w="24px" h="24px" cursor="pointer" />
           {isOpenNavbar && (
