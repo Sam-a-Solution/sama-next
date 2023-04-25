@@ -1,8 +1,13 @@
 import { useRouter } from 'next/router';
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { FormProvider, useWatch } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
 
 import { Box, Button, Flex, Text, VStack } from '@chakra-ui/react';
+
+import { userSliceActions } from '@features/user/userSlice';
+
+import { setToken } from '@utils/localStorage/token';
 
 import AuthCheckbox from './_fragments/AuthCheckbox';
 import AuthLabelInput from './_fragments/AuthLabelInput';
@@ -11,15 +16,23 @@ import useLoginForm from './_hooks/LoginSchema';
 import { useUserLoginCreateMutation } from 'generated/apis/User/User.query';
 
 function LoginPage() {
+  const dispatch = useDispatch();
   const router = useRouter();
   const methods = useLoginForm();
 
-  const [disabled, setDisabled] = React.useState(false);
+  const [disabled, setDisabled] = useState(false);
 
   const { mutate: createLoginMutate } = useUserLoginCreateMutation({
     options: {
       onSuccess: (data) => {
-        console.log({ data });
+        if (data.access && data.refresh) {
+          const { access, refresh } = data;
+          dispatch(userSliceActions.setIsLogin(true));
+          setToken({
+            access,
+            refresh,
+          });
+        }
         // TODO: 로그인 성공 시, 토큰 저장
         router.push('/');
       },
@@ -58,7 +71,6 @@ function LoginPage() {
   const onSubmit = methods.handleSubmit(
     (data) => {
       const { nickname, password } = data;
-      console.log({ data });
       createLoginMutate({
         data: {
           nickname,
