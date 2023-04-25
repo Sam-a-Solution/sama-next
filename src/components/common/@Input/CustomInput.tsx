@@ -7,7 +7,8 @@ interface CustomInputProps extends InputProps {}
 function CustomInput({ ...basisProps }: CustomInputProps, ref: React.Ref<any>) {
   return (
     <Input
-      h="50px"
+      ref={ref}
+      h="50px !important"
       bg="gray.50"
       border="1px solid"
       borderColor="gray.200"
@@ -18,13 +19,19 @@ function CustomInput({ ...basisProps }: CustomInputProps, ref: React.Ref<any>) {
       }}
       _active={{
         outline: 'none',
+        boxShadow: 'none !important',
       }}
       _focus={{
         borderColor: 'black',
         outline: 'none',
+        boxShadow: 'none !important',
       }}
       _focusVisible={{
         outline: 'none',
+        boxShadow: 'none !important',
+      }}
+      _invalid={{
+        borderColor: 'alert.warning.500',
         boxShadow: 'none !important',
       }}
       {...basisProps}
