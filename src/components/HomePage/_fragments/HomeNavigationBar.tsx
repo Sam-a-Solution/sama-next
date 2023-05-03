@@ -102,7 +102,21 @@ function HomeNavigationBar({
           </Flex>
         </AlignCenterFlex>
         <Flex w="100%" flexDir="column" gap="10px">
-          <AlignCenterFlex w="100%">
+          <AlignCenterFlex
+            w="100%"
+            p="13px"
+            alignItems="center"
+            justifyContent="center"
+            _hover={{
+              bg: 'secondary.50',
+              color: 'primary.500',
+              borderRadius: isOpenNavbar ? '0' : '50%',
+            }}
+            _pressed={{
+              bg: 'secondary.50',
+              color: 'primary.500',
+            }}
+          >
             {/* TODO: 작업현황관리 모달 열기 */}
             <Flex
               w="100%"
@@ -113,14 +127,26 @@ function HomeNavigationBar({
             >
               <WorkManagementIcon w="24px" h="24px" />
               {isOpenNavbar && (
-                <Text textStyle="TitleSmall" color="black">
-                  작업 현황 관리
-                </Text>
+                <Text textStyle="TitleSmall">작업 현황 관리</Text>
               )}
             </Flex>
           </AlignCenterFlex>
 
-          <AlignCenterFlex w="100%">
+          <AlignCenterFlex
+            w="100%"
+            p="13px"
+            alignItems="center"
+            justifyContent="center"
+            _hover={{
+              bg: 'secondary.50',
+              color: 'primary.500',
+              borderRadius: isOpenNavbar ? '0' : '50%',
+            }}
+            _pressed={{
+              bg: 'secondary.50',
+              color: 'primary.500',
+            }}
+          >
             <Flex
               w="100%"
               gap="8px"
@@ -130,14 +156,26 @@ function HomeNavigationBar({
             >
               <EmergencyIcon w="24px" h="24px" />
               {isOpenNavbar && (
-                <Text textStyle="TitleSmall" color="black">
-                  비상상황 관리
-                </Text>
+                <Text textStyle="TitleSmall">비상상황 관리</Text>
               )}
             </Flex>
           </AlignCenterFlex>
 
-          <AlignCenterFlex w="100%">
+          <AlignCenterFlex
+            w="100%"
+            p="13px"
+            alignItems="center"
+            justifyContent="center"
+            _hover={{
+              bg: 'secondary.50',
+              color: 'primary.500',
+              borderRadius: isOpenNavbar ? '0' : '50%',
+            }}
+            _pressed={{
+              bg: 'secondary.50',
+              color: 'primary.500',
+            }}
+          >
             <Flex
               w="100%"
               gap="8px"
@@ -147,9 +185,7 @@ function HomeNavigationBar({
             >
               <AccountIcon w="24px" h="24px" cursor="pointer" />
               {isOpenNavbar && (
-                <Text textStyle="TitleSmall" color="black">
-                  작업자 계정 추가
-                </Text>
+                <Text textStyle="TitleSmall">작업자 계정 추가</Text>
               )}
             </Flex>
           </AlignCenterFlex>
