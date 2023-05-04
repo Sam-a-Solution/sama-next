@@ -34,6 +34,7 @@ function HomeNavigationBar({
 }: HomeNavigationBarProps) {
   const router = useRouter();
 
+  const { userInfo } = useLogin();
   const { openModal } = useModals();
   const { logout } = useLogin();
   const { mutate: createLogoutMutate } = useUserLogoutCreateMutation({
@@ -90,12 +91,12 @@ function HomeNavigationBar({
             {isOpenNavbar && (
               <Text textStyle="TitleSmall" color="black">
                 <Highlight
-                  query="samasolution"
+                  query={userInfo?.username || ''}
                   styles={{
                     color: 'primary.500',
                   }}
                 >
-                  samasolution 님
+                  {`${userInfo?.username || ''} 님`}
                 </Highlight>
               </Text>
             )}

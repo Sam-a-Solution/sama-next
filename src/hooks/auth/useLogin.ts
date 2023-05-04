@@ -8,8 +8,11 @@ import { userSliceActions } from '@features/user/userSlice';
 import { useQueryClient } from '@tanstack/react-query';
 import { deleteToken } from '@utils/localStorage/token';
 
+import { useUserMeRetrieveQuery } from 'generated/apis/User/User.query';
+
 export function useLogin() {
   const isLogin = useAppStore((store) => store.USER.isLogin);
+  const { data: userInfo } = useUserMeRetrieveQuery();
 
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
@@ -27,6 +30,7 @@ export function useLogin() {
 
   return {
     isLogin,
+    userInfo,
     logout,
   };
 }
