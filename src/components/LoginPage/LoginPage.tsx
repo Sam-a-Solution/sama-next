@@ -38,6 +38,16 @@ function LoginPage() {
       },
       onError: (error) => {
         setDisabled(true);
+        if (error.response?.status === 400) {
+          methods.setError('nickname', {
+            type: 'validate',
+            message: '아이디 또는 비밀번호를 다시 확인해주세요.',
+          });
+          methods.setError('password', {
+            type: 'validate',
+            message: '아이디 또는 비밀번호를 다시 확인해주세요.',
+          });
+        }
         if (error.response?.status === 404) {
           methods.setError('nickname', {
             type: 'validate',
