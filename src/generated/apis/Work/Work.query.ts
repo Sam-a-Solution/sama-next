@@ -25,12 +25,6 @@ export const QUERY_KEY_WORK_API = {
     ['WORK_CHOICE_RETRIEVE', variables].filter(
       (key) => typeof key !== 'undefined',
     ),
-  STATUS_COUNT_RETRIEVE: (
-    variables?: Parameter<typeof workApi.workStatusCountRetrieve>,
-  ) =>
-    ['WORK_STATUS_COUNT_RETRIEVE', variables].filter(
-      (key) => typeof key !== 'undefined',
-    ),
   RETRIEVE: (variables: Parameter<typeof workApi.workRetrieve>) =>
     ['WORK_RETRIEVE', variables].filter((key) => typeof key !== 'undefined'),
   UPDATE: () => ['WORK_UPDATE'].filter((key) => typeof key !== 'undefined'),
@@ -117,31 +111,6 @@ export const useWorkChoiceRetrieveQuery = (
   const result = useQuery(
     queryKey,
     () => workApi.workChoiceRetrieve(params?.variables),
-    params?.options,
-  );
-
-  return { ...result, queryKey };
-};
-
-/**
- * No description
- *
- * @tags work
- * @name WorkStatusCountRetrieve
- * @summary 작업 통계 조회
- * @request GET:/v1/work/status_count/
- * @secure
- */
-export const useWorkStatusCountRetrieveQuery = (
-  params?: QueryHookParams<
-    typeof workApi.workStatusCountRetrieve,
-    AxiosError<any>
-  >,
-) => {
-  const queryKey = QUERY_KEY_WORK_API.STATUS_COUNT_RETRIEVE(params?.variables);
-  const result = useQuery(
-    queryKey,
-    () => workApi.workStatusCountRetrieve(params?.variables),
     params?.options,
   );
 

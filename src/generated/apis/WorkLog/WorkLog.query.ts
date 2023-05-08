@@ -23,10 +23,20 @@ export const QUERY_KEY_WORK_LOG_API = {
   LIST: (variables?: Parameter<typeof workLogApi.workLogList>) =>
     ['WORK_LOG_LIST', variables].filter((key) => typeof key !== 'undefined'),
   CREATE: () => ['WORK_LOG_CREATE'].filter((key) => typeof key !== 'undefined'),
+  ALL_RETRIEVE: (variables?: Parameter<typeof workLogApi.workLogAllRetrieve>) =>
+    ['WORK_LOG_ALL_RETRIEVE', variables].filter(
+      (key) => typeof key !== 'undefined',
+    ),
   EMERGENCY_RETRIEVE: (
     variables?: Parameter<typeof workLogApi.workLogEmergencyRetrieve>,
   ) =>
     ['WORK_LOG_EMERGENCY_RETRIEVE', variables].filter(
+      (key) => typeof key !== 'undefined',
+    ),
+  STATUS_COUNT_RETRIEVE: (
+    variables?: Parameter<typeof workLogApi.workLogStatusCountRetrieve>,
+  ) =>
+    ['WORK_LOG_STATUS_COUNT_RETRIEVE', variables].filter(
       (key) => typeof key !== 'undefined',
     ),
   RETRIEVE: (variables: Parameter<typeof workLogApi.workLogRetrieve>) =>
@@ -99,6 +109,31 @@ export const useWorkLogCreateMutation = (
  * No description
  *
  * @tags work_log
+ * @name WorkLogAllRetrieve
+ * @summary WorkLog 목록 조회 (무한 스크롤)
+ * @request GET:/v1/work_log/all/
+ * @secure
+ */
+export const useWorkLogAllRetrieveQuery = (
+  params?: QueryHookParams<
+    typeof workLogApi.workLogAllRetrieve,
+    AxiosError<any>
+  >,
+) => {
+  const queryKey = QUERY_KEY_WORK_LOG_API.ALL_RETRIEVE(params?.variables);
+  const result = useQuery(
+    queryKey,
+    () => workLogApi.workLogAllRetrieve(params?.variables),
+    params?.options,
+  );
+
+  return { ...result, queryKey };
+};
+
+/**
+ * No description
+ *
+ * @tags work_log
  * @name WorkLogEmergencyRetrieve
  * @summary 작업 비상 상황 조회
  * @request GET:/v1/work_log/emergency/
@@ -114,6 +149,33 @@ export const useWorkLogEmergencyRetrieveQuery = (
   const result = useQuery(
     queryKey,
     () => workLogApi.workLogEmergencyRetrieve(params?.variables),
+    params?.options,
+  );
+
+  return { ...result, queryKey };
+};
+
+/**
+ * No description
+ *
+ * @tags work_log
+ * @name WorkLogStatusCountRetrieve
+ * @summary 작업 통계 조회
+ * @request GET:/v1/work_log/status_count/
+ * @secure
+ */
+export const useWorkLogStatusCountRetrieveQuery = (
+  params?: QueryHookParams<
+    typeof workLogApi.workLogStatusCountRetrieve,
+    AxiosError<any>
+  >,
+) => {
+  const queryKey = QUERY_KEY_WORK_LOG_API.STATUS_COUNT_RETRIEVE(
+    params?.variables,
+  );
+  const result = useQuery(
+    queryKey,
+    () => workLogApi.workLogStatusCountRetrieve(params?.variables),
     params?.options,
   );
 

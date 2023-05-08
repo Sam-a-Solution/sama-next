@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo, useRef } from 'react';
 
 import {
   Box,
@@ -12,44 +12,53 @@ import {
   Tr,
 } from '@chakra-ui/react';
 
+import useInfiniteScroll from '@hooks/useInfiniteScroll';
+
 import StatusBadge from '@components/common/@Badge/StatusBadge';
 import CustomTd from '@components/common/@Table/CustomTd';
 import CustomTh from '@components/common/@Table/CustomTh';
 
+import { HeavyEquipment } from '../HomePage';
+
+import { WorkStatusCountType } from 'generated/apis/@types/data-contracts';
 import { FoldIcon, UnfoldIcon } from 'generated/icons/MyIcons';
+
+type WorkStatusKey = keyof WorkStatusCountType;
+
+const convertingKeyMap: Record<WorkStatusKey, string> = {
+  emergencyCount: '비상상황',
+  endCount: '정지',
+  progressCount: '운전 중',
+} as const;
 
 interface RightFloatListProps {
   isOpenList: boolean;
   onOpenList: () => void;
   onCloseList: () => void;
+  heavyEquipmentList: HeavyEquipment[];
+  totalStatus: WorkStatusCountType;
+  fetchNextPage: () => void;
+  hasNextPage?: boolean;
 }
-
-const heavyEquipmentList = Array.from({ length: 30 }, (_, i) => ({
-  id: i,
-  driver: ['김운전', '이운전', '박운전'][Math.floor(Math.random() * 3)],
-  carType: [
-    '지게차',
-    '크레인',
-    '굴삭기',
-    '포크레인',
-    '불도저',
-    '덤프트럭',
-    '로더',
-  ][Math.floor(Math.random() * 7)],
-  status: ['정지', '운전', '비상'][Math.floor(Math.random() * 3)],
-}));
-
-const totalStatus = [
-  { id: 1, type: '운전 중', count: 9999 },
-  { id: 2, type: '정지', count: 999 },
-  { id: 3, type: '비상상황', count: 9999 },
-];
 
 function RightFloatList({
   isOpenList,
   onCloseList,
   onOpenList,
+  heavyEquipmentList,
+  totalStatus,
+  fetchNextPage,
+  hasNextPage,
 }: RightFloatListProps) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useInfiniteScroll({
+    targetRef: ref,
+    onIntersect: fetchNextPage,
+    enabled: hasNextPage,
+    threshold: 0.2,
+  });
+
   return (
     <>
       <Box
@@ -111,7 +120,7 @@ function RightFloatList({
               overflowY="auto"
               display="inline-block"
             >
-              {heavyEquipmentList.map((item, index) => (
+              {heavyEquipmentList?.map((item, index) => (
                 <Tr key={item.id} h="36px">
                   <CustomTd w="60px">
                     <Text textStyle="TextSmall" color="black">
@@ -133,6 +142,7 @@ function RightFloatList({
                   </CustomTd>
                 </Tr>
               ))}
+              <Box ref={ref} />
             </Tbody>
           </Table>
         </TableContainer>
@@ -168,16 +178,21 @@ function RightFloatList({
               </Tr>
             </Thead>
             <Tbody>
-              {totalStatus.map((item) => (
-                <Tr key={item.id} h="36px">
+              {Object.keys(totalStatus).map((item, index) => (
+                <Tr key={index} h="36px">
                   <CustomTd w="" borderColor="secondary.100" bg="secondary.50">
                     <Text textStyle="TitleSmall" color="primary.500">
-                      {item.type}
+                      {convertingKeyMap[item as keyof WorkStatusCountType]}
                     </Text>
                   </CustomTd>
                   <CustomTd w="">
-                    <Text textAlign="right" px="9px">
-                      {item.count}
+                    <Text
+                      textAlign="right"
+                      px="9px"
+                      textStyle="Text"
+                      color="black"
+                    >
+                      {totalStatus[item as keyof WorkStatusCountType]}
                     </Text>
                   </CustomTd>
                 </Tr>

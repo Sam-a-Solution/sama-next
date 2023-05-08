@@ -101,24 +101,6 @@ export class WorkApi<
    * No description
    *
    * @tags work
-   * @name WorkStatusCountRetrieve
-   * @summary 작업 통계 조회
-   * @request GET:/v1/work/status_count/
-   * @secure
-   */
-  workStatusCountRetrieve = (variables?: { params?: RequestParams }) =>
-    this.request<WorkType, any>({
-      path: `/v1/work/status_count/`,
-      method: 'GET',
-      secure: true,
-      format: 'json',
-      ...variables?.params,
-    });
-
-  /**
-   * No description
-   *
-   * @tags work
    * @name WorkRetrieve
    * @summary Work 상세 조회
    * @request GET:/v1/work/{work_id}/

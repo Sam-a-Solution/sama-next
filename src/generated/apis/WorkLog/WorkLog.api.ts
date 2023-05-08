@@ -2,6 +2,7 @@ import instance from '@apis/_axios/instance';
 
 import { ContentType, HttpClient, RequestParams } from '../@http-client';
 import {
+  CursorPaginatedWorkLogListType,
   PaginatedWorkLogListType,
   WorkCheckType,
   WorkCheckValidationErrorType,
@@ -13,6 +14,7 @@ import {
   WorkEndValidationErrorType,
   WorkLogType,
   WorkLogValidationErrorType,
+  WorkStatusCountType,
 } from '../@types/data-contracts';
 import { DeepOmitReadOnly } from '../@types/util-types';
 
@@ -73,6 +75,32 @@ export class WorkLogApi<
    * No description
    *
    * @tags work_log
+   * @name WorkLogAllRetrieve
+   * @summary WorkLog 목록 조회 (무한 스크롤)
+   * @request GET:/v1/work_log/all/
+   * @secure
+   */
+  workLogAllRetrieve = (variables?: {
+    query?: {
+      /** The pagination cursor value. */
+      cursor?: string;
+      /** Number of results to return per page. */
+      page_size?: number;
+    };
+    params?: RequestParams;
+  }) =>
+    this.request<CursorPaginatedWorkLogListType, any>({
+      path: `/v1/work_log/all/`,
+      method: 'GET',
+      secure: true,
+      format: 'json',
+      ...variables?.params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags work_log
    * @name WorkLogEmergencyRetrieve
    * @summary 작업 비상 상황 조회
    * @request GET:/v1/work_log/emergency/
@@ -81,6 +109,24 @@ export class WorkLogApi<
   workLogEmergencyRetrieve = (variables?: { params?: RequestParams }) =>
     this.request<WorkEmergencyType, any>({
       path: `/v1/work_log/emergency/`,
+      method: 'GET',
+      secure: true,
+      format: 'json',
+      ...variables?.params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags work_log
+   * @name WorkLogStatusCountRetrieve
+   * @summary 작업 통계 조회
+   * @request GET:/v1/work_log/status_count/
+   * @secure
+   */
+  workLogStatusCountRetrieve = (variables?: { params?: RequestParams }) =>
+    this.request<WorkStatusCountType, any>({
+      path: `/v1/work_log/status_count/`,
       method: 'GET',
       secure: true,
       format: 'json',
