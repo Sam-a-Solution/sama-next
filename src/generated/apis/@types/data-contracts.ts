@@ -1,3 +1,8 @@
+export interface CursorPaginatedWorkLogListType {
+  cursor?: string;
+  results?: WorkLogType[];
+}
+
 export interface DeviceType {
   /** @maxLength 64 */
   uid: string;
@@ -22,19 +27,6 @@ export interface NicknameValidationType {
 export interface NicknameValidationValidationErrorType {
   nonField?: string[];
   nickname?: string[];
-}
-
-export interface NotificationType {
-  readonly id: number;
-  readonly user: string;
-  /** 내용 */
-  readonly body: string;
-}
-
-export interface PaginatedNotificationListType {
-  count?: number;
-  isNext?: boolean;
-  results?: NotificationType[];
 }
 
 export interface PaginatedWorkListType {
@@ -188,6 +180,7 @@ export interface UserValidationErrorType {
 export interface WorkType {
   readonly id: number;
   readonly user: string;
+  readonly worklogSet: number;
   /**
    * 작업명
    * @maxLength 64
@@ -223,18 +216,10 @@ export interface WorkType {
    * @format double
    */
   longitude: number;
-  readonly heavyEquipmentType: WorkHeavyEquipmentType;
-  /** 중장비 종류 */
-  heavyEquipmentTypeWrite?: string;
-  readonly business: WorkBusinessType;
-  /** 사업장 종류 */
-  businessWrite?: string;
-  readonly facility: WorkFacilityType;
-  /** 시설부서 */
-  facilityWrite?: string;
-  readonly operationDepartment: WorkOperationDepartmentType;
-  /** 작업수행부서 */
-  operationDepartmentWrite?: string;
+  heavyEquipmentType: WorkHeavyEquipmentType;
+  business: WorkBusinessType;
+  facility: WorkFacilityType;
+  operationDepartment: WorkOperationDepartmentType;
   /**
    * 도로통제항목
    * @maxLength 32
@@ -245,10 +230,13 @@ export interface WorkType {
 }
 
 export interface WorkBusinessType {
-  /** 영어 이름 */
-  readonly englishName: string;
+  id: number;
   /** 한국 이름 */
   readonly koreaName: string;
+}
+
+export interface WorkBusinessValidationErrorType {
+  id?: string[];
 }
 
 export interface WorkCheckType {
@@ -308,17 +296,23 @@ export interface WorkEndValidationErrorType {
 }
 
 export interface WorkFacilityType {
-  /** 영어 이름 */
-  readonly englishName: string;
+  id: number;
   /** 한국 이름 */
   readonly koreaName: string;
 }
 
+export interface WorkFacilityValidationErrorType {
+  id?: string[];
+}
+
 export interface WorkHeavyEquipmentType {
-  /** 영어 이름 */
-  readonly englishName: string;
+  id: number;
   /** 한국 이름 */
   readonly koreaName: string;
+}
+
+export interface WorkHeavyEquipmentValidationErrorType {
+  id?: string[];
 }
 
 export interface WorkLogType {
@@ -350,18 +344,10 @@ export interface WorkLogType {
    * @maxLength 32
    */
   construction: string;
-  readonly heavyEquipmentType: WorkHeavyEquipmentType;
-  /** 중장비 종류 */
-  heavyEquipmentTypeWrite?: string;
-  readonly business: WorkBusinessType;
-  /** 사업장 종류 */
-  businessWrite?: string;
-  readonly facility: WorkFacilityType;
-  /** 시설부서 */
-  facilityWrite?: string;
-  readonly operationDepartment: WorkOperationDepartmentType;
-  /** 작업수행부서 */
-  operationDepartmentWrite?: string;
+  heavyEquipmentType: WorkHeavyEquipmentType;
+  business: WorkBusinessType;
+  facility: WorkFacilityType;
+  operationDepartment: WorkOperationDepartmentType;
   /** 상태 표시 */
   readonly statusDisplay: string;
   /** 확인한 관리자 아이디 */
@@ -388,6 +374,8 @@ export interface WorkLogType {
    * @maxLength 32
    */
   roadControl: string;
+  /** 관리자가 수정 여부 */
+  byManager?: boolean | null;
 }
 
 export interface WorkLogValidationErrorType {
@@ -396,20 +384,30 @@ export interface WorkLogValidationErrorType {
   name?: string[];
   locationName?: string[];
   construction?: string[];
-  heavyEquipmentTypeWrite?: string[];
-  businessWrite?: string[];
-  facilityWrite?: string[];
-  operationDepartmentWrite?: string[];
+  heavyEquipmentType?: WorkHeavyEquipmentValidationErrorType;
+  business?: WorkBusinessValidationErrorType;
+  facility?: WorkFacilityValidationErrorType;
+  operationDepartment?: WorkOperationDepartmentValidationErrorType;
   latitude?: string[];
   longitude?: string[];
   roadControl?: string[];
+  byManager?: string[];
 }
 
 export interface WorkOperationDepartmentType {
-  /** 영어 이름 */
-  readonly englishName: string;
+  id: number;
   /** 한국 이름 */
   readonly koreaName: string;
+}
+
+export interface WorkOperationDepartmentValidationErrorType {
+  id?: string[];
+}
+
+export interface WorkStatusCountType {
+  progressCount?: number;
+  endCount?: number;
+  emergencyCount?: number;
 }
 
 export interface WorkValidationErrorType {
@@ -421,10 +419,10 @@ export interface WorkValidationErrorType {
   construction?: string[];
   latitude?: string[];
   longitude?: string[];
-  heavyEquipmentTypeWrite?: string[];
-  businessWrite?: string[];
-  facilityWrite?: string[];
-  operationDepartmentWrite?: string[];
+  heavyEquipmentType?: WorkHeavyEquipmentValidationErrorType;
+  business?: WorkBusinessValidationErrorType;
+  facility?: WorkFacilityValidationErrorType;
+  operationDepartment?: WorkOperationDepartmentValidationErrorType;
   roadControl?: string[];
 }
 
