@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 
+import dayjs from 'dayjs';
+
 import {
   Button,
   CloseButton,
@@ -8,7 +10,6 @@ import {
   TableContainer,
   Tbody,
   Text,
-  Tfoot,
   Thead,
   Tr,
 } from '@chakra-ui/react';
@@ -19,49 +20,39 @@ import StatusBadge from '../@Badge/StatusBadge';
 import CustomTable from '../@Table/CustomTable';
 import CustomTd from '../@Table/CustomTd';
 import CustomTh from '../@Table/CustomTh';
+import Pagination from '../Pagination';
 import CustomAlert from './@Alert/CustomAlert';
 import CustomConfirmAlert from './@Alert/CustomConfirmAlert';
 import ModalContainer from './ModalContainer';
 import Report from './Report';
 
+import { WorkLogType } from 'generated/apis/@types/data-contracts';
+import { useWorkLogListQuery } from 'generated/apis/WorkLog/WorkLog.query';
 import { WorkManagementIcon } from 'generated/icons/MyIcons';
-
-const WorkStatusList = Array.from({ length: 40 }, (_, i) => ({
-  id: i + 1,
-  drivder: [
-    '김철수',
-    '이영희',
-    '박민수',
-    '손상일',
-    '박찬하',
-    '박찬종',
-    '김건호',
-    '정아인',
-  ][Math.floor(Math.random() * 3)],
-  carType: [
-    '지게차',
-    '포크레인',
-    '트럭',
-    '불도저',
-    '로더',
-    '스크레이퍼',
-    '트럭믹서',
-    '레미콘',
-    '덤프트럭',
-  ][Math.floor(Math.random() * 9)],
-  status: ['운전', '정지', '비상'][Math.floor(Math.random() * 3)],
-  startTime: ['10:00:00', '11:00:00', '12:00:00'][
-    Math.floor(Math.random() * 3)
-  ],
-  endTime: ['16:00:00', '17:00:00', '18:00:00'][Math.floor(Math.random() * 3)],
-  check: [true, false][Math.floor(Math.random() * 2)],
-}));
 
 interface WorkStatusManagementProps extends Omit<ModalProps, 'children'> {}
 
 function WorkStatusManagement({ ...props }: WorkStatusManagementProps) {
   const { openModal } = useModals();
-  const [list, setList] = useState(WorkStatusList.slice(0, 10));
+  const [workLogList, setWorkLogList] = useState<WorkLogType[]>([]);
+  const [page, setPage] = useState(1);
+  const [count, setCount] = useState<undefined | number>(0);
+
+  useWorkLogListQuery({
+    variables: {
+      query: {
+        limit: 10,
+        offset: page * 10 - 10,
+      },
+    },
+    options: {
+      onSuccess: (data) => {
+        setCount(data?.count);
+        setWorkLogList(data?.results ?? []);
+      },
+    },
+  });
+
   return (
     <ModalContainer
       header={
@@ -85,7 +76,7 @@ function WorkStatusManagement({ ...props }: WorkStatusManagementProps) {
         </Flex>
       }
       body={
-        <TableContainer>
+        <TableContainer p="0 !important">
           <CustomTable>
             <Thead>
               <Tr h="40px" bg="gray.200">
@@ -132,25 +123,25 @@ function WorkStatusManagement({ ...props }: WorkStatusManagementProps) {
               </Tr>
             </Thead>
             <Tbody display="inline-block">
-              {list.map((item) => (
-                <Tr key={item.id} h="60px">
+              {workLogList?.map((item, index) => (
+                <Tr key={`${item.user}-${item.id}-${index}`} h="60px">
                   <CustomTd w="100px">
                     <Text textStyle="Text" color="black">
-                      {item.id}
+                      {page * 10 - 10 + index + 1}
                     </Text>
                   </CustomTd>
                   <CustomTd w="160px">
                     <Text textStyle="Text" color="black">
-                      {item.drivder}
+                      {item?.user || ''}
                     </Text>
                   </CustomTd>
                   <CustomTd w="160px">
                     <Text textStyle="Text" color="black">
-                      {item.carType}
+                      {item?.heavyEquipmentType?.koreaName || ''}
                     </Text>
                   </CustomTd>
                   <CustomTd w="80px">
-                    <StatusBadge status={item.status} />
+                    <StatusBadge status={item?.statusDisplay} />
                   </CustomTd>
                   <CustomTd w="140px">
                     <Button
@@ -166,39 +157,47 @@ function WorkStatusManagement({ ...props }: WorkStatusManagementProps) {
                   </CustomTd>
                   <CustomTd w="220px">
                     <Text textStyle="Text" color="black">
-                      {item.startTime || '-'}
+                      {dayjs(item.startTime).format('HH:mm:ss') || '-'}
                     </Text>
                   </CustomTd>
                   <CustomTd w="220px">
                     <Text textStyle="Text" color="black">
-                      {item.endTime || '-'}
+                      {item?.endTime
+                        ? dayjs(item?.endTime).format('HH:mm:ss')
+                        : '-'}
                     </Text>
                   </CustomTd>
                   <CustomTd w="200px">
-                    {item.status === '정지' && item.check ? (
+                    {(item?.statusDisplay === '대기' ||
+                      item?.statusDisplay === '종료') &&
+                    item?.isChecked ? (
                       <Flex flexDir="column">
                         <Text textStyle="Text" color="black" textAlign="center">
-                          관리자ID
+                          {/* 관리자ID */}
+                          {item?.checkManager || ''}
                         </Text>
                         <Text textStyle="Text" color="black" textAlign="center">
-                          23-12-31 17:08:12
+                          {dayjs(item?.checkManagerTime).format(
+                            'YY-MM-DD HH:mm:ss',
+                          )}
+                          {/* {item?.checkManagerTime || ''} */}
                         </Text>
                       </Flex>
                     ) : (
                       <Button
                         w="80px"
                         h="30px"
-                        bg={item.check ? 'gray.500' : 'primary.500'}
-                        border={item.check ? 'none' : '1px solid'}
+                        bg={item?.isChecked ? 'gray.500' : 'primary.500'}
+                        border={item?.isChecked ? 'none' : '1px solid'}
                         _hover={{
-                          bg: item.check ? 'gray.600' : 'primary.600',
+                          bg: item?.isChecked ? 'gray.600' : 'primary.600',
                         }}
                         _active={{
-                          bg: item.check ? 'gray.700' : 'primary.700',
+                          bg: item?.isChecked ? 'gray.700' : 'primary.700',
                         }}
                         color="white"
                         onClick={
-                          item.check
+                          item?.isChecked
                             ? undefined
                             : () =>
                                 openModal(CustomConfirmAlert, {
@@ -224,7 +223,7 @@ function WorkStatusManagement({ ...props }: WorkStatusManagementProps) {
                                   },
                                 })
                         }
-                        isDisabled={item.check}
+                        isDisabled={item?.isChecked}
                       >
                         확인
                       </Button>
@@ -233,15 +232,25 @@ function WorkStatusManagement({ ...props }: WorkStatusManagementProps) {
                 </Tr>
               ))}
             </Tbody>
-            <Tfoot>
-              {/* TODO: 페이지네이션 구현 */}
-              <Text>페이지네이션</Text>
-            </Tfoot>
+            <Pagination
+              totalItems={count}
+              currentPage={page}
+              itemsPerPage={10}
+              onChangePage={setPage}
+            />
           </CustomTable>
         </TableContainer>
       }
+      modalHeaderProps={{
+        p: '20px 30px !important',
+        mb: '10px !important',
+      }}
       modalContentProps={{
         minW: '1280px',
+        minH: '810px',
+      }}
+      modalBodyProps={{
+        p: '0 !important',
       }}
       {...props}
     />
