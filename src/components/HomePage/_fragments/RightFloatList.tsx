@@ -121,7 +121,7 @@ function RightFloatList({
               display="inline-block"
             >
               {heavyEquipmentList?.map((item, index) => (
-                <Tr key={item.id} h="36px">
+                <Tr key={`${item.driver}-${item.id}-${index}`} h="36px">
                   <CustomTd w="60px">
                     <Text textStyle="TextSmall" color="black">
                       {index + 1}
@@ -179,7 +179,7 @@ function RightFloatList({
             </Thead>
             <Tbody>
               {Object.keys(totalStatus).map((item, index) => (
-                <Tr key={index} h="36px">
+                <Tr key={`${item}-${index}`} h="36px">
                   <CustomTd w="" borderColor="secondary.100" bg="secondary.50">
                     <Text textStyle="TitleSmall" color="primary.500">
                       {convertingKeyMap[item as keyof WorkStatusCountType]}
