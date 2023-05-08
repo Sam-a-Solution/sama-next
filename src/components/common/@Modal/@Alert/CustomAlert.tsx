@@ -11,7 +11,7 @@ interface CustomAlertProps extends Omit<ModalProps, 'children'> {
     title: string;
     content: string;
     submitText: string;
-    onSubmit: () => void;
+    onSubmit?: () => void;
   };
 }
 
@@ -26,7 +26,7 @@ function CustomAlert({ auxProps, ...props }: CustomAlertProps) {
           submitText={submitText}
           onSubmit={() => {
             props.onClose();
-            onSubmit();
+            onSubmit?.();
           }}
         />
       }
