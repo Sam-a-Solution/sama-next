@@ -118,7 +118,6 @@ function HomeNavigationBar({
               color: 'primary.500',
             }}
           >
-            {/* TODO: 작업현황관리 모달 열기 */}
             <Flex
               w="100%"
               gap="8px"
