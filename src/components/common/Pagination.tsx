@@ -57,7 +57,7 @@ const Pagination = ({
     if (pageRange[1] === totalPages) return;
     handleClick(totalPages);
     const newLastPageRange =
-      (totalItems as number) - totalPages * 5 + pageRange[1];
+      ((totalItems as number) - itemsPerPage * 5) / 10 + pageRange[1];
     setPageRange([pageRange[1] + 1, newLastPageRange]);
   };
 
