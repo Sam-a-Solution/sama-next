@@ -7,10 +7,14 @@ import DateInput from '@components/common/@Input/DateInput';
 import CustomSelector from '@components/common/@Select/CustomSelector';
 import FormHelper from '@components/common/FormHelper';
 
-function ReportForm() {
+interface ReportFormProps {
+  isReadOnly?: boolean;
+}
+
+function ReportForm({ isReadOnly = false }: ReportFormProps) {
   return (
     // TODO: react-hook-form 연동
-    <VStack alignItems="flex-start" gap="24px">
+    <VStack alignItems="flex-start" pb="30px" gap="24px">
       <Flex w="100%" h="50px" alignItems="center" gap="12px">
         <Text w="100px" textStyle="Title" color="primary.500">
           작업자
@@ -22,7 +26,7 @@ function ReportForm() {
       <FormHelper label="작업명">
         <CustomInput
           value="로프 외부 작업"
-          isReadOnly
+          isReadOnly={isReadOnly}
           _readOnly={styles.readOnly}
         />
       </FormHelper>
@@ -30,13 +34,13 @@ function ReportForm() {
         <Flex w="100%" alignItems="center" gap="4px">
           <DateInput
             value="2023-04-06"
-            isReadOnly
+            isReadOnly={isReadOnly}
             _readOnly={styles.readOnly}
           />
           <Text>~</Text>
           <DateInput
             value="2023-04-06"
-            isReadOnly
+            isReadOnly={isReadOnly}
             _readOnly={styles.readOnly}
           />
         </Flex>
@@ -44,14 +48,14 @@ function ReportForm() {
       <FormHelper label="작업위치">
         <CustomInput
           value="서울특별시 영등포구 양평로 157"
-          isReadOnly
+          isReadOnly={isReadOnly}
           _readOnly={styles.readOnly}
         />
       </FormHelper>
       <FormHelper label="공사구분">
         <CustomInput
           value="기계설비공사"
-          isReadOnly
+          isReadOnly={isReadOnly}
           _readOnly={styles.readOnly}
         />
       </FormHelper>
@@ -60,7 +64,7 @@ function ReportForm() {
           options={['지게차']}
           onChange={(option: string) => console.log(option)}
           menuButtonProps={{
-            disabled: true,
+            disabled: isReadOnly,
             _disabled: {
               bg: 'gray.300',
               textStyle: 'Text',
@@ -74,7 +78,7 @@ function ReportForm() {
           options={['삼아솔루션']}
           onChange={(option: string) => console.log(option)}
           menuButtonProps={{
-            disabled: true,
+            disabled: isReadOnly,
             _disabled: {
               bg: 'gray.300',
               textStyle: 'Text',
@@ -88,7 +92,7 @@ function ReportForm() {
           options={['시설1팀']}
           onChange={(option: string) => console.log(option)}
           menuButtonProps={{
-            disabled: true,
+            disabled: isReadOnly,
             _disabled: {
               bg: 'gray.300',
               textStyle: 'Text',
@@ -102,7 +106,7 @@ function ReportForm() {
           options={['운전부서']}
           onChange={(option: string) => console.log(option)}
           menuButtonProps={{
-            disabled: true,
+            disabled: isReadOnly,
             _disabled: {
               bg: 'gray.300',
               textStyle: 'Text',
@@ -112,17 +116,10 @@ function ReportForm() {
         />
       </FormHelper>
       <FormHelper label="도로 통제 항목">
-        <CustomSelector
-          options={['전체 통제']}
-          onChange={(option: string) => console.log(option)}
-          menuButtonProps={{
-            disabled: true,
-            _disabled: {
-              bg: 'gray.300',
-              textStyle: 'Text',
-              color: 'gray.500',
-            },
-          }}
+        <CustomInput
+          value="도로 통제 항목"
+          isReadOnly={isReadOnly}
+          _readOnly={styles.readOnly}
         />
       </FormHelper>
     </VStack>

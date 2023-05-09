@@ -72,12 +72,14 @@ const Pagination = ({
           >
             이전
           </button>
-          <button
-            className={`page-item ${pageRange[0] === 1 ? 'disabled' : ''}`}
-            onClick={handleFirstPageClick}
-          >
-            첫 페이지
-          </button>
+          {Math.ceil(pageRange[0] / 5) > 0 && (
+            <button
+              className={`page-item ${pageRange[0] === 1 ? 'disabled' : ''}`}
+              onClick={handleFirstPageClick}
+            >
+              첫 페이지
+            </button>
+          )}
         </Flex>
       ) : (
         <Box w="48px" h="25px" bg="blue.500" />
@@ -103,14 +105,16 @@ const Pagination = ({
       </UnorderedList>
       {pageRange[1] !== totalPages ? (
         <Flex>
-          <button
-            className={`page-item ${
-              pageRange[1] >= totalPages ? 'disabled' : ''
-            }`}
-            onClick={handleLastPageClick}
-          >
-            마지막 페이지
-          </button>
+          {pageRange[0] !== totalPages && (
+            <button
+              className={`page-item ${
+                pageRange[1] >= totalPages ? 'disabled' : ''
+              }`}
+              onClick={handleLastPageClick}
+            >
+              마지막 페이지
+            </button>
+          )}
           <button
             className={`page-item ${
               currentPage === totalPages ? 'disabled' : ''

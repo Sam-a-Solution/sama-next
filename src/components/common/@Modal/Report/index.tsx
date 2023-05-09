@@ -5,9 +5,33 @@ import { Button, CloseButton, Flex, ModalProps, Text } from '@chakra-ui/react';
 import ModalContainer from '../ModalContainer';
 import ReportForm from './_fragments/ReportForm';
 
-interface ReportProps extends Omit<ModalProps, 'children'> {}
+import { useWorkLogRetrieveQuery } from 'generated/apis/WorkLog/WorkLog.query';
 
-function Report({ ...props }: ReportProps) {
+interface ReportProps extends Omit<ModalProps, 'children'> {
+  auxProps?: {
+    workLogId: number;
+    isEditable: boolean;
+  };
+}
+
+function Report({ auxProps, ...props }: ReportProps) {
+  const { workLogId, isEditable } = auxProps ?? {
+    workLogId: 0,
+    isEditable: false,
+  };
+
+  useWorkLogRetrieveQuery({
+    variables: {
+      workLogId,
+    },
+    options: {
+      enabled: !!workLogId,
+      onSuccess: (response) => {
+        console.log('작업일지 조회', { response });
+      },
+    },
+  });
+
   return (
     <ModalContainer
       header={
@@ -18,7 +42,7 @@ function Report({ ...props }: ReportProps) {
           <CloseButton onClick={props.onClose} />
         </Flex>
       }
-      body={<ReportForm />}
+      body={<ReportForm isReadOnly={!isEditable} />}
       footer={
         <Flex w="100%" h="100px" alignItems="center" gap="10px">
           <Button flex="1" h="50px" variant="outline" onClick={props.onClose}>
@@ -45,14 +69,15 @@ function Report({ ...props }: ReportProps) {
       }}
       modalBodyProps={{
         p: '0 30px',
-        h: '300px',
-        overflow: 'auto',
+        minH: '300px',
+        overflowY: 'scroll',
       }}
       modalFooterProps={{
         position: 'sticky',
         bottom: '0',
         bg: 'white',
         zIndex: 'sticky',
+        p: '0 30px',
       }}
       {...props}
     />
