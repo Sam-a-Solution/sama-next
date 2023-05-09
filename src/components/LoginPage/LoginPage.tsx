@@ -11,6 +11,7 @@ import { setToken } from '@utils/localStorage/token';
 
 import AuthCheckbox from './_fragments/AuthCheckbox';
 import AuthLabelInput from './_fragments/AuthLabelInput';
+import FindIdButton from './_fragments/FindIdButton';
 import useLoginForm from './_hooks/LoginSchema';
 
 import { useUserLoginCreateMutation } from 'generated/apis/User/User.query';
@@ -93,6 +94,10 @@ function LoginPage() {
     },
   );
 
+  const onClickFindIdBtn = () => {
+    router.push('/login/findId');
+  };
+
   useEffect(() => {
     if (nicknameValue && !methods.formState.errors.nickname) {
       methods.clearErrors('nickname');
@@ -172,6 +177,7 @@ function LoginPage() {
           >
             <Text textStyle="Button">로그인</Text>
           </Button>
+          <FindIdButton onClickFindIdBtn={onClickFindIdBtn} />
         </Box>
       </FormProvider>
     </Flex>
