@@ -7,3 +7,4 @@ export { Link } from './Link';
 export { Spinner } from './Spinner';
 export { Textarea } from './Textarea';
 export { Tooltip } from './Tooltip';
+export { Text } from './Text';
