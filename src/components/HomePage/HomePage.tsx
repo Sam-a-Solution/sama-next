@@ -4,14 +4,16 @@ import GoogleMapReact from 'google-map-react';
 
 import { CONFIG } from '@config';
 
-import { Box, BoxProps, useDisclosure } from '@chakra-ui/react';
+import { Box, BoxProps, Flex, Text, useDisclosure } from '@chakra-ui/react';
 
 import { useWorkLogAllInfiniteQuery } from '@apis/worLog/workLog.query';
 
 import HomeNavigationBar from './_fragments/HomeNavigationBar';
 import RightFloatList from './_fragments/RightFloatList';
+import WorkMarker from './_fragments/WorkMarker';
 
 import { WorkStatusCountType } from 'generated/apis/@types/data-contracts';
+import { useWorkListQuery } from 'generated/apis/Work/Work.query';
 import { useWorkLogStatusCountRetrieveQuery } from 'generated/apis/WorkLog/WorkLog.query';
 
 export type HeavyEquipment = {
@@ -28,6 +30,20 @@ function HomePageContent({ ...basisProps }: HomePageContentProps) {
     HeavyEquipment[]
   >([]);
   const [totalStatus, setTotalStatus] = useState<WorkStatusCountType>({});
+
+  // P_MEMO: 해당 목록은 페이지네이션이 아닌, 전체로 받아옴
+  const { data: workListData, refetch: refetchWorkListData } = useWorkListQuery(
+    {
+      options: {
+        onSuccess: (data) => {
+          console.log('d############', data);
+        },
+        onError: (e: any) => {
+          console.log('work 불러오기 에러', e.response.data);
+        },
+      },
+    },
+  );
 
   useWorkLogStatusCountRetrieveQuery({
     options: {
@@ -94,6 +110,7 @@ function HomePageContent({ ...basisProps }: HomePageContentProps) {
           bootstrapURLKeys={{ key: CONFIG.GOOGLE_MAP_KEY as string }}
           defaultCenter={{ lat: 37.5665, lng: 126.978 }}
           defaultZoom={11}
+
           //   center: {
           //   lat: 10.99835602,
           //   lng: 77.01502627
@@ -101,7 +118,24 @@ function HomePageContent({ ...basisProps }: HomePageContentProps) {
           // zoom: 11
           // yesIWantToUseGoogleMapApiInternals
           // onGoogleApiLoaded={({ map, maps }) => handleApiLoaded(map, maps)}
-        ></GoogleMapReact>
+        >
+          {/* // P_MEMO: 해당 props를 넘겨야하는데 props가 없기 떄문에 ignore 설정
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-ignore: Unreachable code error */}
+          {workListData?.map((work) => (
+            <Flex
+              key={work.id}
+              flexDir="column"
+              // P_MEMO: 해당 props를 넘겨야하는데 props가 없기 떄문에 ignore 설정
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-ignore: Unreachable code error
+              lat={work.latitude}
+              lng={work.longitude}
+            >
+              <WorkMarker work={work} />
+            </Flex>
+          ))}
+        </GoogleMapReact>
       </Box>
       <RightFloatList
         isOpenList={isOpenList}
