@@ -16,6 +16,8 @@ import {
 
 import useModals from '@hooks/useModals';
 
+import { useQueryClient } from '@tanstack/react-query';
+
 import StatusBadge from '../@Badge/StatusBadge';
 import CustomTable from '../@Table/CustomTable';
 import CustomTd from '../@Table/CustomTd';
@@ -27,13 +29,18 @@ import ModalContainer from './ModalContainer';
 import Report from './Report';
 
 import { WorkLogType } from 'generated/apis/@types/data-contracts';
-import { useWorkLogListQuery } from 'generated/apis/WorkLog/WorkLog.query';
+import {
+  useWorkLogCheckUpdateMutation,
+  useWorkLogListQuery,
+} from 'generated/apis/WorkLog/WorkLog.query';
 import { WorkManagementIcon } from 'generated/icons/MyIcons';
 
 interface WorkStatusManagementProps extends Omit<ModalProps, 'children'> {}
 
 function WorkStatusManagement({ ...props }: WorkStatusManagementProps) {
   const { openModal } = useModals();
+  const queryClient = useQueryClient();
+
   const [workLogList, setWorkLogList] = useState<WorkLogType[]>([]);
   const [page, setPage] = useState(1);
   const [count, setCount] = useState<undefined | number>(0);
@@ -49,6 +56,29 @@ function WorkStatusManagement({ ...props }: WorkStatusManagementProps) {
       onSuccess: (data) => {
         setCount(data?.count);
         setWorkLogList(data?.results ?? []);
+      },
+    },
+  });
+
+  const { mutate: checkUpdateMutate } = useWorkLogCheckUpdateMutation({
+    options: {
+      onSuccess: () => {
+        openModal(CustomAlert, {
+          auxProps: {
+            title: '관리자 확인 완료',
+            content: '작업 확인 완료했습니다.',
+            submitText: '확인',
+          },
+        });
+        queryClient.invalidateQueries([
+          'WORK_LOG_LIST',
+          {
+            query: {
+              limit: 10,
+              offset: page * 10 - 10,
+            },
+          },
+        ]);
       },
     },
   });
@@ -123,114 +153,130 @@ function WorkStatusManagement({ ...props }: WorkStatusManagementProps) {
               </Tr>
             </Thead>
             <Tbody display="inline-block">
-              {workLogList?.map((item, index) => (
-                <Tr key={`${item.user}-${item.id}-${index}`} h="60px">
-                  <CustomTd w="100px">
-                    <Text textStyle="Text" color="black">
-                      {page * 10 - 10 + index + 1}
-                    </Text>
-                  </CustomTd>
-                  <CustomTd w="160px">
-                    <Text textStyle="Text" color="black">
-                      {item?.user || ''}
-                    </Text>
-                  </CustomTd>
-                  <CustomTd w="160px">
-                    <Text textStyle="Text" color="black">
-                      {item?.heavyEquipmentType?.koreaName || ''}
-                    </Text>
-                  </CustomTd>
-                  <CustomTd w="80px">
-                    <StatusBadge status={item?.statusDisplay} />
-                  </CustomTd>
-                  <CustomTd w="140px">
-                    <Button
-                      w="68px"
-                      h="30px"
-                      variant="outline"
-                      colorScheme="primary"
-                      // TODO: prop으로 작업 내용 id 넘겨주기
-                      onClick={() => openModal(Report)}
-                    >
-                      작업 내용
-                    </Button>
-                  </CustomTd>
-                  <CustomTd w="220px">
-                    <Text textStyle="Text" color="black">
-                      {dayjs(item.startTime).format('HH:mm:ss') || '-'}
-                    </Text>
-                  </CustomTd>
-                  <CustomTd w="220px">
-                    <Text textStyle="Text" color="black">
-                      {item?.endTime
-                        ? dayjs(item?.endTime).format('HH:mm:ss')
-                        : '-'}
-                    </Text>
-                  </CustomTd>
-                  <CustomTd w="200px">
-                    {(item?.statusDisplay === '대기' ||
-                      item?.statusDisplay === '종료') &&
-                    item?.isChecked ? (
-                      <Flex flexDir="column">
-                        <Text textStyle="Text" color="black" textAlign="center">
-                          {/* 관리자ID */}
-                          {item?.checkManager || ''}
-                        </Text>
-                        <Text textStyle="Text" color="black" textAlign="center">
-                          {dayjs(item?.checkManagerTime).format(
-                            'YY-MM-DD HH:mm:ss',
-                          )}
-                          {/* {item?.checkManagerTime || ''} */}
-                        </Text>
-                      </Flex>
-                    ) : (
+              {workLogList?.map((item, index) => {
+                const isEditable =
+                  !item?.endTime || item?.isChecked ? false : true;
+                return (
+                  <Tr key={`${item.user}-${item.id}-${index}`} h="60px">
+                    <CustomTd w="100px">
+                      <Text textStyle="Text" color="black">
+                        {page * 10 - 10 + index + 1}
+                      </Text>
+                    </CustomTd>
+                    <CustomTd w="160px">
+                      <Text textStyle="Text" color="black">
+                        {item?.user || ''}
+                      </Text>
+                    </CustomTd>
+                    <CustomTd w="160px">
+                      <Text textStyle="Text" color="black">
+                        {item?.heavyEquipmentType?.koreaName || ''}
+                      </Text>
+                    </CustomTd>
+                    <CustomTd w="80px">
+                      <StatusBadge status={item?.statusDisplay} />
+                    </CustomTd>
+                    <CustomTd w="140px">
+                      {/* 관리자 확인이 완료되었거나, 작업 미종료시 작업내용 수정 불가 */}
                       <Button
-                        w="80px"
+                        w="68px"
                         h="30px"
-                        bg={item?.isChecked ? 'gray.500' : 'primary.500'}
-                        border={item?.isChecked ? 'none' : '1px solid'}
-                        _hover={{
-                          bg: item?.isChecked ? 'gray.600' : 'primary.600',
+                        variant="outline"
+                        colorScheme="primary"
+                        onClick={() => {
+                          // console.log({
+                          //   isChecked: item?.isChecked,
+                          //   endTime: !!item?.endTime,
+                          //   isEditable,
+                          // });
+                          openModal(Report, {
+                            auxProps: {
+                              workLogId: item?.id,
+                              isEditable,
+                            },
+                          });
                         }}
-                        _active={{
-                          bg: item?.isChecked ? 'gray.700' : 'primary.700',
-                        }}
-                        color="white"
-                        onClick={
-                          item?.isChecked
-                            ? undefined
-                            : () =>
-                                openModal(CustomConfirmAlert, {
-                                  auxProps: {
-                                    title: '관리자 확인',
-                                    content: `해당 작업 내용을 확인하시겠습니까?${'\n'}확인 후에는 수정이 불가능합니다.`,
-                                    cancelText: '취소',
-                                    submitText: '확인',
-                                    onSubmit: () => {
-                                      openModal(CustomAlert, {
-                                        auxProps: {
-                                          title: '관리자 확인 완료',
-                                          content: '작업 확인 완료했습니다.',
-                                          submitText: '확인',
-                                          onSubmit: () => {
-                                            alert(
-                                              '관리자 확인 완료되었습니다.',
-                                            );
-                                          },
-                                        },
-                                      });
-                                    },
-                                  },
-                                })
-                        }
-                        isDisabled={item?.isChecked}
                       >
-                        확인
+                        작업 내용
                       </Button>
-                    )}
-                  </CustomTd>
-                </Tr>
-              ))}
+                    </CustomTd>
+                    <CustomTd w="220px">
+                      <Text textStyle="Text" color="black">
+                        {dayjs(item.startTime).format('HH:mm:ss') || '-'}
+                      </Text>
+                    </CustomTd>
+                    <CustomTd w="220px">
+                      <Text textStyle="Text" color="black">
+                        {item?.endTime
+                          ? dayjs(item?.endTime).format('HH:mm:ss')
+                          : '-'}
+                      </Text>
+                    </CustomTd>
+                    <CustomTd w="200px">
+                      {(item?.statusDisplay === '대기' ||
+                        item?.statusDisplay === '종료') &&
+                      item?.isChecked ? (
+                        <Flex flexDir="column">
+                          <Text
+                            textStyle="Text"
+                            color="black"
+                            textAlign="center"
+                          >
+                            {/* 관리자ID */}
+                            {item?.checkManager || ''}
+                          </Text>
+                          <Text
+                            textStyle="Text"
+                            color="black"
+                            textAlign="center"
+                          >
+                            {dayjs(item?.checkManagerTime).format(
+                              'YY-MM-DD HH:mm:ss',
+                            )}
+                            {/* {item?.checkManagerTime || ''} */}
+                          </Text>
+                        </Flex>
+                      ) : (
+                        <Button
+                          w="80px"
+                          h="30px"
+                          bg={item?.isChecked ? 'gray.500' : 'primary.500'}
+                          border={item?.isChecked ? 'none' : '1px solid'}
+                          _hover={{
+                            bg: item?.isChecked ? 'gray.600' : 'primary.600',
+                          }}
+                          _active={{
+                            bg: item?.isChecked ? 'gray.700' : 'primary.700',
+                          }}
+                          color="white"
+                          onClick={
+                            !item?.endTime
+                              ? undefined
+                              : () =>
+                                  openModal(CustomConfirmAlert, {
+                                    auxProps: {
+                                      title: '관리자 확인',
+                                      content: `해당 작업 내용을 확인하시겠습니까?${'\n'}확인 후에는 수정이 불가능합니다.`,
+                                      cancelText: '취소',
+                                      submitText: '확인',
+                                      onSubmit: () => {
+                                        checkUpdateMutate({
+                                          workLogId: item?.id,
+                                          data: {},
+                                        });
+                                      },
+                                    },
+                                  })
+                          }
+                          isDisabled={item?.isChecked || !item?.endTime}
+                        >
+                          확인
+                        </Button>
+                      )}
+                    </CustomTd>
+                  </Tr>
+                );
+              })}
             </Tbody>
             <Pagination
               totalItems={count}
