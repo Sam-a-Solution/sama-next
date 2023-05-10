@@ -7,19 +7,43 @@ import {
   MenuButton,
   MenuButtonProps,
   MenuItem,
+  MenuItemOption,
   MenuList,
   MenuListProps,
+  MenuOptionGroup,
   MenuProps,
   Text,
 } from '@chakra-ui/react';
 
 import useInputWidth from '@hooks/useInputWidth';
 
+import {
+  WorkBusinessType,
+  WorkFacilityType,
+  WorkHeavyEquipmentType,
+  WorkOperationDepartmentType,
+} from 'generated/apis/@types/data-contracts';
 import { DropdownIconIcon, DropupIconIcon } from 'generated/icons/MyIcons';
 
 interface CustomSelectorProps extends Omit<MenuProps, 'children'> {
   options: string[];
-  onChange: (option: string) => void;
+  onChange: (
+    keyName: string,
+    option: string,
+    list:
+      | WorkHeavyEquipmentType[]
+      | WorkBusinessType[]
+      | WorkOperationDepartmentType[]
+      | WorkFacilityType[]
+      | undefined,
+  ) => void;
+  list:
+    | WorkHeavyEquipmentType[]
+    | WorkBusinessType[]
+    | WorkOperationDepartmentType[]
+    | WorkFacilityType[]
+    | undefined;
+  keyName: string;
   menuButtonProps?: MenuButtonProps;
   menuListProps?: MenuListProps;
 }
@@ -27,8 +51,10 @@ interface CustomSelectorProps extends Omit<MenuProps, 'children'> {
 const CustomSelector = ({
   options,
   onChange,
+  keyName,
   menuButtonProps,
   menuListProps,
+  list,
   ...props
 }: CustomSelectorProps) => {
   const [selectedOption, setSelectedOption] = useState(options[0]);
@@ -36,8 +62,9 @@ const CustomSelector = ({
   const menuButtonWidth = useInputWidth(menuButtonRef);
 
   const handleOptionSelect = (option: string) => {
+    console.log({ option });
     setSelectedOption(option);
-    onChange(option);
+    onChange(keyName, option, list);
   };
 
   return (

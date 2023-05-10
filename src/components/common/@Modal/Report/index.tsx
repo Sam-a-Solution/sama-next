@@ -1,11 +1,24 @@
 import React from 'react';
+import { FormProvider } from 'react-hook-form';
+
+import dayjs from 'dayjs';
 
 import { Button, CloseButton, Flex, ModalProps, Text } from '@chakra-ui/react';
 
+import useModals from '@hooks/useModals';
+
+import { useQueryClient } from '@tanstack/react-query';
+
+import CustomConfirmAlert from '../@Alert/CustomConfirmAlert';
 import ModalContainer from '../ModalContainer';
 import ReportForm from './_fragments/ReportForm';
+import useReportForm from './_hooks/useReportForm';
 
-import { useWorkLogRetrieveQuery } from 'generated/apis/WorkLog/WorkLog.query';
+import { useWorkChoiceRetrieveQuery } from 'generated/apis/Work/Work.query';
+import {
+  useWorkLogRetrieveQuery,
+  useWorkLogUpdateMutation,
+} from 'generated/apis/WorkLog/WorkLog.query';
 
 interface ReportProps extends Omit<ModalProps, 'children'> {
   auxProps?: {
@@ -20,6 +33,10 @@ function Report({ auxProps, ...props }: ReportProps) {
     isEditable: false,
   };
 
+  const queryClient = useQueryClient();
+  const methods = useReportForm();
+  const { openModal } = useModals();
+
   useWorkLogRetrieveQuery({
     variables: {
       workLogId,
@@ -27,10 +44,74 @@ function Report({ auxProps, ...props }: ReportProps) {
     options: {
       enabled: !!workLogId,
       onSuccess: (response) => {
-        console.log('작업일지 조회', { response });
+        methods.setValue('workId', response.workId);
+        methods.setValue('user', response.user);
+        methods.setValue('name', response.name);
+        methods.setValue(
+          'startTime',
+          dayjs(response.startTime).format('YYYY-MM-DD') || '',
+        );
+        methods.setValue(
+          'endTime',
+          dayjs(response.endTime).format('YYYY-MM-DD') || '',
+        );
+        methods.setValue('locationName', response.locationName);
+        methods.setValue('construction', response.construction);
+        methods.setValue('heavyEquipmentType', response.heavyEquipmentType);
+        methods.setValue('facility', response.facility);
+        methods.setValue('business', response.business);
+        methods.setValue('operationDepartment', response.operationDepartment);
+        methods.setValue('roadControl', response.roadControl);
       },
     },
   });
+
+  const { data: selects } = useWorkChoiceRetrieveQuery();
+
+  const { mutate: updateWorkLogMutate } = useWorkLogUpdateMutation({
+    options: {
+      onSuccess: () => {
+        queryClient.invalidateQueries(['WORK_LOG_LIST']);
+        props.onClose();
+      },
+    },
+  });
+
+  const openConfirmAlert = () => {
+    openModal(CustomConfirmAlert, {
+      auxProps: {
+        title: '작업 내용 수정',
+        content: '작업 내용을 수정하시겠습니까?',
+        cancelText: '취소',
+        submitText: '수정',
+        onSubmit: () => {
+          const values = methods.getValues();
+
+          console.log({ values });
+
+          // TODO: business, facility, heavyEquipmentType, operationDepartment 값에서 koreaName 제거
+
+          updateWorkLogMutate({
+            workLogId,
+            data: {
+              name: values.name,
+              locationName: values.locationName,
+              // latitude: values.latitude,
+              // longitude: values.longitude,
+              business: values.business,
+              facility: values.facility,
+              heavyEquipmentType: values.heavyEquipmentType,
+              operationDepartment: values.operationDepartment,
+              construction: values.construction,
+              roadControl: values.roadControl,
+              workId: values.workId,
+              byManager: true,
+            },
+          });
+        },
+      },
+    });
+  };
 
   return (
     <ModalContainer
@@ -42,18 +123,23 @@ function Report({ auxProps, ...props }: ReportProps) {
           <CloseButton onClick={props.onClose} />
         </Flex>
       }
-      body={<ReportForm isReadOnly={!isEditable} />}
+      body={
+        <FormProvider {...methods}>
+          <ReportForm
+            isReadOnly={!isEditable}
+            businesSelectList={selects?.business}
+            facilitySelectList={selects?.facility}
+            heavyEquipmentSelectList={selects?.heavyEquipmentType}
+            operationDepartmentSelectList={selects?.operationDepartment}
+          />
+        </FormProvider>
+      }
       footer={
         <Flex w="100%" h="100px" alignItems="center" gap="10px">
           <Button flex="1" h="50px" variant="outline" onClick={props.onClose}>
             <Text textStyle="Button">취소</Text>
           </Button>
-          <Button
-            flex="1"
-            h="50px"
-            // TODO: 작업일지 수정 API 연동
-            onClick={() => alert('작업일지 수정 API 연동')}
-          >
+          <Button flex="1" h="50px" onClick={openConfirmAlert}>
             <Text textStyle="Button">수정</Text>
           </Button>
         </Flex>
