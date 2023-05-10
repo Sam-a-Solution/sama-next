@@ -28,7 +28,7 @@ const useResetPasswordForm = (
 ) => {
   return useForm<ResetPasswordFormType>({
     resolver: yupResolver(resetPasswordSchema),
-    mode: 'onSubmit',
+    mode: 'onChange',
     ...options,
   });
 };
