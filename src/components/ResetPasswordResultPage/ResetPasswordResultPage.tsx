@@ -23,9 +23,7 @@ const ResetPasswordResultPage = () => {
         </Text>
       </VStack>
 
-      <Flex flexDir="column" gap="10px" bgColor="white" w="100%">
-        <PrimaryButton onClick={onClickGoLogin}>로그인</PrimaryButton>
-      </Flex>
+      <PrimaryButton onClick={onClickGoLogin}>로그인</PrimaryButton>
     </>
   );
 };
