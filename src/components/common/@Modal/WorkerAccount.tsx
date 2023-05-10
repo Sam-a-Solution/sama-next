@@ -23,12 +23,17 @@ import {
   useUserNicknameValidationCreateMutation,
   useUserRegisterCreateMutation,
 } from 'generated/apis/User/User.query';
-import { AccountIcon, AddIcon } from 'generated/icons/MyIcons';
+import { AccountIcon, AddIcon, GrayAddIcon } from 'generated/icons/MyIcons';
 
 interface WorkerAccountProps extends Omit<ModalProps, 'children'> {}
 
 function WorkerAccount({ ...props }: WorkerAccountProps) {
   const methods = useAccountForm();
+  const {
+    watch,
+    setError,
+    formState: { isValid },
+  } = methods;
   const { openModal } = useModals();
   const [successText, setSuccessText] = useState('');
 
@@ -62,6 +67,11 @@ function WorkerAccount({ ...props }: WorkerAccountProps) {
     [methods.formState?.errors?.phone?.message],
   );
 
+  const isValidButton = useMemo(
+    () => isValid && !!successText.length,
+    [isValid, successText.length],
+  );
+
   // const formatInputValue = (event: React.ChangeEvent<HTMLInputElement>) => {
   //   const value = event.target.value;
   //   const formattedValue = formatPhoneNumber(value);
@@ -78,6 +88,7 @@ function WorkerAccount({ ...props }: WorkerAccountProps) {
 
         onError: (error) => {
           console.log('아이디 중복검사', { error });
+
           if (error.response?.status === 400) {
             methods.setError('nickname', {
               type: 'validate',
@@ -103,8 +114,13 @@ function WorkerAccount({ ...props }: WorkerAccountProps) {
           },
         });
       },
-      onError: (error) => {
-        console.dir(error);
+      onError: (error: any) => {
+        console.log('계정생성 에러', error.response?.data);
+        for (const keyName in error.response.data) {
+          methods.setError(keyName as any, {
+            message: error?.response?.data[keyName][0],
+          });
+        }
       },
     },
   });
@@ -134,6 +150,11 @@ function WorkerAccount({ ...props }: WorkerAccountProps) {
       setSuccessText('');
     }
   }, [nicknameErrorMessage]);
+
+  // 중복 확인 후 아이디 변경하면 다시 인증해야 됨.
+  useEffect(() => {
+    setSuccessText('');
+  }, [watch('nickname')]);
 
   return (
     <ModalContainer
@@ -254,6 +275,14 @@ function WorkerAccount({ ...props }: WorkerAccountProps) {
           <Button
             flex="1"
             h="50px"
+            isDisabled={!isValidButton}
+            _disabled={{
+              bg: 'gray.400',
+              border: 'none',
+              _hover: {
+                bg: 'gray.400',
+              },
+            }}
             onClick={() =>
               openModal(CustomConfirmAlert, {
                 auxProps: {
@@ -266,7 +295,12 @@ function WorkerAccount({ ...props }: WorkerAccountProps) {
               })
             }
           >
-            <AddIcon w="24px" h="24px" mr="8px" />
+            {isValidButton ? (
+              <AddIcon w="24px" h="24px" mr="8px" />
+            ) : (
+              <GrayAddIcon boxSize="24px" mr="8px" />
+            )}
+
             <Text textStyle="Button">계정 생성</Text>
           </Button>
         </Flex>
