@@ -34,7 +34,7 @@ export interface PaginatedWorkListType {
   isNext?: boolean;
   results?: WorkType[];
 }
-
+// export type PaginatedWorkListType = WorkType[];
 export interface PaginatedWorkLogListType {
   count?: number;
   isNext?: boolean;
