@@ -13,8 +13,8 @@ function FindId() {
       <Head>
         <title>똑똑한개발자 | 아이디/비밀번호 찾기</title>
       </Head>
-      <HomeLayout header={<LoginHeader />} content={<FindIdPage />} />
-      {/* <LoginLayout content={<FindIdPage />} /> */}
+      {/* <HomeLayout header={<LoginHeader />} content={<FindIdPage />} /> */}
+      <LoginLayout content={<FindIdPage />} />
     </>
   );
 }

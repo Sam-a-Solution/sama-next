@@ -116,62 +116,46 @@ function FindIdPage() {
   }, [watch(['code', 'phone'])]);
 
   return (
-    <Flex
-      w="100%"
-      h="100vh"
-      justifyContent="center"
-      alignItems="center"
-      bg="#FAFAFA"
-    >
-      <FormProvider {...methods}>
-        <Box
-          p="60px 50px"
-          bg="white"
-          border="1px solid"
-          borderColor="gray.200"
-          borderRadius="15px"
-          as="form"
-          onSubmit={onSubmit}
-        >
-          <VStack w="402px" gap="18px" mb="40px">
-            <Text textStyle="TitleLarge" w="100%">
-              아이디 찾기/비밀번호 재설정
-            </Text>
-            {/* {progress === 1 && ( */}
-            <AuthLabelInput
-              isDisabled={progress === 2}
-              label="휴대폰 번호"
-              type="number"
-              placeholderText="휴대폰 번호를 입력해주세요. (‘-’ 제외)"
-              errorMessage={methods.formState.errors.phone?.message}
-              name="phone"
-            />
-            {/* )} */}
-            {progress === 2 && (
-              <VStack w="100%">
-                <AuthLabelInput
-                  label="인증번호"
-                  type="number"
-                  placeholderText="인증번호를 입력해주세요."
-                  errorMessage={methods.formState.errors.code?.message}
-                  name="code"
-                />
-                <PrimaryButton
-                  isDisabled={!isValid}
-                  onClick={onPressReRequestAuthCode}
-                  variant="outline"
-                >
-                  인증번호 재전송
-                </PrimaryButton>
-              </VStack>
-            )}
-          </VStack>
+    <Flex flexDir="column" gap="40px" as="form" onSubmit={onSubmit}>
+      <VStack gap="12px">
+        <Text textStyle="TitleLarge" w="100%" mb="48px">
+          아이디 찾기/비밀번호 재설정
+        </Text>
 
-          <PrimaryButton isDisabled={!isValid} type="submit">
-            다음
-          </PrimaryButton>
-        </Box>
-      </FormProvider>
+        <FormProvider {...methods}>
+          <AuthLabelInput
+            isDisabled={progress === 2}
+            label="휴대폰 번호"
+            type="number"
+            placeholderText="휴대폰 번호를 입력해주세요. (‘-’ 제외)"
+            errorMessage={methods.formState.errors.phone?.message}
+            name="phone"
+          />
+
+          {progress === 2 && (
+            <Flex flexDir="column" w="100%" gap="10px">
+              <AuthLabelInput
+                label="인증번호"
+                type="number"
+                placeholderText="인증번호를 입력해주세요."
+                errorMessage={methods.formState.errors.code?.message}
+                name="code"
+              />
+              <PrimaryButton
+                isDisabled={!isValid}
+                onClick={onPressReRequestAuthCode}
+                variant="outline"
+              >
+                인증번호 재전송
+              </PrimaryButton>
+            </Flex>
+          )}
+        </FormProvider>
+      </VStack>
+
+      <PrimaryButton isDisabled={!isValid} type="submit">
+        다음
+      </PrimaryButton>
     </Flex>
   );
 }
