@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import GoogleMapReact from 'google-map-react';
 
 import { CONFIG } from '@config';
 
-import { Box, BoxProps, Flex, Text, useDisclosure } from '@chakra-ui/react';
+import { Box, BoxProps, Flex, useDisclosure } from '@chakra-ui/react';
 
 import { useWorkLogAllInfiniteQuery } from '@apis/worLog/workLog.query';
 
+import FooterControlWrapper from './_fragments/FooterControlWrapper';
 import HomeNavigationBar from './_fragments/HomeNavigationBar';
 import RightFloatList from './_fragments/RightFloatList';
 import WorkMarker from './_fragments/WorkMarker';
@@ -30,6 +31,8 @@ function HomePageContent({ ...basisProps }: HomePageContentProps) {
     HeavyEquipment[]
   >([]);
   const [totalStatus, setTotalStatus] = useState<WorkStatusCountType>({});
+
+  const [mapZoom, setMapZoom] = useState(11);
 
   // P_MEMO: 해당 목록은 페이지네이션이 아닌, 전체로 받아옴
   const { data: workListData, refetch: refetchWorkListData } = useWorkListQuery(
@@ -95,6 +98,15 @@ function HomePageContent({ ...basisProps }: HomePageContentProps) {
     onClose: onCloseList,
   } = useDisclosure();
 
+  const onClickPlusZoom = useCallback(() => {
+    setMapZoom((prev) => (prev === 20 ? prev : prev + 1));
+  }, []);
+
+  const onClickMinusZoom = useCallback(
+    () => setMapZoom((prev) => (prev === 1 ? prev : prev - 1)),
+    [],
+  );
+
   return (
     <Box position="relative" {...basisProps}>
       <HomeNavigationBar
@@ -104,8 +116,10 @@ function HomePageContent({ ...basisProps }: HomePageContentProps) {
       />
       <Box w="100vw" h="100vh">
         <GoogleMapReact
+          zoom={mapZoom}
           options={{
             mapTypeId: 'satellite',
+            disableDefaultUI: true,
           }}
           bootstrapURLKeys={{ key: CONFIG.GOOGLE_MAP_KEY as string }}
           defaultCenter={{ lat: 37.5665, lng: 126.978 }}
@@ -137,6 +151,8 @@ function HomePageContent({ ...basisProps }: HomePageContentProps) {
           ))}
         </GoogleMapReact>
       </Box>
+
+      {/* 우측 work 목록 */}
       <RightFloatList
         isOpenList={isOpenList}
         onOpenList={onOpenList}
@@ -145,6 +161,15 @@ function HomePageContent({ ...basisProps }: HomePageContentProps) {
         totalStatus={totalStatus}
         hasNextPage={hasNextPage}
         fetchNextPage={fetchNextPage}
+      />
+      {/* 하단 타이머, 컨트롤러 */}
+      <FooterControlWrapper
+        minutes={0}
+        seconds={0}
+        // P_MEMO: 타이머가 돌아갈 때 마다 전체 리랜더링을 막기 위해 컴포넌트 내에서 useTimer 선언, 사용 -> 핸들러가 아닌 refetch 자체를 넘겨줌
+        refetchWorkListData={refetchWorkListData}
+        onClickMinusZoom={onClickMinusZoom}
+        onClickPlusZoom={onClickPlusZoom}
       />
     </Box>
   );
