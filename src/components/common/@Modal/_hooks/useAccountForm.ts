@@ -3,6 +3,7 @@ import { UseFormProps, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
 import { yupResolver } from '@hookform/resolvers/yup';
+import regex from '@utils/regex';
 
 export type accountSchemaType = {
   nickname: string;
@@ -25,18 +26,18 @@ export const accountSchema = yup.object().shape({
   affiliation: yup.string().required('소속을 입력해주세요.'),
   phone: yup
     .string()
-    .required('핸드폰 번호를 입력해주세요.')
-    .typeError('숫자만 입력해주세요.'),
+    .required('휴대폰 번호를 입력해주세요.')
+    .matches(regex.phone, '잘못된 휴대폰 번호입니다.'),
   password: yup
     .string()
     .required('비밀번호를 입력해주세요.')
     .matches(
-      /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,16})/,
+      regex.password,
       '8~16자 / 영문, 숫자, 특수문자 중 2가지 이상 조합',
     ),
   passwordConfirm: yup
     .string()
-    .oneOf([yup.ref('password'), null], '동일한 비밀번호를 입력해주세요.'),
+    .oneOf([yup.ref('password')], '동일한 비밀번호를 입력해주세요.'),
 });
 
 const useAccountForm = (options?: UseFormProps<accountSchemaType>) => {
