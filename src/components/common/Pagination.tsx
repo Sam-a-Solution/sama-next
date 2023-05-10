@@ -2,6 +2,13 @@ import { useState } from 'react';
 
 import { Box, Button, Flex, ListItem, UnorderedList } from '@chakra-ui/react';
 
+import {
+  FirstPageIcon,
+  LastPageIcon,
+  NextPageIcon,
+  PrevPageIcon,
+} from 'generated/icons/MyIcons';
+
 type PaginationProps = {
   totalItems?: number;
   currentPage: number;
@@ -66,23 +73,23 @@ const Pagination = ({
     <Flex h="80px" justifyContent="center" alignItems="center" gap="20px">
       {pageRange[0] !== 1 ? (
         <Flex>
-          <button
-            className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}
-            onClick={() => handleClick(currentPage - 1)}
-          >
-            이전
-          </button>
           {Math.ceil(pageRange[0] / 5) > 0 && (
             <button
               className={`page-item ${pageRange[0] === 1 ? 'disabled' : ''}`}
               onClick={handleFirstPageClick}
             >
-              첫 페이지
+              <FirstPageIcon w="24px" h="24px" />
             </button>
           )}
+          <button
+            className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}
+            onClick={() => handleClick(currentPage - 1)}
+          >
+            <PrevPageIcon w="24px" h="24px" />
+          </button>
         </Flex>
       ) : (
-        <Box w="48px" h="25px" bg="blue.500" />
+        <Box w="48px" h="25px" />
       )}
       <UnorderedList listStyleType="none" gap="30px">
         {pages.map((page) => (
@@ -105,6 +112,14 @@ const Pagination = ({
       </UnorderedList>
       {pageRange[1] !== totalPages ? (
         <Flex>
+          <button
+            className={`page-item ${
+              currentPage === totalPages ? 'disabled' : ''
+            }`}
+            onClick={() => handleClick(currentPage + 1)}
+          >
+            <NextPageIcon w="24px" h="24px" />
+          </button>
           {pageRange[0] !== totalPages && (
             <button
               className={`page-item ${
@@ -112,20 +127,12 @@ const Pagination = ({
               }`}
               onClick={handleLastPageClick}
             >
-              마지막 페이지
+              <LastPageIcon w="24px" h="24px" />
             </button>
           )}
-          <button
-            className={`page-item ${
-              currentPage === totalPages ? 'disabled' : ''
-            }`}
-            onClick={() => handleClick(currentPage + 1)}
-          >
-            다음
-          </button>
         </Flex>
       ) : (
-        <Box w="48px" h="25px" bg="blue.500" />
+        <Box w="48px" h="25px" />
       )}
     </Flex>
   );
