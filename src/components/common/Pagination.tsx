@@ -71,26 +71,20 @@ const Pagination = ({
   // TODO: 페에징 아이콘 변경
   return (
     <Flex h="80px" justifyContent="center" alignItems="center" gap="20px">
-      {pageRange[0] !== 1 ? (
-        <Flex>
-          {Math.ceil(pageRange[0] / 5) > 0 && (
-            <button
-              className={`page-item ${pageRange[0] === 1 ? 'disabled' : ''}`}
-              onClick={handleFirstPageClick}
-            >
-              <FirstPageIcon w="24px" h="24px" />
-            </button>
-          )}
-          <button
-            className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}
-            onClick={() => handleClick(currentPage - 1)}
-          >
-            <PrevPageIcon w="24px" h="24px" />
-          </button>
-        </Flex>
-      ) : (
-        <Box w="48px" h="25px" />
-      )}
+      <Flex>
+        <button
+          className={`page-item ${pageRange[0] === 1 ? 'disabled' : ''}`}
+          onClick={handleFirstPageClick}
+        >
+          <FirstPageIcon w="24px" h="24px" />
+        </button>
+        <button
+          className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}
+          onClick={() => handleClick(currentPage - 1)}
+        >
+          <PrevPageIcon w="24px" h="24px" />
+        </button>
+      </Flex>
       <UnorderedList listStyleType="none" gap="30px">
         {pages.map((page) => (
           <ListItem
@@ -110,30 +104,24 @@ const Pagination = ({
           </ListItem>
         ))}
       </UnorderedList>
-      {pageRange[1] !== totalPages ? (
-        <Flex>
-          <button
-            className={`page-item ${
-              currentPage === totalPages ? 'disabled' : ''
-            }`}
-            onClick={() => handleClick(currentPage + 1)}
-          >
-            <NextPageIcon w="24px" h="24px" />
-          </button>
-          {pageRange[0] !== totalPages && (
-            <button
-              className={`page-item ${
-                pageRange[1] >= totalPages ? 'disabled' : ''
-              }`}
-              onClick={handleLastPageClick}
-            >
-              <LastPageIcon w="24px" h="24px" />
-            </button>
-          )}
-        </Flex>
-      ) : (
-        <Box w="48px" h="25px" />
-      )}
+      <Flex>
+        <button
+          className={`page-item ${
+            currentPage === totalPages ? 'disabled' : ''
+          }`}
+          onClick={() => handleClick(currentPage + 1)}
+        >
+          <NextPageIcon w="24px" h="24px" />
+        </button>
+        <button
+          className={`page-item ${
+            pageRange[1] >= totalPages ? 'disabled' : ''
+          }`}
+          onClick={handleLastPageClick}
+        >
+          <LastPageIcon w="24px" h="24px" />
+        </button>
+      </Flex>
     </Flex>
   );
 };

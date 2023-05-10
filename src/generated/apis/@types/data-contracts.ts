@@ -247,6 +247,13 @@ export interface WorkCheckValidationErrorType {
   nonField?: string[];
 }
 
+export interface WorkChoiceType {
+  heavyEquipmentType: WorkHeavyEquipmentType[];
+  business: WorkBusinessType[];
+  facility: WorkFacilityType[];
+  operationDepartment: WorkOperationDepartmentType[];
+}
+
 export interface WorkEmergencyType {
   readonly id: number;
   /**

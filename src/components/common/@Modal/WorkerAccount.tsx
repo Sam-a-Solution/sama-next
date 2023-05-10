@@ -102,7 +102,6 @@ function WorkerAccount({ ...props }: WorkerAccountProps) {
   const { mutate: registerCreateMutate } = useUserRegisterCreateMutation({
     options: {
       onSuccess: (data) => {
-        console.log({ data });
         openModal(CustomAlert, {
           auxProps: {
             title: '작업자 계정 추가 완료',
