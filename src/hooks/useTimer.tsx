@@ -33,7 +33,6 @@ const useTimer = () => {
 
   useEffect(() => {
     setMs((prev) => prev - interval);
-    console.log('tick');
   }, [tick]);
 
   useEffect(() => {
