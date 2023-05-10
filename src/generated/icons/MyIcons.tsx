@@ -234,9 +234,73 @@ export const UnfoldIcon = (props: IconProps) => (
     <path d="M3 7L8 3L8 11L3 7Z" fill="#8C919F" />
   </Icon>
 );
+export const FirstPageIcon = (props: IconProps) => (
+  <Icon viewBox="0 0 24 24" {...props}>
+    <path
+      d="M18 16.4448L13.918 12.0591L18 7.99902"
+      stroke="#1A1A1A"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      fill="none"
+    />
+    <path
+      d="M11 16.4448L6.91797 12.0591L11 7.99902"
+      stroke="#1A1A1A"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      fill="none"
+    />
+  </Icon>
+);
+export const LastPageIcon = (props: IconProps) => (
+  <Icon viewBox="0 0 24 24" {...props}>
+    <path
+      d="M6 16.4458L10.082 12.0601L6 8"
+      stroke="#1A1A1A"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      fill="none"
+    />
+    <path
+      d="M13 16.4458L17.082 12.0601L13 8"
+      stroke="#1A1A1A"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      fill="none"
+    />
+  </Icon>
+);
 export const MoonIcon = (props: IconProps) => (
   <Icon viewBox="0 0 24 24" {...props}>
     <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+  </Icon>
+);
+export const NextPageIcon = (props: IconProps) => (
+  <Icon viewBox="0 0 24 24" {...props}>
+    <path
+      d="M9.64062 16.7036L14.3816 12.0137L9.64062 7.67285"
+      stroke="#1A1A1A"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      fill="none"
+    />
+  </Icon>
+);
+export const PrevPageIcon = (props: IconProps) => (
+  <Icon viewBox="0 0 24 24" {...props}>
+    <path
+      d="M14.3816 16.7036L9.64062 12.0137L14.3816 7.67285"
+      stroke="#1A1A1A"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      fill="none"
+    />
   </Icon>
 );
 export const SunIcon = (props: IconProps) => (
