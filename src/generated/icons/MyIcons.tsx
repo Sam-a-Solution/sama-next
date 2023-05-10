@@ -255,3 +255,20 @@ export const WorkManagementIcon = (props: IconProps) => (
     />
   </Icon>
 );
+
+export const PrimaryCheckRound = (props: IconProps) => (
+  <Icon viewBox="0 0 108 108" {...props}>
+    <path
+      d="M108.5 54C108.5 24.1766 84.3234 0 54.5 0C24.6766 0 0.5 24.1766 0.5 54C0.5 83.8234 24.6766 108 54.5 108C84.3234 108 108.5 83.8234 108.5 54Z"
+      fill="#B7EDD6"
+    />
+    <path
+      d="M29.2524 52.8859L48.787 71.8439L76.9928 38.7734"
+      stroke="#2BAD76"
+      fill="#B7EDD6"
+      strokeWidth="11"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </Icon>
+);

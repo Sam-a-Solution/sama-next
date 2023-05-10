@@ -3,6 +3,7 @@ import { ReactNode } from 'react';
 import {
   Box,
   Flex,
+  FlexProps,
   FormControl,
   FormControlProps,
   FormErrorMessage,
@@ -22,6 +23,7 @@ interface FormHelperProps extends FormControlProps {
   label?: string;
   children: ReactNode | ReactNode[];
 
+  wrapperProps?: FlexProps;
   labelProps?: FormLabelProps;
   successTextProps?: TextProps;
   helperTextProps?: TextProps;
@@ -45,6 +47,7 @@ const FormHelper = ({
   children,
   label,
 
+  wrapperProps,
   labelProps,
   successTextProps,
   helperTextProps,
@@ -58,7 +61,7 @@ const FormHelper = ({
 
   return (
     <FormControl mt="0 !important" isInvalid={!!errorText} {...basisProps}>
-      <Flex alignItems="center" gap="12px">
+      <Flex alignItems="center" gap="12px" {...wrapperProps}>
         {!!label && (
           <FormLabel
             margin="0 !important"

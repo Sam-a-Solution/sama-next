@@ -26,7 +26,7 @@ function MyApp({ Component, pageProps }: any) {
       <ModalsProvider>
         <Component {...pageProps} />
       </ModalsProvider>
-      <ReactQueryDevtools initialIsOpen={false} />
+      <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
     </React.Fragment>
   );
 }
