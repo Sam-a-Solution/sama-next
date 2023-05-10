@@ -7,6 +7,12 @@ import { Box, Button, Flex, Text, VStack } from '@chakra-ui/react';
 
 import { userSliceActions } from '@features/user/userSlice';
 
+import { LOCAL_KEY } from '@constants/local-key';
+import {
+  getLocalStorage,
+  removeLocalStorage,
+  setLocalStorage,
+} from '@utils/localStorage/helper';
 import { setToken } from '@utils/localStorage/token';
 
 import AuthCheckbox from './_fragments/AuthCheckbox';
@@ -23,6 +29,9 @@ function LoginPage() {
 
   const [disabled, setDisabled] = useState(false);
 
+  const [isSaveId, setIsSaveId] = useState(false);
+  const [isSaveLogin, setIsSaveLogin] = useState(true);
+
   const { mutate: createLoginMutate } = useUserLoginCreateMutation({
     options: {
       onSuccess: (data) => {
@@ -34,7 +43,14 @@ function LoginPage() {
             refresh,
           });
         }
-        // TODO: 로그인 성공 시, 토큰 저장
+        // 로그인 유지여부, 아이디 저장여부
+        setLocalStorage(LOCAL_KEY.IS_SAVE_LOGIN, JSON.stringify(isSaveLogin));
+        if (isSaveId) {
+          setLocalStorage(LOCAL_KEY.SAVE_ID, methods.watch('nickname'));
+        } else {
+          removeLocalStorage(LOCAL_KEY.SAVE_ID);
+        }
+
         router.push('/');
       },
       onError: (error) => {
@@ -113,6 +129,25 @@ function LoginPage() {
     }
   }, [nicknameValue, passwordValue, methods]);
 
+  // 아이디 / 로그인유지 여부 확인 후 default 세팅
+  useEffect(() => {
+    if (!methods) return;
+
+    const savedId: string | null = getLocalStorage(LOCAL_KEY.SAVE_ID);
+    if (savedId) {
+      setIsSaveId(true);
+      methods.setValue('nickname', savedId);
+    }
+
+    const stringifiedSaveLogin: string | null = getLocalStorage(
+      LOCAL_KEY.IS_SAVE_LOGIN,
+    );
+    if (stringifiedSaveLogin) {
+      const parsedIsSaveLogin: boolean = JSON.parse(stringifiedSaveLogin);
+      setIsSaveLogin(parsedIsSaveLogin);
+    }
+  }, [methods]);
+
   return (
     <Flex
       w="100%"
@@ -154,10 +189,20 @@ function LoginPage() {
               name="password"
             />
             <Flex w="100%" gap="24px" mt="0 !important">
-              {/* TODO: 아이디 저장 기능 */}
-              <AuthCheckbox labelText="아이디 저장" />
-              {/* TODO: 로그인 상태 유지 기능 */}
-              <AuthCheckbox labelText="로그인 상태 유지" />
+              <AuthCheckbox
+                labelText="아이디 저장"
+                isChecked={isSaveId}
+                onChange={(e) => {
+                  setIsSaveId(e.target.checked);
+                }}
+              />
+              <AuthCheckbox
+                labelText="로그인 상태 유지"
+                isChecked={isSaveLogin}
+                onChange={(e) => {
+                  setIsSaveLogin(e.target.checked);
+                }}
+              />
             </Flex>
           </VStack>
           <Button
