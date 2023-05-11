@@ -37,8 +37,6 @@ const WorkStatusManagementItem = ({
   const isCanCheck =
     item?.statusDisplay === '대기' || item?.statusDisplay === '종료';
 
-  console.log('dddd', item?.statusDisplay);
-
   return (
     <Tr key={`${item.user}-${item.id}-${index}`} h="60px">
       <CustomTd w="100px">

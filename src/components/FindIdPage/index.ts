@@ -1,3 +1,3 @@
-import LoginPage from './FindIdPage';
+import FindIdPage from './FindIdPage';
 
-export default LoginPage;
+export default FindIdPage;
