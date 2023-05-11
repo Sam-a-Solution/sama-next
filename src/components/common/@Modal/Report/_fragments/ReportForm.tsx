@@ -5,11 +5,14 @@ import { Flex, Text, VStack } from '@chakra-ui/react';
 
 import CustomInput from '@components/common/@Input/CustomInput';
 import DateInput from '@components/common/@Input/DateInput';
-import CustomSelector from '@components/common/@Select/CustomSelector';
+import FormSelect from '@components/common/@Select/FormSelect';
 import FormHelper from '@components/common/FormHelper';
+
+import { choiceToSelect } from '@utils/format';
 
 import {
   WorkBusinessType,
+  WorkChoiceType,
   WorkFacilityType,
   WorkHeavyEquipmentType,
   WorkOperationDepartmentType,
@@ -17,28 +20,16 @@ import {
 
 interface ReportFormProps {
   isReadOnly?: boolean;
-  heavyEquipmentSelectList?: WorkHeavyEquipmentType[];
-  businesSelectList?: WorkBusinessType[];
-  operationDepartmentSelectList?: WorkOperationDepartmentType[];
-  facilitySelectList?: WorkFacilityType[];
+  selects?: WorkChoiceType;
+  userName?: string;
 }
 
 function ReportForm({
   isReadOnly = false,
-  heavyEquipmentSelectList,
-  businesSelectList,
-  facilitySelectList,
-  operationDepartmentSelectList,
+  selects,
+  userName,
 }: ReportFormProps) {
   const methods = useFormContext();
-  console.log('ReportForm', {
-    isReadOnly,
-    values: methods.watch(),
-    heavyEquipmentSelectList,
-    businesSelectList,
-    facilitySelectList,
-    operationDepartmentSelectList,
-  });
 
   const handleSelectOption = useCallback(
     (
@@ -69,7 +60,7 @@ function ReportForm({
           작업자
         </Text>
         <Text textStyle="Text" color="black">
-          {methods.watch('user') || ''}
+          {userName || ''}
         </Text>
       </Flex>
       <FormHelper label="작업명">
@@ -116,76 +107,37 @@ function ReportForm({
           isReadOnly={isReadOnly}
           _readOnly={styles.readOnly}
           {...methods.register('construction')}
-        />
-      </FormHelper>
-      <FormHelper label="중장비 종류">
-        <CustomSelector
-          options={
-            heavyEquipmentSelectList?.map((item) => item.koreaName) || []
-          }
-          list={heavyEquipmentSelectList}
-          onChange={handleSelectOption}
-          keyName="heavyEquipmentType"
-          menuButtonProps={{
-            disabled: isReadOnly,
-            _disabled: {
-              bg: 'gray.300',
-              textStyle: 'Text',
-              color: 'gray.500',
-            },
+          _disabled={{
+            bgColor: 'gray.200',
           }}
         />
       </FormHelper>
-      <FormHelper label="사업장">
-        <CustomSelector
-          options={businesSelectList?.map((item) => item.koreaName) || []}
-          list={businesSelectList}
-          keyName="business"
-          onChange={handleSelectOption}
-          menuButtonProps={{
-            disabled: isReadOnly,
-            _disabled: {
-              bg: 'gray.300',
-              textStyle: 'Text',
-              color: 'gray.500',
-            },
-          }}
-        />
-      </FormHelper>
-      <FormHelper label="시설부서">
-        <CustomSelector
-          options={facilitySelectList?.map((item) => item.koreaName) || []}
-          list={facilitySelectList}
-          keyName="facility"
-          onChange={handleSelectOption}
-          menuButtonProps={{
-            disabled: isReadOnly,
-            _disabled: {
-              bg: 'gray.300',
-              textStyle: 'Text',
-              color: 'gray.500',
-            },
-          }}
-        />
-      </FormHelper>
-      <FormHelper label="작업수행부서">
-        <CustomSelector
-          options={
-            operationDepartmentSelectList?.map((item) => item.koreaName) || []
-          }
-          list={operationDepartmentSelectList}
-          keyName="operationDepartment"
-          onChange={handleSelectOption}
-          menuButtonProps={{
-            disabled: isReadOnly,
-            _disabled: {
-              bg: 'gray.300',
-              textStyle: 'Text',
-              color: 'gray.500',
-            },
-          }}
-        />
-      </FormHelper>
+      {/* 작업내역 4개 */}
+      <FormSelect
+        keyName="heavyEquipmentType"
+        selectList={choiceToSelect(selects?.heavyEquipmentType as any)}
+        label="중장비 종류"
+        isDisabled={isReadOnly}
+      />
+      <FormSelect
+        keyName="business"
+        selectList={choiceToSelect(selects?.business as any)}
+        label="사업장"
+        isDisabled={isReadOnly}
+      />
+      <FormSelect
+        keyName="facility"
+        selectList={choiceToSelect(selects?.facility as any)}
+        label="시설부서"
+        isDisabled={isReadOnly}
+      />
+      <FormSelect
+        keyName="operationDepartment"
+        selectList={choiceToSelect(selects?.operationDepartment as any)}
+        label="작업수행부서"
+        isDisabled={isReadOnly}
+      />
+
       <FormHelper label="도로 통제 항목">
         <CustomInput
           isReadOnly={isReadOnly}
@@ -201,7 +153,7 @@ export default ReportForm;
 
 const styles = {
   readOnly: {
-    bg: 'gray.300',
+    bg: 'gray.200',
     textStyle: 'Text',
     color: 'gray.500',
   },
