@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
+
+import dayjs from 'dayjs';
 
 import {
   Button,
@@ -8,66 +10,88 @@ import {
   TableContainer,
   Tbody,
   Text,
-  Tfoot,
   Thead,
   Tr,
 } from '@chakra-ui/react';
 
+import useModals from '@hooks/useModals';
+
+import { useQueryClient } from '@tanstack/react-query';
+
+import { useWorkLogEmergencyReleaseUpdateMutation } from '../../../generated/apis/WorkLog/WorkLog.query';
 import StatusBadge from '../@Badge/StatusBadge';
 import CustomTable from '../@Table/CustomTable';
 import CustomTd from '../@Table/CustomTd';
 import CustomTh from '../@Table/CustomTh';
+import Pagination from '../Pagination';
+import CustomAlert from './@Alert/CustomAlert';
+import CustomConfirmAlert from './@Alert/CustomConfirmAlert';
 import EmergencyStatusItem from './EmergencyStatusItem';
 import ModalContainer from './ModalContainer';
 
+import { WorkLogType } from 'generated/apis/@types/data-contracts';
 import { useWorkLogEmergencyRetrieveQuery } from 'generated/apis/WorkLog/WorkLog.query';
 import { EmergencyIcon } from 'generated/icons/MyIcons';
-
-const emergencyStatusList = Array.from({ length: 40 }, (_, i) => ({
-  id: i + 1,
-  drivder: [
-    '김철수',
-    '이영희',
-    '박민수',
-    '손상일',
-    '박찬하',
-    '박찬종',
-    '김건호',
-    '정아인',
-  ][Math.floor(Math.random() * 3)],
-  carType: [
-    '지게차',
-    '포크레인',
-    '트럭',
-    '불도저',
-    '로더',
-    '스크레이퍼',
-    '트럭믹서',
-    '레미콘',
-    '덤프트럭',
-  ][Math.floor(Math.random() * 9)],
-  status: ['운전', '정지', '비상'][Math.floor(Math.random() * 3)],
-  startTime: ['10:00:00', '11:00:00', '12:00:00'][
-    Math.floor(Math.random() * 3)
-  ],
-  endTime: ['16:00:00', '17:00:00', '18:00:00'][Math.floor(Math.random() * 3)],
-  check: [true, false][Math.floor(Math.random() * 2)],
-}));
 
 interface EmergencyStatusManagementProps extends Omit<ModalProps, 'children'> {}
 
 function EmergencyStatusManagement({
   ...props
 }: EmergencyStatusManagementProps) {
-  const [list, setList] = React.useState(emergencyStatusList.slice(0, 10));
+  const queryClient = useQueryClient();
+  const { openModal } = useModals();
 
-  // P_MEMO: 페이지네이션 데이터, 아마 수정될 예정.
-  const { data: emergencyList } = useWorkLogEmergencyRetrieveQuery({
+  const [emergencyList, setEmergencyList] = useState<WorkLogType[]>([]);
+  const [page, setPage] = useState(1);
+  const [count, setCount] = useState<undefined | number>(0);
+
+  useWorkLogEmergencyRetrieveQuery({
+    variables: {
+      query: {
+        limit: 10,
+        offset: page * 10 - 9,
+      },
+    },
     options: {
-      onError: (e) =>
-        console.log('비상상황 로그 정보 불러오기 에러', e?.response?.data),
+      onSuccess: (data) => {
+        setCount(data.count);
+        setEmergencyList(data.results ?? []);
+      },
     },
   });
+
+  const { mutate: updateEmergencyOffMutate } =
+    useWorkLogEmergencyReleaseUpdateMutation({
+      options: {
+        onSuccess: () => {
+          queryClient.invalidateQueries(['WORK_LOG_EMERGENCY_RETRIEVE']);
+          openModal(CustomAlert, {
+            auxProps: {
+              title: '비상상황 해제 완료',
+              content: '비상상황이 해제되었습니다.',
+              submitText: '확인',
+            },
+          });
+        },
+      },
+    });
+
+  const handleEmergencyOff = (workLogId: number) => {
+    openModal(CustomConfirmAlert, {
+      auxProps: {
+        title: '비상상황 해제',
+        content: '비상상황을 해제하시겠습니까?',
+        cancelText: '취소',
+        submitText: '해제',
+        onSubmit: () => {
+          updateEmergencyOffMutate({
+            workLogId,
+            data: {},
+          });
+        },
+      },
+    });
+  };
 
   return (
     <ModalContainer
@@ -93,7 +117,7 @@ function EmergencyStatusManagement({
       }
       body={
         <TableContainer>
-          <CustomTable>
+          <CustomTable minH="640px">
             <Thead>
               <Tr h="40px" bg="gray.200">
                 <CustomTh w="120px">
@@ -133,23 +157,90 @@ function EmergencyStatusManagement({
                 </CustomTh>
               </Tr>
             </Thead>
-            <Tbody display="inline-block" minH="610px">
-              {/* // P_MEMO: 해당 emergency 변경 예정, 타입 임시 ignore처리
-              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-ignore: Unreachable code error */}
-              {emergencyList?.map((item) => (
-                <EmergencyStatusItem key={item.id} item={item} />
+            <Tbody
+              display="inline-block"
+              h="600px"
+              borderBottom="1px solid"
+              borderColor="gray.300"
+            >
+              {emergencyList.map((emergency, index) => (
+                <Tr key={emergency.id} h="60px">
+                  <CustomTd w="120px">
+                    <Text textStyle="Text" color="black">
+                      {index + 1 + (page - 1) * 10}
+                    </Text>
+                  </CustomTd>
+                  <CustomTd w="200px">
+                    <Text textStyle="Text" color="black">
+                      {emergency?.user}
+                    </Text>
+                  </CustomTd>
+                  <CustomTd w="200px">
+                    <Text textStyle="Text" color="black">
+                      {/* {item.carType} */}
+                      {emergency?.heavyEquipmentType?.koreaName}
+                    </Text>
+                  </CustomTd>
+                  <CustomTd w="120px">
+                    <StatusBadge status={emergency?.statusDisplay} />
+                  </CustomTd>
+                  <CustomTd w="250px">
+                    <Text textStyle="Text" color="black">
+                      {/* {item.startTime || '-'} */}
+                      {dayjs(emergency?.startTime).format('HH:mm:ss') || '-'}
+                    </Text>
+                  </CustomTd>
+                  <CustomTd w="250px">
+                    <Text textStyle="Text" color="black">
+                      {/* {item.endTime || '-'} */}
+                      {dayjs(emergency?.endTime).format('HH:mm:ss') || '-'}
+                    </Text>
+                  </CustomTd>
+                  <CustomTd w="140px">
+                    <Button
+                      w="80px"
+                      h="30px"
+                      bg={emergency?.isChecked ? 'gray.500' : 'primary.500'}
+                      border={emergency?.isChecked ? 'none' : '1px solid'}
+                      _hover={{
+                        bg: emergency?.isChecked ? 'gray.600' : 'primary.600',
+                      }}
+                      _active={{
+                        bg: emergency?.isChecked ? 'gray.700' : 'primary.700',
+                      }}
+                      _disabled={{
+                        bg: 'gray.400',
+                      }}
+                      color="white"
+                      onClick={() => handleEmergencyOff(emergency?.id)}
+                      isDisabled={emergency?.isChecked || !emergency?.endTime}
+                    >
+                      해제
+                    </Button>
+                  </CustomTd>
+                </Tr>
+                // <EmergencyStatusItem
+                //   key={emergency?.id}
+                //   item={emergency}
+                //   index={index}
+                //   page={page}
+                // />
               ))}
             </Tbody>
-            <Tfoot>
-              {/* TODO: 페이지네이션 구현 */}
-              <Text>페이지네이션</Text>
-            </Tfoot>
           </CustomTable>
+          <Pagination
+            totalItems={count}
+            currentPage={page}
+            itemsPerPage={10}
+            onChangePage={setPage}
+          />
         </TableContainer>
       }
       modalContentProps={{
         minW: '1280px',
+      }}
+      modalBodyProps={{
+        p: '0 !important',
       }}
       {...props}
     />

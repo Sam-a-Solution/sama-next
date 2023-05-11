@@ -3,6 +3,7 @@ import instance from '@apis/_axios/instance';
 import { ContentType, HttpClient, RequestParams } from '../@http-client';
 import {
   CursorPaginatedWorkLogListType,
+  PaginateWorkEmergencyListType,
   PaginatedWorkLogListType,
   WorkCheckType,
   WorkCheckValidationErrorType,
@@ -106,10 +107,17 @@ export class WorkLogApi<
    * @request GET:/v1/work_log/emergency/
    * @secure
    */
-  workLogEmergencyRetrieve = (variables?: { params?: RequestParams }) =>
-    this.request<WorkEmergencyType, any>({
+  workLogEmergencyRetrieve = (variables?: {
+    query?: {
+      limit?: number;
+      offset?: number;
+    };
+    params?: RequestParams;
+  }) =>
+    this.request<PaginateWorkEmergencyListType, any>({
       path: `/v1/work_log/emergency/`,
       method: 'GET',
+      query: variables?.query,
       secure: true,
       format: 'json',
       ...variables?.params,
