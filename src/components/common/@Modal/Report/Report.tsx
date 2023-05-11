@@ -9,6 +9,7 @@ import useModals from '@hooks/useModals';
 
 import { useQueryClient } from '@tanstack/react-query';
 
+import CustomAlert from '../@Alert/CustomAlert';
 import CustomConfirmAlert from '../@Alert/CustomConfirmAlert';
 import ModalContainer from '../ModalContainer';
 import ReportForm from './_fragments/ReportForm';
@@ -35,33 +36,50 @@ function Report({ auxProps, ...props }: ReportProps) {
 
   const queryClient = useQueryClient();
   const methods = useReportForm();
+  const { getValues } = methods;
   const { openModal } = useModals();
 
-  useWorkLogRetrieveQuery({
+  // 데이터 다른 modal 상태 바뀔떄마다 set 해 버려서...문제가 생김.
+  const { data: workLogData } = useWorkLogRetrieveQuery({
     variables: {
       workLogId,
     },
     options: {
       enabled: !!workLogId,
       onSuccess: (response) => {
-        methods.setValue('workId', response.workId);
-        methods.setValue('user', response.user);
-        methods.setValue('name', response.name);
+        const {
+          name,
+          startTime,
+          endTime,
+          locationName,
+          construction,
+          roadControl,
+          business,
+          facility,
+          heavyEquipmentType,
+          operationDepartment,
+        } = response;
+
+        methods.setValue('name', name);
         methods.setValue(
           'startTime',
-          dayjs(response.startTime).format('YYYY-MM-DD') || '',
+          dayjs(startTime).format('YYYY-MM-DD') || '',
         );
+        methods.setValue('endTime', dayjs(endTime).format('YYYY-MM-DD') || '');
+        methods.setValue('locationName', locationName);
+        methods.setValue('construction', construction);
         methods.setValue(
-          'endTime',
-          dayjs(response.endTime).format('YYYY-MM-DD') || '',
+          'heavyEquipmentType',
+          heavyEquipmentType.id.toString(),
         );
-        methods.setValue('locationName', response.locationName);
-        methods.setValue('construction', response.construction);
-        methods.setValue('heavyEquipmentType', response.heavyEquipmentType);
-        methods.setValue('facility', response.facility);
-        methods.setValue('business', response.business);
-        methods.setValue('operationDepartment', response.operationDepartment);
-        methods.setValue('roadControl', response.roadControl);
+        methods.setValue('business', business.id.toString());
+        methods.setValue('facility', facility.id.toString());
+        methods.setValue(
+          'operationDepartment',
+          operationDepartment.id.toString(),
+        );
+
+        methods.setValue('roadControl', roadControl);
       },
     },
   });
@@ -72,8 +90,19 @@ function Report({ auxProps, ...props }: ReportProps) {
     options: {
       onSuccess: () => {
         queryClient.invalidateQueries(['WORK_LOG_LIST']);
-        props.onClose();
+        openModal(CustomAlert, {
+          auxProps: {
+            title: '작업 내용 수정 완료',
+            content: '작업 내용이 수정되었습니다.',
+            submitText: '확인',
+            onSubmit: () => {
+              props.onClose();
+            },
+          },
+        });
       },
+      onError: (e) =>
+        console.log('갱신에러', e?.response?.data, methods.getValues()),
     },
   });
 
@@ -86,25 +115,20 @@ function Report({ auxProps, ...props }: ReportProps) {
         submitText: '수정',
         onSubmit: () => {
           const values = methods.getValues();
-
-          console.log({ values });
-
-          // TODO: business, facility, heavyEquipmentType, operationDepartment 값에서 koreaName 제거
-
           updateWorkLogMutate({
             workLogId,
             data: {
-              name: values.name,
-              locationName: values.locationName,
-              // latitude: values.latitude,
-              // longitude: values.longitude,
-              business: values.business,
-              facility: values.facility,
-              heavyEquipmentType: values.heavyEquipmentType,
-              operationDepartment: values.operationDepartment,
-              construction: values.construction,
-              roadControl: values.roadControl,
-              workId: values.workId,
+              ...values,
+              heavyEquipmentType: {
+                id: Number(getValues('heavyEquipmentType')),
+              },
+              business: { id: Number(getValues('business')) },
+              facility: { id: Number(getValues('facility')) },
+              operationDepartment: {
+                id: Number(getValues('operationDepartment')),
+              },
+              // startTime: dayjs(getValues('startTime')).format('YYYY-MM-DD'),
+              // endTime: dayjs(getValues('endTime')).format('YYYY-MM-DD'),
               byManager: true,
             },
           });
@@ -126,23 +150,30 @@ function Report({ auxProps, ...props }: ReportProps) {
       body={
         <FormProvider {...methods}>
           <ReportForm
+            userName={workLogData?.user}
             isReadOnly={!isEditable}
-            businesSelectList={selects?.business}
-            facilitySelectList={selects?.facility}
-            heavyEquipmentSelectList={selects?.heavyEquipmentType}
-            operationDepartmentSelectList={selects?.operationDepartment}
+            selects={selects}
           />
         </FormProvider>
       }
       footer={
-        <Flex w="100%" h="100px" alignItems="center" gap="10px">
-          <Button flex="1" h="50px" variant="outline" onClick={props.onClose}>
-            <Text textStyle="Button">취소</Text>
-          </Button>
-          <Button flex="1" h="50px" onClick={openConfirmAlert}>
-            <Text textStyle="Button">수정</Text>
-          </Button>
-        </Flex>
+        <>
+          {isEditable && (
+            <Flex w="100%" h="100px" alignItems="center" gap="10px">
+              <Button
+                flex="1"
+                h="50px"
+                variant="outline"
+                onClick={props.onClose}
+              >
+                <Text textStyle="Button">취소</Text>
+              </Button>
+              <Button flex="1" h="50px" onClick={openConfirmAlert}>
+                <Text textStyle="Button">수정</Text>
+              </Button>
+            </Flex>
+          )}
+        </>
       }
       // TODO: 스크롤 처리
       modalContentProps={{
