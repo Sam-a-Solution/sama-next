@@ -1,3 +1,5 @@
+import { ChoiceDataType, SelectType } from '@apis/type';
+
 export const intComma = (x: number | string) => {
   return x?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 };
@@ -115,3 +117,13 @@ export function formatPhoneNumber(number: string) {
   const formattedNumber = number.replace(regex, '$1-$2-$3');
   return formattedNumber;
 }
+
+export const choiceToSelect = (
+  choiceArr?: ChoiceDataType[],
+): SelectType<string>[] | undefined => {
+  const result: SelectType<string>[] | undefined = choiceArr?.map((v) => ({
+    value: v.id,
+    label: v.koreaName as string,
+  }));
+  return result;
+};

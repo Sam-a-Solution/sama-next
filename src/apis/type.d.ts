@@ -54,3 +54,13 @@ export type UnboxPromise<T extends Promise<any>> = T extends Promise<infer U>
   : never;
 
 export type Parameter<T> = T extends (param: infer U) => any ? U : never;
+
+type ChoiceDataType = {
+  id: string;
+  koreaName?: string;
+};
+
+interface SelectType<T = any> {
+  label: string;
+  value: T;
+}

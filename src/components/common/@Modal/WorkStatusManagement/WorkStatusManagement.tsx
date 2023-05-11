@@ -26,7 +26,7 @@ import Pagination from '../../Pagination';
 import CustomAlert from '../@Alert/CustomAlert';
 import CustomConfirmAlert from '../@Alert/CustomConfirmAlert';
 import ModalContainer from '../ModalContainer';
-import Report from '../Report';
+import Report from '../Report/Report';
 import WorkStatusManagementHeader from './WorkStatusManagementHeader';
 import WorkStatusManagementItem from './WorkStatusManagementItem';
 
