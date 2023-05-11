@@ -17,8 +17,10 @@ import StatusBadge from '../@Badge/StatusBadge';
 import CustomTable from '../@Table/CustomTable';
 import CustomTd from '../@Table/CustomTd';
 import CustomTh from '../@Table/CustomTh';
+import EmergencyStatusItem from './EmergencyStatusItem';
 import ModalContainer from './ModalContainer';
 
+import { useWorkLogEmergencyRetrieveQuery } from 'generated/apis/WorkLog/WorkLog.query';
 import { EmergencyIcon } from 'generated/icons/MyIcons';
 
 const emergencyStatusList = Array.from({ length: 40 }, (_, i) => ({
@@ -58,6 +60,15 @@ function EmergencyStatusManagement({
   ...props
 }: EmergencyStatusManagementProps) {
   const [list, setList] = React.useState(emergencyStatusList.slice(0, 10));
+
+  // P_MEMO: 페이지네이션 데이터, 아마 수정될 예정.
+  const { data: emergencyList } = useWorkLogEmergencyRetrieveQuery({
+    options: {
+      onError: (e) =>
+        console.log('비상상황 로그 정보 불러오기 에러', e?.response?.data),
+    },
+  });
+
   return (
     <ModalContainer
       header={
@@ -107,12 +118,12 @@ function EmergencyStatusManagement({
                 </CustomTh>
                 <CustomTh w="250px">
                   <Text textStyle="TitleSmall" color="gray.700">
-                    작업 시작 시간
+                    발생 시간
                   </Text>
                 </CustomTh>
                 <CustomTh w="250px">
                   <Text textStyle="TitleSmall" color="gray.700">
-                    작업 종료 시간
+                    해제 시간
                   </Text>
                 </CustomTh>
                 <CustomTh w="140px">
@@ -122,43 +133,12 @@ function EmergencyStatusManagement({
                 </CustomTh>
               </Tr>
             </Thead>
-            <Tbody display="inline-block">
-              {list.map((item) => (
-                <Tr key={item.id} h="60px">
-                  <CustomTd w="120px">
-                    <Text textStyle="Text" color="black">
-                      {item.id}
-                    </Text>
-                  </CustomTd>
-                  <CustomTd w="200px">
-                    <Text textStyle="Text" color="black">
-                      {item.drivder}
-                    </Text>
-                  </CustomTd>
-                  <CustomTd w="200px">
-                    <Text textStyle="Text" color="black">
-                      {item.carType}
-                    </Text>
-                  </CustomTd>
-                  <CustomTd w="120px">
-                    <StatusBadge status={item.status} />
-                  </CustomTd>
-                  <CustomTd w="250px">
-                    <Text textStyle="Text" color="black">
-                      {item.startTime || '-'}
-                    </Text>
-                  </CustomTd>
-                  <CustomTd w="250px">
-                    <Text textStyle="Text" color="black">
-                      {item.endTime || '-'}
-                    </Text>
-                  </CustomTd>
-                  <CustomTd w="140px">
-                    <Button w="80px" h="30px" isDisabled={item.check}>
-                      해제
-                    </Button>
-                  </CustomTd>
-                </Tr>
+            <Tbody display="inline-block" minH="610px">
+              {/* // P_MEMO: 해당 emergency 변경 예정, 타입 임시 ignore처리
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-ignore: Unreachable code error */}
+              {emergencyList?.map((item) => (
+                <EmergencyStatusItem key={item.id} item={item} />
               ))}
             </Tbody>
             <Tfoot>
