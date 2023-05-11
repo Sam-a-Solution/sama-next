@@ -61,27 +61,16 @@ function HomePageContent({ ...basisProps }: HomePageContentProps) {
     variables: {},
     options: {
       onSuccess: (response) => {
-        // const equipmentList = response.results
-        //   ?.flatMap((workLog) => workLog)
-        //   .map((workLog) => ({
-        //     id: workLog.id,
-        //     driver: workLog.user,
-        //     carType: workLog.heavyEquipmentType.koreaName,
-        //     status: workLog.statusDisplay,
-        //   }));
         const equipmentList = response.pages
           .flatMap((page) => page.results)
           .map((workLog) => ({
             id: workLog?.id,
             driver: workLog?.user,
-            carType: workLog?.heavyEquipmentType.koreaName,
+            carType: workLog?.heavyEquipmentType?.koreaName,
             status: workLog?.statusDisplay,
           }));
 
         setHeavyEquipmentList(equipmentList as HeavyEquipment[]);
-        console.log({ response, equipmentList });
-
-        // console.log({ response, equipmentList });
       },
     },
   });
