@@ -248,6 +248,9 @@ function WorkStatusManagement({ ...props }: WorkStatusManagementProps) {
                           _active={{
                             bg: item?.isChecked ? 'gray.700' : 'primary.700',
                           }}
+                          _disabled={{
+                            bg: 'gray.400',
+                          }}
                           color="white"
                           onClick={
                             !item?.endTime

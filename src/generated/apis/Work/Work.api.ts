@@ -3,6 +3,7 @@ import instance from '@apis/_axios/instance';
 import { ContentType, HttpClient, RequestParams } from '../@http-client';
 import {
   PaginatedWorkListType,
+  WorkChoiceType,
   WorkType,
   WorkValidationErrorType,
 } from '../@types/data-contracts';
@@ -89,7 +90,7 @@ export class WorkApi<
    * @secure
    */
   workChoiceRetrieve = (variables?: { params?: RequestParams }) =>
-    this.request<WorkType, any>({
+    this.request<WorkChoiceType, any>({
       path: `/v1/work/choice/`,
       method: 'GET',
       secure: true,
