@@ -29,12 +29,18 @@ export interface NicknameValidationValidationErrorType {
   nickname?: string[];
 }
 
+export interface PaginateWorkEmergencyListType {
+  count?: number;
+  isNext?: boolean;
+  results?: WorkLogType[];
+}
+
 export interface PaginatedWorkListType {
   count?: number;
   isNext?: boolean;
   results?: WorkType[];
 }
-// export type PaginatedWorkListType = WorkType[];
+
 export interface PaginatedWorkLogListType {
   count?: number;
   isNext?: boolean;
