@@ -434,7 +434,7 @@ export interface WorkValidationErrorType {
 }
 
 export type WorkStatusType = keyof typeof WorkStatusTypeMap;
-const WorkStatusTypeMap = {
+export const WorkStatusTypeMap = {
   READY: '비상',
   PROGRESS: '종료',
   END: '진행 중',
