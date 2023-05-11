@@ -8,15 +8,21 @@ import CustomTd from '../@Table/CustomTd';
 import { WorkEmergencyType } from 'generated/apis/@types/data-contracts';
 
 interface EmergencyStatusItemProps {
-  item: WorkEmergencyType;
+  item: Partial<WorkEmergencyType>;
+  index: number;
+  page: number;
 }
 
-const EmergencyStatusItem = ({ item }: EmergencyStatusItemProps) => {
+const EmergencyStatusItem = ({
+  item,
+  index,
+  page,
+}: EmergencyStatusItemProps) => {
   return (
     <Tr h="60px">
       <CustomTd w="120px">
         <Text textStyle="Text" color="black">
-          {item.id}
+          {index + 1 + (page - 1) * 10}
         </Text>
       </CustomTd>
       <CustomTd w="200px">
