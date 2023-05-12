@@ -180,6 +180,7 @@ function Report({ auxProps, ...props }: ReportProps) {
         minW: '574px',
         maxH: '800px',
         position: 'relative',
+        h: '90vh',
       }}
       modalHeaderProps={{
         p: '19px 30px',
@@ -195,6 +196,7 @@ function Report({ auxProps, ...props }: ReportProps) {
         bg: 'white',
         zIndex: 'sticky',
         p: '0 30px',
+        borderRadius: '10px',
       }}
       {...props}
     />

@@ -40,8 +40,10 @@ const WorkStatusManagementItem = ({
   return (
     <Tr key={`${item.user}-${item.id}-${index}`} h="60px">
       <CustomTd w="100px">
+        {/* P_TODO: 기획 확인 필요. index를 표시하는게 나을것같은데? */}
         <Text textStyle="Text" color="black">
-          {page * 10 - 10 + index + 1}
+          {/* {page * 10 - 10 + index + 1} */}
+          {item.id}
         </Text>
       </CustomTd>
       <CustomTd w="160px">

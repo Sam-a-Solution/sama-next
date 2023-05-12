@@ -82,7 +82,7 @@ const Pagination = ({
           <PrevPageIcon w="24px" h="24px" />
         </button>
       </Flex>
-      <UnorderedList listStyleType="none" gap="30px">
+      <UnorderedList listStyleType="none" gap="30px" ml="0px">
         {pages.map((page) => (
           <ListItem
             key={page}

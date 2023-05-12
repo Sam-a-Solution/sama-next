@@ -4,9 +4,14 @@ import GoogleMapReact from 'google-map-react';
 
 import { CONFIG } from '@config';
 
-import { Box, BoxProps, Flex, useDisclosure } from '@chakra-ui/react';
+import { Box, BoxProps, Flex, useDisclosure, useToast } from '@chakra-ui/react';
 
 import { useWorkLogAllInfiniteQuery } from '@apis/worLog/workLog.query';
+import useModals from '@hooks/useModals';
+import { useEmergencySocket } from '@hooks/useSocket';
+
+import EmergencyStatusManagement from '@components/common/@Modal/EmergencyStatusManagement';
+import EmergencyToast from '@components/common/EmergencyToast';
 
 import FooterControlWrapper from './_fragments/FooterControlWrapper';
 import HomeNavigationBar from './_fragments/HomeNavigationBar';
@@ -16,6 +21,9 @@ import WorkMarker from './_fragments/WorkMarker';
 import { WorkStatusCountType } from 'generated/apis/@types/data-contracts';
 import { useWorkListQuery } from 'generated/apis/Work/Work.query';
 import { useWorkLogStatusCountRetrieveQuery } from 'generated/apis/WorkLog/WorkLog.query';
+import { ToastEmergencyIcon } from 'generated/icons/MyIcons';
+
+const TOAST_DURATION = 1000 * 10;
 
 export type HeavyEquipment = {
   id?: number;
@@ -27,11 +35,13 @@ export type HeavyEquipment = {
 interface HomePageContentProps extends BoxProps {}
 
 function HomePageContent({ ...basisProps }: HomePageContentProps) {
+  const { openModal } = useModals();
+  const toast = useToast();
+
   const [heavyEquipmentList, setHeavyEquipmentList] = useState<
     HeavyEquipment[]
   >([]);
   const [totalStatus, setTotalStatus] = useState<WorkStatusCountType>({});
-
   const [mapZoom, setMapZoom] = useState(11);
 
   // P_MEMO: 해당 목록은 페이지네이션이 아닌, 전체로 받아옴
@@ -95,6 +105,28 @@ function HomePageContent({ ...basisProps }: HomePageContentProps) {
     () => setMapZoom((prev) => (prev === 1 ? prev : prev - 1)),
     [],
   );
+
+  const onClickConfirm = () => {
+    openModal(EmergencyStatusManagement);
+    toast.closeAll();
+  };
+
+  const onOpenToast = (data: string) => {
+    toast({
+      duration: TOAST_DURATION,
+      position: 'top',
+      icon: <ToastEmergencyIcon boxSize="24px" />,
+      render: () => {
+        return <EmergencyToast data={data} onClickConfirm={onClickConfirm} />;
+      },
+    });
+  };
+
+  useEmergencySocket({
+    callback: (data: any) => {
+      onOpenToast(data);
+    },
+  });
 
   return (
     <Box position="relative" {...basisProps}>

@@ -29,10 +29,11 @@ export interface NicknameValidationValidationErrorType {
   nickname?: string[];
 }
 
+// P_TYPE: 타입 수정될 예정 WorkLogType -> WorkEmergencyType
 export interface PaginateWorkEmergencyListType {
   count?: number;
   isNext?: boolean;
-  results?: WorkLogType[];
+  results?: WorkEmergencyType[];
 }
 
 export interface PaginatedWorkListType {
