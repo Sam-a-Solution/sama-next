@@ -27,11 +27,9 @@ const Pagination = ({
 
   const handleClick = (page: number) => {
     if (page <= 0) return; // 1페이지 이하로 내려가지 않도록
-
-    onChangePage(page); // 페이지 변경
-
     if (page === 1) return;
     if (page > totalPages) return; // 마지막 페이지 이상으로 올라가지 않도록
+    onChangePage(page); // 페이지 변경
 
     const lastPage = Math.min(totalPages, pageRange[1]);
     const firstPage = Math.max(1, pageRange[0]);
