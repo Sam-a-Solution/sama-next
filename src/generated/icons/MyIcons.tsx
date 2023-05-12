@@ -558,3 +558,40 @@ export const MinusIcon = (props: IconProps) => (
     </svg>
   </Icon>
 );
+
+export const ToastEmergencyIcon = (props: IconProps) => (
+  <Icon viewBox="0 0 24 24" {...props}>
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M4 14C4 9.58172 7.58172 6 12 6C16.4183 6 20 9.58172 20 14V21C20 21.5523 19.5523 22 19 22H5C4.44772 22 4 21.5523 4 21V14Z"
+        fill="#FFA8A8"
+      />
+      <circle cx="12" cy="15" r="4" fill="#FF6060" />
+      <circle cx="12" cy="15" r="2" fill="#FFE2E2" />
+      <rect x="11" y="18" width="2" height="4" fill="#FF6060" />
+      <rect x="11" y="1" width="2" height="4" rx="1" fill="#FFE2E2" />
+      <rect
+        x="4"
+        y="3.70703"
+        width="2"
+        height="4"
+        rx="1"
+        transform="rotate(-45 4 3.70703)"
+        fill="#FFE2E2"
+      />
+      <rect
+        width="2"
+        height="4"
+        rx="1"
+        transform="matrix(-0.707107 -0.707107 -0.707107 0.707107 19.8286 3.70703)"
+        fill="#FFE2E2"
+      />
+    </svg>
+  </Icon>
+);
