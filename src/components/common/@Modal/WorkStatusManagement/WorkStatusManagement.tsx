@@ -175,6 +175,7 @@ function WorkStatusManagement({ ...props }: WorkStatusManagementProps) {
       modalBodyProps={{
         p: '0 !important',
       }}
+      blockScrollOnMount={false}
       {...props}
     />
   );
