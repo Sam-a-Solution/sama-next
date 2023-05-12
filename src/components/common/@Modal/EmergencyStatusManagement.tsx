@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
 
-import dayjs from 'dayjs';
-
 import {
-  Button,
   CloseButton,
   Flex,
   ModalProps,
@@ -19,9 +16,7 @@ import useModals from '@hooks/useModals';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { useWorkLogEmergencyReleaseUpdateMutation } from '../../../generated/apis/WorkLog/WorkLog.query';
-import StatusBadge from '../@Badge/StatusBadge';
 import CustomTable from '../@Table/CustomTable';
-import CustomTd from '../@Table/CustomTd';
 import CustomTh from '../@Table/CustomTh';
 import Pagination from '../Pagination';
 import CustomAlert from './@Alert/CustomAlert';
@@ -29,7 +24,7 @@ import CustomConfirmAlert from './@Alert/CustomConfirmAlert';
 import EmergencyStatusItem from './EmergencyStatusItem';
 import ModalContainer from './ModalContainer';
 
-import { WorkLogType } from 'generated/apis/@types/data-contracts';
+import { WorkEmergencyType } from 'generated/apis/@types/data-contracts';
 import { useWorkLogEmergencyRetrieveQuery } from 'generated/apis/WorkLog/WorkLog.query';
 import { EmergencyIcon } from 'generated/icons/MyIcons';
 
@@ -41,7 +36,7 @@ function EmergencyStatusManagement({
   const queryClient = useQueryClient();
   const { openModal } = useModals();
 
-  const [emergencyList, setEmergencyList] = useState<WorkLogType[]>([]);
+  const [emergencyList, setEmergencyList] = useState<WorkEmergencyType[]>([]);
   const [page, setPage] = useState(1);
   const [count, setCount] = useState<undefined | number>(0);
 
@@ -49,7 +44,7 @@ function EmergencyStatusManagement({
     variables: {
       query: {
         limit: 10,
-        offset: page * 10 - 9,
+        offset: page * 10 - 10,
       },
     },
     options: {
@@ -164,67 +159,13 @@ function EmergencyStatusManagement({
               borderColor="gray.300"
             >
               {emergencyList.map((emergency, index) => (
-                <Tr key={emergency.id} h="60px">
-                  <CustomTd w="120px">
-                    <Text textStyle="Text" color="black">
-                      {index + 1 + (page - 1) * 10}
-                    </Text>
-                  </CustomTd>
-                  <CustomTd w="200px">
-                    <Text textStyle="Text" color="black">
-                      {emergency?.user}
-                    </Text>
-                  </CustomTd>
-                  <CustomTd w="200px">
-                    <Text textStyle="Text" color="black">
-                      {/* {item.carType} */}
-                      {emergency?.heavyEquipmentType?.koreaName}
-                    </Text>
-                  </CustomTd>
-                  <CustomTd w="120px">
-                    <StatusBadge status={emergency?.statusDisplay} />
-                  </CustomTd>
-                  <CustomTd w="250px">
-                    <Text textStyle="Text" color="black">
-                      {/* {item.startTime || '-'} */}
-                      {dayjs(emergency?.startTime).format('HH:mm:ss') || '-'}
-                    </Text>
-                  </CustomTd>
-                  <CustomTd w="250px">
-                    <Text textStyle="Text" color="black">
-                      {/* {item.endTime || '-'} */}
-                      {dayjs(emergency?.endTime).format('HH:mm:ss') || '-'}
-                    </Text>
-                  </CustomTd>
-                  <CustomTd w="140px">
-                    <Button
-                      w="80px"
-                      h="30px"
-                      bg={emergency?.isChecked ? 'gray.500' : 'primary.500'}
-                      border={emergency?.isChecked ? 'none' : '1px solid'}
-                      _hover={{
-                        bg: emergency?.isChecked ? 'gray.600' : 'primary.600',
-                      }}
-                      _active={{
-                        bg: emergency?.isChecked ? 'gray.700' : 'primary.700',
-                      }}
-                      _disabled={{
-                        bg: 'gray.400',
-                      }}
-                      color="white"
-                      onClick={() => handleEmergencyOff(emergency?.id)}
-                      isDisabled={emergency?.isChecked || !emergency?.endTime}
-                    >
-                      해제
-                    </Button>
-                  </CustomTd>
-                </Tr>
-                // <EmergencyStatusItem
-                //   key={emergency?.id}
-                //   item={emergency}
-                //   index={index}
-                //   page={page}
-                // />
+                <EmergencyStatusItem
+                  key={emergency?.id}
+                  item={emergency}
+                  index={index}
+                  page={page}
+                  handleEmergencyOff={handleEmergencyOff}
+                />
               ))}
             </Tbody>
           </CustomTable>
