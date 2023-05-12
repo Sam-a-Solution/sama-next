@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 
 import GoogleMapReact from 'google-map-react';
 
@@ -6,12 +6,13 @@ import { CONFIG } from '@config';
 
 import { Box, BoxProps, Flex, useDisclosure, useToast } from '@chakra-ui/react';
 
-import { useWorkLogAllInfiniteQuery } from '@apis/worLog/workLog.query';
 import useModals from '@hooks/useModals';
 import { useEmergencySocket } from '@hooks/useSocket';
 
 import EmergencyStatusManagement from '@components/common/@Modal/EmergencyStatusManagement';
 import EmergencyToast from '@components/common/EmergencyToast';
+
+import { TOAST_DURATION } from '@constants/index';
 
 import FooterControlWrapper from './_fragments/FooterControlWrapper';
 import HomeNavigationBar from './_fragments/HomeNavigationBar';
@@ -25,8 +26,6 @@ import {
 import { useWorkListQuery } from 'generated/apis/Work/Work.query';
 import { useWorkLogStatusCountRetrieveQuery } from 'generated/apis/WorkLog/WorkLog.query';
 import { ToastEmergencyIcon } from 'generated/icons/MyIcons';
-
-const TOAST_DURATION = 1000 * 10;
 
 export type HeavyEquipment = {
   id?: number;

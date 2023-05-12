@@ -4,6 +4,8 @@ import { Divider, Flex } from '@chakra-ui/react';
 
 import useTimer from '@hooks/useTimer';
 
+import { REFRESH_TERM } from '@constants/index';
+
 import RefreshTimer, { RefreshTimerProps } from './components/RefreshTimer';
 import ZoomController, {
   ZoomControllerProps,
@@ -14,9 +16,6 @@ interface FooterControlWrapperProps extends ZoomControllerProps {
   minutes: number;
   seconds: number;
 }
-
-// P_TODO: 임시로 값 바꿔둠. 추후 10분으로 변경 예정
-const REFRESH_TERM = 1000 * 60 * 1;
 
 const FooterControlWrapper = ({
   onClickMinusZoom,
