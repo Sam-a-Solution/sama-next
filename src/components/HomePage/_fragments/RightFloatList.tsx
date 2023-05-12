@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from 'react';
+import React from 'react';
 
 import {
   Box,
@@ -12,15 +12,14 @@ import {
   Tr,
 } from '@chakra-ui/react';
 
-import useInfiniteScroll from '@hooks/useInfiniteScroll';
-
 import StatusBadge from '@components/common/@Badge/StatusBadge';
 import CustomTd from '@components/common/@Table/CustomTd';
 import CustomTh from '@components/common/@Table/CustomTh';
 
-import { HeavyEquipment } from '../HomePage';
-
-import { WorkStatusCountType } from 'generated/apis/@types/data-contracts';
+import {
+  WorkStatusCountType,
+  WorkType,
+} from 'generated/apis/@types/data-contracts';
 import { FoldIcon, UnfoldIcon } from 'generated/icons/MyIcons';
 
 type WorkStatusKey = keyof WorkStatusCountType;
@@ -35,30 +34,17 @@ interface RightFloatListProps {
   isOpenList: boolean;
   onOpenList: () => void;
   onCloseList: () => void;
-  heavyEquipmentList: HeavyEquipment[];
   totalStatus: WorkStatusCountType;
-  fetchNextPage: () => void;
-  hasNextPage?: boolean;
+  workListData: WorkType[];
 }
 
 function RightFloatList({
   isOpenList,
   onCloseList,
   onOpenList,
-  heavyEquipmentList,
   totalStatus,
-  fetchNextPage,
-  hasNextPage,
+  workListData,
 }: RightFloatListProps) {
-  const ref = useRef<HTMLDivElement>(null);
-
-  useInfiniteScroll({
-    targetRef: ref,
-    onIntersect: fetchNextPage,
-    enabled: hasNextPage,
-    threshold: 0.2,
-  });
-
   return (
     <>
       <Box
@@ -120,21 +106,21 @@ function RightFloatList({
               overflowY="auto"
               display="inline-block"
             >
-              {heavyEquipmentList?.map((item, index) => (
-                <Tr key={`${item.driver}-${item.id}-${index}`} h="36px">
+              {workListData?.map((item, index) => (
+                <Tr key={`${item.id}-${index}`} h="36px">
                   <CustomTd w="60px">
                     <Text textStyle="TextSmall" color="black">
-                      {index + 1}
+                      {item.id}
                     </Text>
                   </CustomTd>
                   <CustomTd w="80px">
                     <Text textStyle="TextSmall" color="black">
-                      {item.driver}
+                      {item.user}
                     </Text>
                   </CustomTd>
                   <CustomTd w="80px">
                     <Text textStyle="TextSmall" color="black">
-                      {item.carType}
+                      {item.heavyEquipmentType.koreaName}
                     </Text>
                   </CustomTd>
                   <CustomTd w="80px">
@@ -142,7 +128,6 @@ function RightFloatList({
                   </CustomTd>
                 </Tr>
               ))}
-              <Box ref={ref} />
             </Tbody>
           </Table>
         </TableContainer>
@@ -209,13 +194,15 @@ function RightFloatList({
         right={!isOpenList ? '300px' : '0'}
         top="50%"
         zIndex="sticky"
-        colorScheme="whiteAlpha"
         bg="white"
         border="none"
         borderRadius="8px 0 0 8px"
         transition="all 0.5s ease-in-out"
         boxShadow="0px 0px 10px rgba(26, 26, 26, 0.1)"
         onClick={isOpenList ? onCloseList : onOpenList}
+        _hover={{
+          bgColor: 'white',
+        }}
       >
         <>
           {isOpenList ? (

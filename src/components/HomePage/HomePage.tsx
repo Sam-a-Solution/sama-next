@@ -18,7 +18,10 @@ import HomeNavigationBar from './_fragments/HomeNavigationBar';
 import RightFloatList from './_fragments/RightFloatList';
 import WorkMarker from './_fragments/WorkMarker';
 
-import { WorkStatusCountType } from 'generated/apis/@types/data-contracts';
+import {
+  WorkStatusCountType,
+  WorkType,
+} from 'generated/apis/@types/data-contracts';
 import { useWorkListQuery } from 'generated/apis/Work/Work.query';
 import { useWorkLogStatusCountRetrieveQuery } from 'generated/apis/WorkLog/WorkLog.query';
 import { ToastEmergencyIcon } from 'generated/icons/MyIcons';
@@ -38,9 +41,6 @@ function HomePageContent({ ...basisProps }: HomePageContentProps) {
   const { openModal } = useModals();
   const toast = useToast();
 
-  const [heavyEquipmentList, setHeavyEquipmentList] = useState<
-    HeavyEquipment[]
-  >([]);
   const [totalStatus, setTotalStatus] = useState<WorkStatusCountType>({});
   const [mapZoom, setMapZoom] = useState(11);
 
@@ -49,7 +49,7 @@ function HomePageContent({ ...basisProps }: HomePageContentProps) {
     {
       options: {
         onSuccess: (data) => {
-          console.log('d############', data);
+          console.log('워크 불러오기', data);
         },
         onError: (e: any) => {
           console.log('work 불러오기 에러', e.response.data);
@@ -63,24 +63,6 @@ function HomePageContent({ ...basisProps }: HomePageContentProps) {
       onSuccess: (response) => {
         console.log('작업 통계', { response });
         setTotalStatus(response);
-      },
-    },
-  });
-
-  const { fetchNextPage, hasNextPage } = useWorkLogAllInfiniteQuery({
-    variables: {},
-    options: {
-      onSuccess: (response) => {
-        const equipmentList = response.pages
-          .flatMap((page) => page.results)
-          .map((workLog) => ({
-            id: workLog?.id,
-            driver: workLog?.user,
-            carType: workLog?.heavyEquipmentType?.koreaName,
-            status: workLog?.statusDisplay,
-          }));
-
-        setHeavyEquipmentList(equipmentList as HeavyEquipment[]);
       },
     },
   });
@@ -178,10 +160,8 @@ function HomePageContent({ ...basisProps }: HomePageContentProps) {
         isOpenList={isOpenList}
         onOpenList={onOpenList}
         onCloseList={onCloseList}
-        heavyEquipmentList={heavyEquipmentList}
+        workListData={workListData as WorkType[]}
         totalStatus={totalStatus}
-        hasNextPage={hasNextPage}
-        fetchNextPage={fetchNextPage}
       />
       {/* 하단 타이머, 컨트롤러 */}
       <FooterControlWrapper
