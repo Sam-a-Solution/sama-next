@@ -89,7 +89,7 @@ function ReportForm({
       {/* 주소 검색 API 연동 */}
       <FormHelper label="작업위치">
         <CustomInput
-          isReadOnly={true}
+          isReadOnly={isReadOnly}
           _readOnly={styles.readOnly}
           _active={{
             border: 'none',
@@ -97,8 +97,6 @@ function ReportForm({
           _focus={{
             border: 'none',
           }}
-          cursor="pointer"
-          onClick={() => alert('주소 검색 API 연동')}
           {...methods.register('locationName')}
         />
       </FormHelper>
