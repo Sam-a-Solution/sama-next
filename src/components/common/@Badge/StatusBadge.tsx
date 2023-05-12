@@ -13,6 +13,10 @@ function StatusBadge({ status }: StatusBadgeProps) {
       대기: '정지',
       종료: '정지',
       비상: '비상',
+      PROGRESS: '운전',
+      READY: '정지',
+      END: '정지',
+      EMERGENCY: '비상',
     }),
     [],
   );
