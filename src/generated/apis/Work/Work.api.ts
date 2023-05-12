@@ -30,7 +30,8 @@ export class WorkApi<
     };
     params?: RequestParams;
   }) =>
-    this.request<PaginatedWorkListType, any>({
+    // P_API: offset 등 param 여부에 따라 데이터 오는게 달라짐. 임의로 추가됨.
+    this.request<PaginatedWorkListType | WorkType[], any>({
       path: `/v1/work/`,
       method: 'GET',
       query: variables?.query,

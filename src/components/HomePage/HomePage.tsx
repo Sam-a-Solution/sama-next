@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 
 import GoogleMapReact from 'google-map-react';
 
@@ -6,24 +6,26 @@ import { CONFIG } from '@config';
 
 import { Box, BoxProps, Flex, useDisclosure, useToast } from '@chakra-ui/react';
 
-import { useWorkLogAllInfiniteQuery } from '@apis/worLog/workLog.query';
 import useModals from '@hooks/useModals';
 import { useEmergencySocket } from '@hooks/useSocket';
 
 import EmergencyStatusManagement from '@components/common/@Modal/EmergencyStatusManagement';
 import EmergencyToast from '@components/common/EmergencyToast';
 
+import { TOAST_DURATION } from '@constants/index';
+
 import FooterControlWrapper from './_fragments/FooterControlWrapper';
 import HomeNavigationBar from './_fragments/HomeNavigationBar';
 import RightFloatList from './_fragments/RightFloatList';
 import WorkMarker from './_fragments/WorkMarker';
 
-import { WorkStatusCountType } from 'generated/apis/@types/data-contracts';
+import {
+  WorkStatusCountType,
+  WorkType,
+} from 'generated/apis/@types/data-contracts';
 import { useWorkListQuery } from 'generated/apis/Work/Work.query';
 import { useWorkLogStatusCountRetrieveQuery } from 'generated/apis/WorkLog/WorkLog.query';
 import { ToastEmergencyIcon } from 'generated/icons/MyIcons';
-
-const TOAST_DURATION = 1000 * 10;
 
 export type HeavyEquipment = {
   id?: number;
@@ -38,9 +40,6 @@ function HomePageContent({ ...basisProps }: HomePageContentProps) {
   const { openModal } = useModals();
   const toast = useToast();
 
-  const [heavyEquipmentList, setHeavyEquipmentList] = useState<
-    HeavyEquipment[]
-  >([]);
   const [totalStatus, setTotalStatus] = useState<WorkStatusCountType>({});
   const [mapZoom, setMapZoom] = useState(11);
 
@@ -49,7 +48,7 @@ function HomePageContent({ ...basisProps }: HomePageContentProps) {
     {
       options: {
         onSuccess: (data) => {
-          console.log('d############', data);
+          console.log('워크 불러오기', data);
         },
         onError: (e: any) => {
           console.log('work 불러오기 에러', e.response.data);
@@ -63,24 +62,6 @@ function HomePageContent({ ...basisProps }: HomePageContentProps) {
       onSuccess: (response) => {
         console.log('작업 통계', { response });
         setTotalStatus(response);
-      },
-    },
-  });
-
-  const { fetchNextPage, hasNextPage } = useWorkLogAllInfiniteQuery({
-    variables: {},
-    options: {
-      onSuccess: (response) => {
-        const equipmentList = response.pages
-          .flatMap((page) => page.results)
-          .map((workLog) => ({
-            id: workLog?.id,
-            driver: workLog?.user,
-            carType: workLog?.heavyEquipmentType?.koreaName,
-            status: workLog?.statusDisplay,
-          }));
-
-        setHeavyEquipmentList(equipmentList as HeavyEquipment[]);
       },
     },
   });
@@ -178,10 +159,8 @@ function HomePageContent({ ...basisProps }: HomePageContentProps) {
         isOpenList={isOpenList}
         onOpenList={onOpenList}
         onCloseList={onCloseList}
-        heavyEquipmentList={heavyEquipmentList}
+        workListData={workListData as WorkType[]}
         totalStatus={totalStatus}
-        hasNextPage={hasNextPage}
-        fetchNextPage={fetchNextPage}
       />
       {/* 하단 타이머, 컨트롤러 */}
       <FooterControlWrapper
