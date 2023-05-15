@@ -61,11 +61,8 @@ function Report({ auxProps, ...props }: ReportProps) {
         } = response;
 
         methods.setValue('name', name);
-        methods.setValue(
-          'startTime',
-          dayjs(startTime).format('YYYY-MM-DD') || '',
-        );
-        methods.setValue('endTime', dayjs(endTime).format('YYYY-MM-DD') || '');
+        if (startTime) methods.setValue('startTime', startTime);
+        if (endTime) methods.setValue('endTime', endTime);
         methods.setValue('locationName', locationName);
         methods.setValue('construction', construction);
         methods.setValue(
