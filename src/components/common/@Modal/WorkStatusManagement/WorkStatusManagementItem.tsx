@@ -52,7 +52,13 @@ const WorkStatusManagementItem = ({
         </Text>
       </CustomTd>
       <CustomTd w="160px">
-        <Text textStyle="Text" color="black">
+        <Text
+          textStyle="Text"
+          color="black"
+          textOverflow="ellipsis"
+          w="160px"
+          overflow="hidden"
+        >
           {item?.heavyEquipmentType?.koreaName || ''}
         </Text>
       </CustomTd>

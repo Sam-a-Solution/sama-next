@@ -114,12 +114,24 @@ function RightFloatList({
                     </Text>
                   </CustomTd>
                   <CustomTd w="80px">
-                    <Text textStyle="TextSmall" color="black">
+                    <Text
+                      textStyle="TextSmall"
+                      color="black"
+                      textOverflow="ellipsis"
+                      w="80px"
+                      overflow="hidden"
+                    >
                       {item.user}
                     </Text>
                   </CustomTd>
                   <CustomTd w="80px">
-                    <Text textStyle="TextSmall" color="black">
+                    <Text
+                      textStyle="TextSmall"
+                      color="black"
+                      textOverflow="ellipsis"
+                      w="80px"
+                      overflow="hidden"
+                    >
                       {item.heavyEquipmentType.koreaName}
                     </Text>
                   </CustomTd>
