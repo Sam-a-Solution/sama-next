@@ -124,8 +124,9 @@ function Report({ auxProps, ...props }: ReportProps) {
               operationDepartment: {
                 id: Number(getValues('operationDepartment')),
               },
-              // startTime: dayjs(getValues('startTime')).format('YYYY-MM-DD'),
-              // endTime: dayjs(getValues('endTime')).format('YYYY-MM-DD'),
+              // P_TODO: 날짜 readlOnly, 제대로 수정되지 않음.
+              // startTime: dayjs(getValues('startTime')).toString(),
+              // endTime: dayjs(getValues('endTime')).toString(),
               byManager: true,
             },
           });

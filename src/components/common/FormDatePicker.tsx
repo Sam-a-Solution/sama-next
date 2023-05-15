@@ -59,7 +59,7 @@ const FormDatePicker = ({ label, keyName, ...props }: FormDatePickerProps) => {
             <ArrowRightIcon boxSize="20px" onClick={increaseMonth} />
           </Flex>
         )}
-        // {...props}
+        {...props}
       />
     </DatePickerContainer>
   );

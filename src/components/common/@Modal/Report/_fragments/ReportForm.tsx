@@ -4,19 +4,13 @@ import { useFormContext } from 'react-hook-form';
 import { Flex, Text, VStack } from '@chakra-ui/react';
 
 import CustomInput from '@components/common/@Input/CustomInput';
-import DateInput from '@components/common/@Input/DateInput';
 import FormSelect from '@components/common/@Select/FormSelect';
+import FormDatePicker from '@components/common/FormDatePicker';
 import FormHelper from '@components/common/FormHelper';
 
 import { choiceToSelect } from '@utils/format';
 
-import {
-  WorkBusinessType,
-  WorkChoiceType,
-  WorkFacilityType,
-  WorkHeavyEquipmentType,
-  WorkOperationDepartmentType,
-} from 'generated/apis/@types/data-contracts';
+import { WorkChoiceType } from 'generated/apis/@types/data-contracts';
 
 interface ReportFormProps {
   isReadOnly?: boolean;
@@ -30,28 +24,6 @@ function ReportForm({
   userName,
 }: ReportFormProps) {
   const methods = useFormContext();
-
-  const handleSelectOption = useCallback(
-    (
-      keyName: string,
-      option: string,
-      list:
-        | WorkHeavyEquipmentType[]
-        | WorkBusinessType[]
-        | WorkOperationDepartmentType[]
-        | WorkFacilityType[]
-        | undefined,
-    ) => {
-      console.log('실행되니');
-      console.log({ keyName, option, list });
-
-      methods.setValue(
-        keyName,
-        list?.find((item) => item.koreaName === option),
-      );
-    },
-    [methods],
-  );
 
   return (
     <VStack alignItems="flex-start" pb="30px" gap="24px">
@@ -70,23 +42,15 @@ function ReportForm({
           {...methods.register('name')}
         />
       </FormHelper>
-      {/* TODO: 달력 구현 */}
+
       <FormHelper label="작업기간">
         <Flex w="100%" alignItems="center" gap="4px">
-          <DateInput
-            isReadOnly={isReadOnly}
-            _readOnly={styles.readOnly}
-            registerName="startTime"
-          />
-          <Text>~</Text>
-          <DateInput
-            isReadOnly={isReadOnly}
-            _readOnly={styles.readOnly}
-            registerName="endTime"
-          />
+          <FormDatePicker keyName="startTime" disabled={isReadOnly} />
+          <Text fontWeight="700">~</Text>
+          <FormDatePicker keyName="endTime" disabled={isReadOnly} />
         </Flex>
       </FormHelper>
-      {/* 주소 검색 API 연동 */}
+
       <FormHelper label="작업위치">
         <CustomInput
           isReadOnly={isReadOnly}
@@ -110,7 +74,8 @@ function ReportForm({
           }}
         />
       </FormHelper>
-      {/* 작업내역 4개 */}
+
+      {/* 각 choice (select) 4개 */}
       <FormSelect
         keyName="heavyEquipmentType"
         selectList={choiceToSelect(selects?.heavyEquipmentType as any)}
