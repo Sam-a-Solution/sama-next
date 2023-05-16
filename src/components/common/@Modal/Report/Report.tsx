@@ -112,6 +112,7 @@ function Report({ auxProps, ...props }: ReportProps) {
         submitText: '수정',
         onSubmit: () => {
           const values = methods.getValues();
+
           updateWorkLogMutate({
             workLogId,
             data: {
@@ -124,9 +125,9 @@ function Report({ auxProps, ...props }: ReportProps) {
               operationDepartment: {
                 id: Number(getValues('operationDepartment')),
               },
-              // P_TODO: 날짜 readlOnly, 제대로 수정되지 않음.
-              // startTime: dayjs(getValues('startTime')).toString(),
-              // endTime: dayjs(getValues('endTime')).toString(),
+              // P_MEMO: 시간 차이 9시간 더해줌
+              startTime: dayjs(getValues('startTime')).add(9, 'hour').toDate(),
+              endTime: dayjs(getValues('endTime')).add(9, 'hour').toDate(),
               byManager: true,
             },
           });
