@@ -74,7 +74,7 @@ function FindIdPage() {
                   content: `입력하신 정보와\n일치하는 아이디가 없습니다.`,
                   submitText: '확인',
                   onSubmit: () => {
-                    router.replace('login');
+                    router.replace('/login');
                     closeModal('a');
                   },
                 },
