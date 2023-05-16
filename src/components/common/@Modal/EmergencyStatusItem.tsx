@@ -37,7 +37,13 @@ const EmergencyStatusItem = ({
         </Text>
       </CustomTd>
       <CustomTd w="200px">
-        <Text textStyle="Text" color="black">
+        <Text
+          textStyle="Text"
+          color="black"
+          textOverflow="ellipsis"
+          w="200px"
+          overflow="hidden"
+        >
           {item.heavyEquipmentType}
         </Text>
       </CustomTd>

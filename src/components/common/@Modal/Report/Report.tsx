@@ -61,11 +61,8 @@ function Report({ auxProps, ...props }: ReportProps) {
         } = response;
 
         methods.setValue('name', name);
-        methods.setValue(
-          'startTime',
-          dayjs(startTime).format('YYYY-MM-DD') || '',
-        );
-        methods.setValue('endTime', dayjs(endTime).format('YYYY-MM-DD') || '');
+        if (startTime) methods.setValue('startTime', startTime);
+        if (endTime) methods.setValue('endTime', endTime);
         methods.setValue('locationName', locationName);
         methods.setValue('construction', construction);
         methods.setValue(
@@ -115,6 +112,7 @@ function Report({ auxProps, ...props }: ReportProps) {
         submitText: '수정',
         onSubmit: () => {
           const values = methods.getValues();
+
           updateWorkLogMutate({
             workLogId,
             data: {
@@ -127,8 +125,9 @@ function Report({ auxProps, ...props }: ReportProps) {
               operationDepartment: {
                 id: Number(getValues('operationDepartment')),
               },
-              // startTime: dayjs(getValues('startTime')).format('YYYY-MM-DD'),
-              // endTime: dayjs(getValues('endTime')).format('YYYY-MM-DD'),
+              // P_MEMO: 시간 차이 9시간 더해줌
+              startTime: dayjs(getValues('startTime')).add(9, 'hour').toDate(),
+              endTime: dayjs(getValues('endTime')).add(9, 'hour').toDate(),
               byManager: true,
             },
           });

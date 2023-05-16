@@ -342,12 +342,12 @@ export interface WorkLogType {
    * 시작 시간
    * @format date-time
    */
-  readonly startTime: string | null;
+  startTime: string | Date | null;
   /**
    * 종료 시간
    * @format date-time
    */
-  readonly endTime: string | null;
+  endTime: string | Date | null;
   /**
    * 위치 이름
    * @maxLength 32
