@@ -49,7 +49,7 @@ const FormDatePicker = ({ label, keyName, ...props }: FormDatePickerProps) => {
             }}
           />
         }
-        dateFormat="yy-MM-dd hh:mm"
+        dateFormat="yy-MM-dd HH:mm"
         renderCustomHeader={({ date, decreaseMonth, increaseMonth }) => (
           <Flex alignItems="center" justifyContent="space-between" h="60px">
             <ArrowLeftIcon boxSize="20px" onClick={decreaseMonth} />
