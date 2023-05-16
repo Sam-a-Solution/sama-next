@@ -29,7 +29,6 @@ export interface NicknameValidationValidationErrorType {
   nickname?: string[];
 }
 
-// P_TYPE: 타입 수정될 예정 WorkLogType -> WorkEmergencyType
 export interface PaginateWorkEmergencyListType {
   count?: number;
   isNext?: boolean;
@@ -106,7 +105,7 @@ export interface UserType {
    * 소속
    * @maxLength 32
    */
-  affiliation: string;
+  affiliation?: string;
 }
 
 export interface UserLoginType {
@@ -342,12 +341,12 @@ export interface WorkLogType {
    * 시작 시간
    * @format date-time
    */
-  startTime: string | Date | null;
+  startTime?: string | Date | null;
   /**
    * 종료 시간
    * @format date-time
    */
-  endTime: string | Date | null;
+  endTime?: string | Date | null;
   /**
    * 위치 이름
    * @maxLength 32
@@ -396,6 +395,8 @@ export interface WorkLogValidationErrorType {
   nonField?: string[];
   workId?: string[];
   name?: string[];
+  startTime?: string[];
+  endTime?: string[];
   locationName?: string[];
   construction?: string[];
   heavyEquipmentType?: WorkHeavyEquipmentValidationErrorType;
