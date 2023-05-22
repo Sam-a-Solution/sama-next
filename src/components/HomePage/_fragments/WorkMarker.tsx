@@ -39,10 +39,10 @@ const WorkMarker = ({ work }: WorkMarkerProps) => {
           py="4px"
           px="8px"
         >
-          <Text color="white" size="sm" fontWeight="700">
+          <Text color="white" size="sm" fontWeight="700" wordBreak="keep-all">
             {work.heavyEquipmentType?.koreaName}
           </Text>
-          <Text color="white" size="sm">
+          <Text color="white" size="sm" wordBreak="keep-all">
             {work.user}
           </Text>
         </Flex>
