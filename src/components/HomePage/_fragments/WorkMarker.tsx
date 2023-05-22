@@ -31,6 +31,7 @@ const WorkMarker = ({ work }: WorkMarkerProps) => {
           borderBottomColor="rgba(0, 0, 0, 0.66)"
           borderBottomWidth="10px"
         />
+
         <Flex
           flexDir="column"
           bgColor="rgba(0, 0, 0, 0.66)"

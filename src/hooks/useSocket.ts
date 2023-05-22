@@ -1,8 +1,12 @@
 import { useEffect, useRef } from 'react';
 
+import { CONFIG } from '@config';
+
 interface useEmergencySocketProps {
   callback?: Function;
 }
+
+const SOCKET_BASE_URL = CONFIG.API_BASE_URL?.split('https://')[1];
 
 const useEmergencySocket = ({ callback }: useEmergencySocketProps) => {
   const socketRef = useRef<WebSocket | null>(null);
@@ -10,9 +14,8 @@ const useEmergencySocket = ({ callback }: useEmergencySocketProps) => {
   // init
   useEffect(() => {
     if (!callback) return;
-    socketRef.current = new WebSocket(
-      `wss://api.dev.ismart-safety.com/ws/work/`,
-    );
+    socketRef.current = new WebSocket(`wss://${SOCKET_BASE_URL}/ws/work/`);
+
     socketRef.current.onopen = () => {
       console.log('웹 소켓 연결 성공: ', socketRef.current);
     };
