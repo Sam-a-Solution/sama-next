@@ -20,25 +20,18 @@ function StatusBadge({ status }: StatusBadgeProps) {
     }),
     [],
   );
+
+  const isProgress = status === '진행 중' || status === 'PROGRESS';
+
+  const isEmergency = status === '비상' || status === 'EMERGENCY';
+
   return (
     <Badge
       w="50px"
       h="26px"
       py="4px"
-      bg={
-        status === '진행 중'
-          ? 'secondary.100'
-          : status === '비상'
-          ? '#FFE2E2'
-          : 'gray.500'
-      }
-      color={
-        status === '진행 중'
-          ? 'primary.500'
-          : status === '비상'
-          ? '#FF6060'
-          : 'white'
-      }
+      bg={isProgress ? 'secondary.100' : isEmergency ? '#FFE2E2' : 'gray.500'}
+      color={isProgress ? 'primary.500' : isEmergency ? '#FF6060' : 'white'}
       borderRadius="30px"
     >
       {statusMap[status as string]}
