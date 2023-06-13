@@ -11,10 +11,10 @@ import { ColorModeScript } from '@chakra-ui/color-mode';
 
 import config from '@theme/config';
 
-const SITE_NAME = 'TOKTOKHAN.DEV';
-const SITE_TITLE = 'TOKTOKHAN.DEV';
-const SITE_DESCRIPTION = '디지털프로덕트의 TOKTOK한 경험';
-const SITE_IMAGE = '/images/new_og.png';
+export const SITE_NAME = 'Smart 안전관리';
+export const SITE_TITLE = 'Smart 안전관리';
+const SITE_DESCRIPTION = '중장비를 더욱 안전하게';
+const SITE_IMAGE = '/images/app_og.png';
 
 // const GOOGLE_ANALYTICS_ID = 'G-입력해주세요';
 
@@ -54,10 +54,26 @@ class MyDocument extends Document {
           <link rel="preconnect" href="https://fonts.googleapis.com" />
           <link rel="preconnect" href="https://fonts.gstatic.com" />
           {/* SEO */}
-          <link rel="apple-touch-icon" href="/icons/120.png" />
-          <link rel="apple-touch-icon" sizes="152x152" href="/icons/152.png" />
-          <link rel="apple-touch-icon" sizes="180x180" href="/icons/180.png" />
-          <link rel="apple-touch-icon" sizes="167x167" href="/icons/167.png" />
+          <link
+            rel="apple-touch-icon"
+            sizes="120x120"
+            href="/apple-icon-120x120.png"
+          />
+          <link
+            rel="apple-touch-icon"
+            sizes="144x144"
+            href="/apple-icon-144x144.png"
+          />
+          <link
+            rel="apple-touch-icon"
+            sizes="152x152"
+            href="/apple-icon-152x152.png"
+          />
+          <link
+            rel="apple-touch-icon"
+            sizes="180x180"
+            href="/apple-icon-180x180.png"
+          />
           <meta name="apple-mobile-web-app-capable" content="yes" />
 
           <link rel="canonical" href="https://www.toktokhan.dev/" />

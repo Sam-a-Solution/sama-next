@@ -6,12 +6,14 @@ import HomeLayout from '@components/common/@Layout/HomeLayout';
 
 import withUnAuthGuard from '@hocs/withUnAuthGuard';
 
+import { SITE_NAME } from 'pages/_document';
+
 function Login() {
   return (
     <>
       <Head>
         {/* ex) Your App Name | Page Name */}
-        <title>똑똑한개발자 | login</title>
+        <title>{SITE_NAME} | login</title>
       </Head>
       <HomeLayout header={<LoginHeader />} content={<LoginPage />} />
     </>
