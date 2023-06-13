@@ -20,6 +20,6 @@ export const MY_IMAGES = {
       SUN: { src: '/icons/svg/sun.svg', alt: 'sun' },
     },
   },
-  IMAGES: { NEW_OG: { src: '/images/new_og.png', alt: 'new-og' } },
+  IMAGES: { NEW_OG: { src: '/images/app_og.png', alt: 'app_og' } },
   VERCEL: { src: '/vercel.svg', alt: 'vercel' },
 };
