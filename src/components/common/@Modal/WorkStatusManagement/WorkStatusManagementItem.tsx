@@ -79,12 +79,14 @@ const WorkStatusManagementItem = ({
       </CustomTd>
       <CustomTd w="220px">
         <Text textStyle="Text" color="black">
-          {dayjs(item.startTime).format('HH:mm:ss') || '-'}
+          {dayjs(item.startTime).format('YY-MM-DD HH:mm:ss') || '-'}
         </Text>
       </CustomTd>
       <CustomTd w="220px">
         <Text textStyle="Text" color="black">
-          {item?.endTime ? dayjs(item?.endTime).format('HH:mm:ss') : '-'}
+          {item?.endTime
+            ? dayjs(item?.endTime).format('YY-MM-DD HH:mm:ss')
+            : '-'}
         </Text>
       </CustomTd>
       <CustomTd w="200px">
