@@ -14,7 +14,7 @@ const FindIdResultPage = () => {
 
   const onClickResetPassword = () => {
     router.push({
-      pathname: '/login/resetPassword',
+      pathname: '/login/reset-password',
       query: { phone: phone },
     });
   };

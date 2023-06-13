@@ -33,7 +33,7 @@ const ResetPasswordPage = () => {
         onSuccess: (data) => {
           console.log('비밀번호 변경 완료', data);
 
-          router.replace('/login/resetPassword/result');
+          router.replace('/login/reset-password/result');
         },
         onError: (e: any) => {
           console.log('비밀번호 변경 에러', e.response.data);
