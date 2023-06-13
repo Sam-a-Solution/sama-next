@@ -58,7 +58,7 @@ function FindIdPage() {
       options: {
         onSuccess: (data) => {
           router.push({
-            pathname: '/login/findId/result',
+            pathname: '/login/find-id/result',
             query: {
               phone: watch('phone'),
               username: data.username,

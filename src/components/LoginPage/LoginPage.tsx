@@ -111,7 +111,7 @@ function LoginPage() {
   );
 
   const onClickFindIdBtn = () => {
-    router.push('/login/findId');
+    router.push('/login/find-id');
   };
 
   useEffect(() => {
