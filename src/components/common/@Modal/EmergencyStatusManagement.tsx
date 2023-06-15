@@ -60,6 +60,7 @@ function EmergencyStatusManagement({
       options: {
         onSuccess: () => {
           queryClient.invalidateQueries(['WORK_LOG_EMERGENCY_RETRIEVE']);
+          queryClient.invalidateQueries(['WORK_LIST']);
           openModal(CustomAlert, {
             auxProps: {
               title: '비상상황 해제 완료',

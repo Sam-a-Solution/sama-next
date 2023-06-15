@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 
 import GoogleMapReact from 'google-map-react';
 
@@ -13,6 +13,7 @@ import EmergencyStatusManagement from '@components/common/@Modal/EmergencyStatus
 import EmergencyToast from '@components/common/EmergencyToast';
 
 import { TOAST_DURATION } from '@constants/index';
+import { useQueryClient } from '@tanstack/react-query';
 
 import FooterControlWrapper from './_fragments/FooterControlWrapper';
 import HomeNavigationBar from './_fragments/HomeNavigationBar';
@@ -21,6 +22,7 @@ import WorkMarker from './_fragments/WorkMarker';
 
 import {
   WorkStatusCountType,
+  WorkStatusType,
   WorkType,
 } from 'generated/apis/@types/data-contracts';
 import { useWorkListQuery } from 'generated/apis/Work/Work.query';
@@ -39,6 +41,7 @@ interface HomePageContentProps extends BoxProps {}
 function HomePageContent({ ...basisProps }: HomePageContentProps) {
   const { openModal } = useModals();
   const toast = useToast();
+  const queryClient = useQueryClient();
 
   const [totalStatus, setTotalStatus] = useState<WorkStatusCountType>({});
   const [mapZoom, setMapZoom] = useState(11);
@@ -106,6 +109,7 @@ function HomePageContent({ ...basisProps }: HomePageContentProps) {
   useEmergencySocket({
     callback: (data: any) => {
       onOpenToast(data);
+      queryClient.invalidateQueries(['WORK_LIST']);
     },
   });
 
