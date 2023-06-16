@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 
 import GoogleMapReact from 'google-map-react';
 
@@ -13,6 +13,7 @@ import EmergencyStatusManagement from '@components/common/@Modal/EmergencyStatus
 import EmergencyToast from '@components/common/EmergencyToast';
 
 import { TOAST_DURATION } from '@constants/index';
+import { useQueryClient } from '@tanstack/react-query';
 
 import FooterControlWrapper from './_fragments/FooterControlWrapper';
 import HomeNavigationBar from './_fragments/HomeNavigationBar';
@@ -21,6 +22,7 @@ import WorkMarker from './_fragments/WorkMarker';
 
 import {
   WorkStatusCountType,
+  WorkStatusType,
   WorkType,
 } from 'generated/apis/@types/data-contracts';
 import { useWorkListQuery } from 'generated/apis/Work/Work.query';
@@ -39,6 +41,7 @@ interface HomePageContentProps extends BoxProps {}
 function HomePageContent({ ...basisProps }: HomePageContentProps) {
   const { openModal } = useModals();
   const toast = useToast();
+  const queryClient = useQueryClient();
 
   const [totalStatus, setTotalStatus] = useState<WorkStatusCountType>({});
   const [mapZoom, setMapZoom] = useState(11);
@@ -65,6 +68,25 @@ function HomePageContent({ ...basisProps }: HomePageContentProps) {
       },
     },
   });
+
+  // P_TODO: 가중치 계산 로직, 임시
+  const getStatusWeight = (status: WorkStatusType) => {
+    if (status === 'EMERGENCY') return 3;
+    else if (status === 'PROGRESS') return 2;
+    else return 1;
+  };
+
+  const sortedWorkList = useMemo(() => {
+    if (!workListData) return [];
+    else {
+      const clone = [...(workListData as WorkType[])];
+      return clone?.sort((a, b) => {
+        const aWeight = getStatusWeight(a.status);
+        const bWeight = getStatusWeight(b.status);
+        return aWeight - bWeight;
+      });
+    }
+  }, [workListData]);
 
   const {
     isOpen: isOpenNavbar,
@@ -105,6 +127,7 @@ function HomePageContent({ ...basisProps }: HomePageContentProps) {
 
   useEmergencySocket({
     callback: (data: any) => {
+      queryClient.invalidateQueries(['WORK_LIST']);
       onOpenToast(data);
     },
   });
@@ -138,7 +161,7 @@ function HomePageContent({ ...basisProps }: HomePageContentProps) {
           {/* // P_MEMO: 해당 props를 넘겨야하는데 props가 없기 떄문에 ignore 설정
               // eslint-disable-next-line @typescript-eslint/ban-ts-comment
               // @ts-ignore: Unreachable code error */}
-          {workListData?.map((work) => (
+          {sortedWorkList?.map((work) => (
             <Flex
               key={work.id}
               flexDir="column"
