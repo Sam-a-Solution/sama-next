@@ -69,6 +69,25 @@ function HomePageContent({ ...basisProps }: HomePageContentProps) {
     },
   });
 
+  // P_TODO: 가중치 계산 로직, 임시
+  const getStatusWeight = (status: WorkStatusType) => {
+    if (status === 'EMERGENCY') return 3;
+    else if (status === 'PROGRESS') return 2;
+    else return 1;
+  };
+
+  const sortedWorkList = useMemo(() => {
+    if (!workListData) return [];
+    else {
+      const clone = [...(workListData as WorkType[])];
+      return clone?.sort((a, b) => {
+        const aWeight = getStatusWeight(a.status);
+        const bWeight = getStatusWeight(b.status);
+        return aWeight - bWeight;
+      });
+    }
+  }, [workListData]);
+
   const {
     isOpen: isOpenNavbar,
     onOpen: onOpenNavbar,
@@ -108,8 +127,8 @@ function HomePageContent({ ...basisProps }: HomePageContentProps) {
 
   useEmergencySocket({
     callback: (data: any) => {
-      onOpenToast(data);
       queryClient.invalidateQueries(['WORK_LIST']);
+      onOpenToast(data);
     },
   });
 
@@ -142,7 +161,7 @@ function HomePageContent({ ...basisProps }: HomePageContentProps) {
           {/* // P_MEMO: 해당 props를 넘겨야하는데 props가 없기 떄문에 ignore 설정
               // eslint-disable-next-line @typescript-eslint/ban-ts-comment
               // @ts-ignore: Unreachable code error */}
-          {workListData?.map((work) => (
+          {sortedWorkList?.map((work) => (
             <Flex
               key={work.id}
               flexDir="column"
