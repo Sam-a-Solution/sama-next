@@ -104,6 +104,20 @@ function Report({ auxProps, ...props }: ReportProps) {
   });
 
   const openConfirmAlert = () => {
+    const isCollectTime =
+      dayjs(getValues('endTime')).diff(dayjs(getValues('startTime'))) > 0;
+
+    if (!isCollectTime) {
+      openModal(CustomAlert, {
+        auxProps: {
+          title: '작업기간 시간 설정 오류',
+          content: `작업 종료시간이 작업 시작시간보다 빠릅니다.\n올바른 작업시간을 입력해주세요.`,
+          submitText: '확인',
+        },
+      });
+      return;
+    }
+
     openModal(CustomConfirmAlert, {
       auxProps: {
         title: '작업 내용 수정',
@@ -112,7 +126,6 @@ function Report({ auxProps, ...props }: ReportProps) {
         submitText: '수정',
         onSubmit: () => {
           const values = methods.getValues();
-
           updateWorkLogMutate({
             workLogId,
             data: {
