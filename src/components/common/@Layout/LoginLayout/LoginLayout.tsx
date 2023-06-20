@@ -2,6 +2,7 @@ import React from 'react';
 
 import { Flex, FlexProps, VStack } from '@chakra-ui/react';
 
+import MainHeader from '../Header/MainHeader';
 import LoginHeader from './components/LoginHeader';
 
 interface LoginLayoutProps {
@@ -12,7 +13,7 @@ interface LoginLayoutProps {
 }
 
 const LoginLayout = ({
-  header = <LoginHeader />,
+  header = <MainHeader />,
   footer,
   content,
   flexProps,
