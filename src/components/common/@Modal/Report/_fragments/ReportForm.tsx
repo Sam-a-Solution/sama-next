@@ -45,9 +45,17 @@ function ReportForm({
 
       <FormHelper label="작업기간">
         <Flex w="100%" alignItems="center" gap="4px">
-          <FormDatePicker keyName="startTime" disabled={isReadOnly} />
+          <FormDatePicker
+            keyName="startTime"
+            disabled={isReadOnly}
+            maxDate={new Date()}
+          />
           <Text fontWeight="700">~</Text>
-          <FormDatePicker keyName="endTime" disabled={isReadOnly} />
+          <FormDatePicker
+            keyName="endTime"
+            disabled={isReadOnly}
+            minDate={new Date()}
+          />
         </Flex>
       </FormHelper>
 

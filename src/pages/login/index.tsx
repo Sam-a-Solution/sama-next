@@ -1,7 +1,7 @@
 import Head from 'next/head';
 
 import LoginPage from '@components/LoginPage';
-import LoginHeader from '@components/common/@Layout/Header/LoginHeader';
+import MainHeader from '@components/common/@Layout/Header/MainHeader';
 import HomeLayout from '@components/common/@Layout/HomeLayout';
 
 import withUnAuthGuard from '@hocs/withUnAuthGuard';
@@ -15,7 +15,7 @@ function Login() {
         {/* ex) Your App Name | Page Name */}
         <title>{SITE_NAME} | login</title>
       </Head>
-      <HomeLayout header={<LoginHeader />} content={<LoginPage />} />
+      <HomeLayout header={<MainHeader />} content={<LoginPage />} />
     </>
   );
 }

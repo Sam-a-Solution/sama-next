@@ -3,7 +3,7 @@ import React from 'react';
 
 import { Flex } from '@chakra-ui/react';
 
-function LoginHeader() {
+function MainHeader() {
   return (
     <>
       <Flex //
@@ -26,4 +26,4 @@ function LoginHeader() {
   );
 }
 
-export default LoginHeader;
+export default MainHeader;
