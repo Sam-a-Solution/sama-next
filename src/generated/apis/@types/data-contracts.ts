@@ -389,6 +389,9 @@ export interface WorkLogType {
   roadControl: string;
   /** 관리자가 수정 여부 */
   byManager?: boolean | null;
+
+  /** 비상 해재 여부 */
+  readonly isEmergencyReleased: boolean;
 }
 
 export interface WorkLogValidationErrorType {

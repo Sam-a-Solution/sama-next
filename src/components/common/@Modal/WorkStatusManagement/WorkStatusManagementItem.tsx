@@ -63,7 +63,10 @@ const WorkStatusManagementItem = ({
         </Text>
       </CustomTd>
       <CustomTd w="80px">
-        <StatusBadge status={item?.statusDisplay} />
+        <StatusBadge
+          status={item?.statusDisplay}
+          isEmergencyReleased={item.isEmergencyReleased}
+        />
       </CustomTd>
       <CustomTd w="140px">
         {/* 관리자 확인이 완료되었거나, 작업 미종료시 작업내용 수정 불가 */}
