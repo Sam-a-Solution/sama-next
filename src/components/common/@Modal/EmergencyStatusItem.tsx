@@ -48,7 +48,10 @@ const EmergencyStatusItem = ({
         </Text>
       </CustomTd>
       <CustomTd w="120px">
-        <StatusBadge status={item.statusDisplay} />
+        <StatusBadge
+          status={item.statusDisplay}
+          isEmergencyReleased={item.isEmergencyReleased}
+        />
       </CustomTd>
       <CustomTd w="250px">
         <Text textStyle="Text" color="black">

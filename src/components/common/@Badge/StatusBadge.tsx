@@ -4,26 +4,29 @@ import { Badge } from '@chakra-ui/react';
 
 interface StatusBadgeProps {
   status?: string;
+  isEmergencyReleased?: boolean;
 }
 
-function StatusBadge({ status }: StatusBadgeProps) {
-  const statusMap: { [key: string]: string } = useMemo(
-    () => ({
-      '진행 중': '운전',
-      대기: '정지',
-      종료: '정지',
-      비상: '비상',
-      PROGRESS: '운전',
-      READY: '정지',
-      END: '정지',
-      EMERGENCY: '비상',
-    }),
-    [],
-  );
-
+function StatusBadge({ status, isEmergencyReleased }: StatusBadgeProps) {
   const isProgress = status === '진행 중' || status === 'PROGRESS';
 
-  const isEmergency = status === '비상' || status === 'EMERGENCY';
+  const isEmergency =
+    isEmergencyReleased === false &&
+    (status === '비상' || status === 'EMERGENCY');
+
+  const getStatusText = ({
+    isProgress,
+    isEmergency,
+  }: {
+    isProgress: boolean;
+    isEmergency: boolean;
+  }) => {
+    if (isEmergency) return '비상';
+    else if (isProgress) return '운전';
+    else return '정지';
+  };
+
+  console.log('이머전시이이ㅣㅣ', isEmergency, isEmergencyReleased);
 
   return (
     <Badge
@@ -34,7 +37,11 @@ function StatusBadge({ status }: StatusBadgeProps) {
       color={isProgress ? 'primary.500' : isEmergency ? '#FF6060' : 'white'}
       borderRadius="30px"
     >
-      {statusMap[status as string]}
+      {/* {statusMap[status as string]} */}
+      {getStatusText({
+        isProgress,
+        isEmergency,
+      })}
     </Badge>
   );
 }
