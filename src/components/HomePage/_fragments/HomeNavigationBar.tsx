@@ -40,7 +40,6 @@ function HomeNavigationBar({
   const { mutate: createLogoutMutate } = useUserLogoutCreateMutation({
     options: {
       onSuccess: (data) => {
-        console.log({ data });
         logout();
         router.push('/login');
       },

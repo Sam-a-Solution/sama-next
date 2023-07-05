@@ -82,13 +82,10 @@ function WorkerAccount({ ...props }: WorkerAccountProps) {
     useUserNicknameValidationCreateMutation({
       options: {
         onSuccess: () => {
-          // console.log('아이디 중복검사', { data });
           setSuccessText('사용 가능한 아이디입니다.');
         },
 
         onError: (error) => {
-          console.log('아이디 중복검사', { error });
-
           if (error.response?.status === 400) {
             methods.setError('nickname', {
               type: 'validate',
@@ -114,7 +111,6 @@ function WorkerAccount({ ...props }: WorkerAccountProps) {
         });
       },
       onError: (error: any) => {
-        console.log('계정생성 에러', error.response?.data);
         for (const keyName in error.response.data) {
           methods.setError(keyName as any, {
             message: error?.response?.data[keyName][0],
@@ -132,17 +128,11 @@ function WorkerAccount({ ...props }: WorkerAccountProps) {
     });
   };
 
-  const handleCreateAccount = methods.handleSubmit(
-    (data) => {
-      console.log({ data });
-      registerCreateMutate({
-        data,
-      });
-    },
-    (error) => {
-      console.log({ error });
-    },
-  );
+  const handleCreateAccount = methods.handleSubmit((data) => {
+    registerCreateMutate({
+      data,
+    });
+  });
 
   useEffect(() => {
     if (nicknameErrorMessage) {

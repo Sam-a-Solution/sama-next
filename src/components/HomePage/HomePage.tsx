@@ -48,22 +48,12 @@ function HomePageContent({ ...basisProps }: HomePageContentProps) {
 
   // P_MEMO: 해당 목록은 페이지네이션이 아닌, 전체로 받아옴
   const { data: workListData, refetch: refetchWorkListData } = useWorkListQuery(
-    {
-      options: {
-        onSuccess: (data) => {
-          console.log('워크 불러오기', data);
-        },
-        onError: (e: any) => {
-          console.log('work 불러오기 에러', e.response.data);
-        },
-      },
-    },
+    {},
   );
 
   useWorkLogStatusCountRetrieveQuery({
     options: {
       onSuccess: (response) => {
-        console.log('작업 통계', { response });
         setTotalStatus(response);
       },
     },

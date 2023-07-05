@@ -95,20 +95,15 @@ function LoginPage() {
     [nicknameValue, passwordValue],
   );
 
-  const onSubmit = methods.handleSubmit(
-    (data) => {
-      const { nickname, password } = data;
-      createLoginMutate({
-        data: {
-          nickname,
-          password,
-        },
-      });
-    },
-    (error) => {
-      console.log(error);
-    },
-  );
+  const onSubmit = methods.handleSubmit((data) => {
+    const { nickname, password } = data;
+    createLoginMutate({
+      data: {
+        nickname,
+        password,
+      },
+    });
+  });
 
   const onClickFindIdBtn = () => {
     router.push('/login/find-id');

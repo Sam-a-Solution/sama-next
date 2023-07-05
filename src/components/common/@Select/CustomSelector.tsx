@@ -62,7 +62,6 @@ const CustomSelector = ({
   const menuButtonWidth = useInputWidth(menuButtonRef);
 
   const handleOptionSelect = (option: string) => {
-    console.log({ option });
     setSelectedOption(option);
     onChange(keyName, option, list);
   };

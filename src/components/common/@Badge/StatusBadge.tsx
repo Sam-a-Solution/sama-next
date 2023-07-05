@@ -26,8 +26,6 @@ function StatusBadge({ status, isEmergencyReleased }: StatusBadgeProps) {
     else return '정지';
   };
 
-  console.log('이머전시이이ㅣㅣ', isEmergency, isEmergencyReleased);
-
   return (
     <Badge
       w="50px"

@@ -45,7 +45,6 @@ function FindIdPage() {
           setProgress(2);
         },
         onError: (e: any) => {
-          console.log('인증번호 발송 에러', e.response.data);
           for (const keyName in e.response.data) {
             setError(keyName as any, { message: e.response.data[keyName][0] });
           }

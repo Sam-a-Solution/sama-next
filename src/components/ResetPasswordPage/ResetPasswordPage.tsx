@@ -31,12 +31,9 @@ const ResetPasswordPage = () => {
     useUserPasswordResetCreateMutation({
       options: {
         onSuccess: (data) => {
-          console.log('비밀번호 변경 완료', data);
-
           router.replace('/login/reset-password/result');
         },
         onError: (e: any) => {
-          console.log('비밀번호 변경 에러', e.response.data);
           for (const keyName in e.response.data) {
             setError(keyName as any, { message: e.response.data[keyName][0] });
           }

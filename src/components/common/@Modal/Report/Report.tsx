@@ -98,8 +98,6 @@ function Report({ auxProps, ...props }: ReportProps) {
           },
         });
       },
-      onError: (e) =>
-        console.log('갱신에러', e?.response?.data, methods.getValues()),
     },
   });
 
