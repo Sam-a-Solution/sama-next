@@ -26,6 +26,7 @@ import Pagination from '../../Pagination';
 import CustomAlert from '../@Alert/CustomAlert';
 import CustomConfirmAlert from '../@Alert/CustomConfirmAlert';
 import ModalContainer from '../ModalContainer';
+import PauseLog from '../PauesLog/PauseLog';
 import Report from '../Report/Report';
 import WorkStatusManagementHeader from './WorkStatusManagementHeader';
 import WorkStatusManagementItem from './WorkStatusManagementItem';
@@ -100,6 +101,14 @@ function WorkStatusManagement({ ...props }: WorkStatusManagementProps) {
     });
   };
 
+  const onClickOpenPauseLogModal = ({ item }: { item: WorkLogType }) => {
+    openModal(PauseLog, {
+      auxProps: {
+        workLogId: item?.id,
+      },
+    });
+  };
+
   const onClickManagerCheck = ({ item }: { item: WorkLogType }) => {
     openModal(CustomConfirmAlert, {
       auxProps: {
@@ -152,6 +161,7 @@ function WorkStatusManagement({ ...props }: WorkStatusManagementProps) {
                   page={page}
                   onClickOpenReportModal={onClickOpenReportModal}
                   onClickManagerCheck={onClickManagerCheck}
+                  onClickOpenPauseLogModal={onClickOpenPauseLogModal}
                 />
               ))}
             </Tbody>

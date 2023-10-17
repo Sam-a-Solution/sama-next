@@ -21,6 +21,7 @@ interface WorkStatusManagementItemProps {
     isEditable: boolean;
   }) => void;
   onClickManagerCheck: ({ item }: { item: WorkLogType }) => void;
+  onClickOpenPauseLogModal: ({ item }: { item: WorkLogType }) => void;
 }
 
 const WorkStatusManagementItem = ({
@@ -29,6 +30,7 @@ const WorkStatusManagementItem = ({
   page,
   onClickManagerCheck,
   onClickOpenReportModal,
+  onClickOpenPauseLogModal,
 }: WorkStatusManagementItemProps) => {
   const isEditable =
     !item?.isChecked &&
@@ -80,17 +82,32 @@ const WorkStatusManagementItem = ({
           작업 내용
         </Button>
       </CustomTd>
-      <CustomTd w="220px">
+      <CustomTd w="120px">
         <Text textStyle="Text" color="black">
-          {dayjs(item.startTime).format('YY-MM-DD HH:mm:ss') || '-'}
+          {dayjs(item.startTime).format('HH:mm:ss') || '-'}
         </Text>
       </CustomTd>
-      <CustomTd w="220px">
+      <CustomTd w="120px">
         <Text textStyle="Text" color="black">
-          {item?.endTime
-            ? dayjs(item?.endTime).format('YY-MM-DD HH:mm:ss')
-            : '-'}
+          {item?.endTime ? dayjs(item?.endTime).format('HH:mm:ss') : '-'}
         </Text>
+      </CustomTd>
+      <CustomTd w="120px">
+        <Text textStyle="Text" color="black">
+          {item.workTime ? item.workTime?.split('.')[0] : '-'}
+        </Text>
+      </CustomTd>
+      <CustomTd w="120px">
+        <Button
+          w="auto"
+          px="12px"
+          h="30px"
+          variant="outline"
+          colorScheme="primary"
+          onClick={() => onClickOpenPauseLogModal({ item })}
+        >
+          일시 중지 내역
+        </Button>
       </CustomTd>
       <CustomTd w="200px">
         {item?.isChecked ? (
