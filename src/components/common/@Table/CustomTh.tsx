@@ -1,20 +1,19 @@
 import React from 'react';
 
-import { Th } from '@chakra-ui/react';
+import { TableCaptionProps, Th } from '@chakra-ui/react';
 
-interface CustomThProps {
+interface CustomThProps extends TableCaptionProps {
   children: React.ReactNode;
-  w: string;
 }
 
-function CustomTh({ children, w }: CustomThProps) {
+function CustomTh({ children, ...props }: CustomThProps) {
   return (
     <Th
-      w={w}
       textAlign="center"
       css={{
         padding: 0,
       }}
+      {...props}
     >
       {children}
     </Th>
