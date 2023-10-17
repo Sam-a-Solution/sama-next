@@ -484,6 +484,38 @@ export const MarkerEmergencyIcon = (props: IconProps) => (
   </Icon>
 );
 
+export const MarkerPauseIcon = (props: IconProps) => (
+  <Icon viewBox="0 0 34 34" {...props}>
+    <svg
+      width="34"
+      height="34"
+      viewBox="0 0 35 34"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <g clipPath="url(#clip0_555_16840)">
+        <circle cx="17.5" cy="17" r="17" fill="#8C919F" />
+        <rect x="11.5" y="10" width="4" height="14" rx="1" fill="#B8BCC8" />
+        <rect x="19.5" y="10" width="4" height="14" rx="1" fill="#B8BCC8" />
+      </g>
+      <rect
+        x="1.5"
+        y="1"
+        width="32"
+        height="32"
+        rx="16"
+        stroke="white"
+        strokeWidth="2"
+      />
+      <defs>
+        <clipPath id="clip0_555_16840">
+          <rect x="0.5" width="34" height="34" rx="17" fill="white" />
+        </clipPath>
+      </defs>
+    </svg>
+  </Icon>
+);
+
 export const RefreshIcon = (props: IconProps) => (
   <Icon viewBox="0 0 24 24" {...props}>
     <svg
