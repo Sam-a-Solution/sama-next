@@ -16,6 +16,10 @@ module.exports = {
         source: '/sitemap.xml',
         destination: '/api/sitemap',
       },
+      // {
+      //   source: '/v1/:path*',
+      //   destination: `https://api.ismart-safety.com/v1/:path*`,
+      // },
     ];
   },
 };

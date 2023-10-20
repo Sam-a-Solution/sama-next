@@ -351,6 +351,11 @@ export interface WorkLogType {
    * 위치 이름
    * @maxLength 32
    */
+  /**
+   * 실 근무시간
+   * @format date-time
+   */
+  workTime?: string;
   locationName: string;
   /**
    * 공사 구분
@@ -450,4 +455,5 @@ export const WorkStatusTypeMap = {
   PROGRESS: '종료',
   END: '진행 중',
   EMERGENCY: '대기',
+  PAUSE: '일시정지',
 } as const;
