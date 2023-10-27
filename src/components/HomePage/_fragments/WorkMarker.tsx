@@ -56,7 +56,6 @@ const WorkMarker = ({ work }: WorkMarkerProps) => {
             {work.user}
           </Text>
         </Flex>
-        MarkerIcon
       </Flex>
     </Flex>
   );
