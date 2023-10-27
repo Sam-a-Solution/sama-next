@@ -431,6 +431,7 @@ export interface WorkStatusCountType {
   progressCount?: number;
   endCount?: number;
   emergencyCount?: number;
+  pauseCount?: number;
 }
 
 export interface WorkValidationErrorType {
@@ -455,5 +456,5 @@ export const WorkStatusTypeMap = {
   PROGRESS: '종료',
   END: '진행 중',
   EMERGENCY: '대기',
-  PAUSE: '일시정지',
+  PAUSE: '일시중지',
 } as const;

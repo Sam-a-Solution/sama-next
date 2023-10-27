@@ -83,7 +83,7 @@ function PauseLog({ auxProps, ...props }: PauseLogProps) {
               </CustomTh>
               <CustomTh w="200px">
                 <Text textStyle="TitleSmall" color="gray.700">
-                  일시 정지 시간
+                  일시 중지 시간
                 </Text>
               </CustomTh>
             </Thead>

@@ -9,7 +9,7 @@ interface StatusBadgeProps {
 
 function StatusBadge({ status, isEmergencyReleased }: StatusBadgeProps) {
   const isProgress = status === '진행 중' || status === 'PROGRESS';
-  const isPause = status === '일시정지' || status === 'PAUSE';
+  const isPause = status === '일시중지' || status === 'PAUSE';
 
   const isEmergency =
     isEmergencyReleased === false &&
@@ -19,7 +19,7 @@ function StatusBadge({ status, isEmergencyReleased }: StatusBadgeProps) {
     {
       if (isEmergency) return '비상';
       else if (isProgress) return '운전';
-      else if (isPause) return '일시정지';
+      else if (isPause) return '일시중지';
       else return '정지';
     }
   }, [isEmergency, isPause, isProgress]);
