@@ -28,6 +28,7 @@ const convertingKeyMap: Record<WorkStatusKey, string> = {
   emergencyCount: '비상상황',
   endCount: '정지',
   progressCount: '운전 중',
+  pauseCount: '일시중지',
 } as const;
 
 interface RightFloatListProps {
@@ -175,25 +176,31 @@ function RightFloatList({
               </Tr>
             </Thead>
             <Tbody>
-              {Object.keys(totalStatus).map((item, index) => (
-                <Tr key={`${item}-${index}`} h="36px">
-                  <CustomTd w="" borderColor="secondary.100" bg="secondary.50">
-                    <Text textStyle="TitleSmall" color="primary.500">
-                      {convertingKeyMap[item as keyof WorkStatusCountType]}
-                    </Text>
-                  </CustomTd>
-                  <CustomTd w="">
-                    <Text
-                      textAlign="right"
-                      px="9px"
-                      textStyle="Text"
-                      color="black"
+              {Object.keys(totalStatus).map((item, index) => {
+                return (
+                  <Tr key={`${item}-${index}`} h="36px">
+                    <CustomTd
+                      w=""
+                      borderColor="secondary.100"
+                      bg="secondary.50"
                     >
-                      {totalStatus[item as keyof WorkStatusCountType]}
-                    </Text>
-                  </CustomTd>
-                </Tr>
-              ))}
+                      <Text textStyle="TitleSmall" color="primary.500">
+                        {convertingKeyMap[item as keyof WorkStatusCountType]}
+                      </Text>
+                    </CustomTd>
+                    <CustomTd w="">
+                      <Text
+                        textAlign="right"
+                        px="9px"
+                        textStyle="Text"
+                        color="black"
+                      >
+                        {totalStatus[item as keyof WorkStatusCountType]}
+                      </Text>
+                    </CustomTd>
+                  </Tr>
+                );
+              })}
             </Tbody>
           </Table>
         </TableContainer>
