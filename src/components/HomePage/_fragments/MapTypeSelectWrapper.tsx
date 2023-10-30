@@ -1,6 +1,6 @@
-import { memo, useCallback, useEffect } from 'react';
+import { memo } from 'react';
 
-import { Divider, Flex, Text } from '@chakra-ui/react';
+import { Flex, Text } from '@chakra-ui/react';
 
 import { LABEL } from '@constants/label';
 import { LAYOUT } from '@constants/layout';
@@ -15,7 +15,6 @@ const MapTypeSelectWrapper = ({
 }: MapTypeSelectWrapperProps) => {
   return (
     <Flex
-      zIndex={10_000}
       position="absolute"
       alignItems="center"
       top={LAYOUT.HEADER.HEIGHT}

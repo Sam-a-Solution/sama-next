@@ -16,8 +16,8 @@ import { TOAST_DURATION } from '@constants/index';
 import { useQueryClient } from '@tanstack/react-query';
 
 import FooterControlWrapper from './_fragments/FooterControlWrapper';
-import MapTypeSelectWrapper from './_fragments/FooterControlWrapper/MapTypeSelectWrapper';
 import HomeNavigationBar from './_fragments/HomeNavigationBar';
+import MapTypeSelectWrapper from './_fragments/MapTypeSelectWrapper';
 import RightFloatList from './_fragments/RightFloatList';
 import WorkMarker from './_fragments/WorkMarker';
 
@@ -126,10 +126,6 @@ function HomePageContent({ ...basisProps }: HomePageContentProps) {
 
   return (
     <Box position="relative" {...basisProps}>
-      <MapTypeSelectWrapper
-        setViewMapType={setViewMapType}
-        viewMapType={viewMapType}
-      />
       <HomeNavigationBar
         isOpenNavbar={isOpenNavbar}
         onOpenNavbar={onOpenNavbar}
@@ -189,6 +185,11 @@ function HomePageContent({ ...basisProps }: HomePageContentProps) {
         refetchWorkListData={refetchWorkListData}
         onClickMinusZoom={onClickMinusZoom}
         onClickPlusZoom={onClickPlusZoom}
+      />
+
+      <MapTypeSelectWrapper
+        setViewMapType={setViewMapType}
+        viewMapType={viewMapType}
       />
     </Box>
   );
