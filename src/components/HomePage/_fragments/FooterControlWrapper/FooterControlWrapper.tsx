@@ -37,13 +37,7 @@ const FooterControlWrapper = ({
   }, [ms, refetchWorkListData, setUseTimer, stopTimer]);
 
   return (
-    <Flex
-      position="absolute"
-      bottom="20px"
-      left="50%"
-      transform="translateX(-50%)"
-      gap="12px"
-    >
+    <Flex position="absolute" bottom="20px" left="50%" gap="12px">
       <RefreshTimer
         minutes={minutes}
         seconds={seconds}

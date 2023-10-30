@@ -11,8 +11,7 @@ import { WorkLogType } from 'generated/apis/@types/data-contracts';
 
 interface WorkStatusManagementItemProps {
   item: WorkLogType;
-  index: number;
-  page: number;
+
   onClickOpenReportModal: ({
     item,
     isEditable,
@@ -26,8 +25,7 @@ interface WorkStatusManagementItemProps {
 
 const WorkStatusManagementItem = ({
   item,
-  index,
-  page,
+
   onClickManagerCheck,
   onClickOpenReportModal,
   onClickOpenPauseLogModal,
@@ -40,11 +38,9 @@ const WorkStatusManagementItem = ({
     item?.statusDisplay === '대기' || item?.statusDisplay === '종료';
 
   return (
-    <Tr key={`${item.user}-${item.id}-${index}`} h="60px">
+    <Tr key={`${item.user}-${item.id}`} h="60px">
       <CustomTd w="100px">
-        {/* P_TODO: 기획 확인 필요. index를 표시하는게 나을것같은데? */}
         <Text textStyle="Text" color="black">
-          {/* {page * 10 - 10 + index + 1} */}
           {item.id}
         </Text>
       </CustomTd>

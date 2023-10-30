@@ -1,6 +1,12 @@
-import { useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
-import { Button, Flex, ListItem, UnorderedList } from '@chakra-ui/react';
+import {
+  Button,
+  Flex,
+  IconButton,
+  ListItem,
+  UnorderedList,
+} from '@chakra-ui/react';
 
 import {
   FirstPageIcon,
@@ -10,80 +16,90 @@ import {
 } from 'generated/icons/MyIcons';
 
 type PaginationProps = {
-  totalItems?: number;
   currentPage: number;
-  itemsPerPage: number;
-  onChangePage: (pageNumber: number) => void;
+  setCurrentPage: (pageNumber: number) => void;
+  totalItems?: number;
+  buttonLimit?: number;
+  pageSize?: number;
 };
 
 const Pagination = ({
-  totalItems,
   currentPage,
-  itemsPerPage,
-  onChangePage,
+  setCurrentPage,
+  totalItems = 0,
+  buttonLimit = 5,
+  pageSize = 10,
 }: PaginationProps) => {
-  const totalPages = Math.ceil((totalItems as number) / itemsPerPage);
-  const [pageRange, setPageRange] = useState([1, 5]);
+  const pageGroupIndex = Math.floor(currentPage / buttonLimit);
 
-  const handleClick = (page: number) => {
-    if (page <= 0) return; // 1페이지 이하로 내려가지 않도록
-    if (page === 1) return;
-    if (page > totalPages) return; // 마지막 페이지 이상으로 올라가지 않도록
-    onChangePage(page); // 페이지 변경
+  const pageButtonLength = useMemo(
+    () => Math.ceil(totalItems / pageSize),
+    [totalItems, pageSize],
+  );
 
-    const lastPage = Math.min(totalPages, pageRange[1]);
-    const firstPage = Math.max(1, pageRange[0]);
+  const pageButtonList = useMemo(
+    () =>
+      Array(pageButtonLength)
+        .fill(0)
+        .map((_, i) => i),
+    [pageButtonLength],
+  );
 
-    // 마지막 페이지보다 큰 경우
-    if (page > lastPage) {
-      const newLastRange = totalPages - 5 > 4 ? page + 4 : totalPages;
-      setPageRange([page, newLastRange]);
-    }
+  const isDisabledPrev = useMemo(() => currentPage <= 0, [currentPage]);
+  const isDisabledNext = useMemo(
+    () => currentPage >= pageButtonLength - 1,
+    [pageButtonLength, currentPage],
+  );
 
-    // 첫 페이지보다 작은 경우
-    if (page < firstPage) {
-      const newFirstRange = page - 4 > 1 ? page - 5 : 1;
-      setPageRange([newFirstRange, page]);
-    }
-  };
+  const onClickFirstPageButton = useCallback(
+    () => setCurrentPage(0),
+    [setCurrentPage],
+  );
 
-  const pages = [];
-  for (let i = pageRange[0]; i <= Math.min(totalPages, pageRange[1]); i++) {
-    pages.push(i);
-  }
+  const onClickLastPageButton = useCallback(
+    () => setCurrentPage(pageButtonLength - 1),
+    [pageButtonLength, setCurrentPage],
+  );
 
-  const handleFirstPageClick = () => {
-    handleClick(1);
-    setPageRange([1, 5]);
-  };
+  const onClickPrevPageButton = useCallback(() => {
+    const nextSelectedPage =
+      pageGroupIndex === 0 ? 0 : pageGroupIndex * buttonLimit;
+    setCurrentPage(nextSelectedPage);
+  }, [buttonLimit, pageGroupIndex, setCurrentPage]);
 
-  const handleLastPageClick = () => {
-    if (pageRange[1] === totalPages) return;
-    handleClick(totalPages);
-    const newLastPageRange =
-      Math.ceil(((totalItems as number) - itemsPerPage * 5) / 10) +
-      pageRange[1];
-    setPageRange([pageRange[1] + 1, newLastPageRange]);
-  };
+  const onClickNextPageButton = useCallback(() => {
+    const nextSelectedPage =
+      pageGroupIndex === Math.floor(pageButtonLength / buttonLimit)
+        ? pageButtonLength - 1
+        : (pageGroupIndex + 1) * buttonLimit + 1;
+    setCurrentPage(nextSelectedPage);
+  }, [buttonLimit, pageButtonLength, pageGroupIndex, setCurrentPage]);
 
   return (
     <Flex h="80px" justifyContent="center" alignItems="center" gap="20px">
       <Flex>
-        <button
-          className={`page-item ${pageRange[0] === 1 ? 'disabled' : ''}`}
-          onClick={handleFirstPageClick}
-        >
-          <FirstPageIcon w="24px" h="24px" />
-        </button>
-        <button
-          className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}
-          onClick={() => handleClick(currentPage - 1)}
-        >
-          <PrevPageIcon w="24px" h="24px" />
-        </button>
+        <IconButton
+          isDisabled={isDisabledPrev}
+          onClick={onClickFirstPageButton}
+          icon={<FirstPageIcon w="24px" h="24px" />}
+          size="xs"
+          w="24px"
+          variant="unstyled"
+          aria-label={'next-page-button'}
+        />
+
+        <IconButton
+          isDisabled={isDisabledPrev}
+          onClick={onClickPrevPageButton}
+          icon={<PrevPageIcon w="24px" h="24px" />}
+          size="xs"
+          w="24px"
+          variant="unstyled"
+          aria-label={'next-page-button'}
+        />
       </Flex>
       <UnorderedList listStyleType="none" gap="30px" ml="0px">
-        {pages.map((page) => (
+        {pageButtonList.map((page) => (
           <ListItem
             key={page}
             display="inline-block"
@@ -94,30 +110,34 @@ const Pagination = ({
               variant="link"
               color={currentPage === page ? 'primary.500' : 'black'}
               textStyle={currentPage === page ? 'TextActive' : 'Text'}
-              onClick={() => handleClick(page)}
+              onClick={() => {
+                setCurrentPage(page);
+              }}
             >
-              {page}
+              {page + 1}
             </Button>
           </ListItem>
         ))}
       </UnorderedList>
       <Flex>
-        <button
-          className={`page-item ${
-            currentPage === totalPages ? 'disabled' : ''
-          }`}
-          onClick={() => handleClick(currentPage + 1)}
-        >
-          <NextPageIcon w="24px" h="24px" />
-        </button>
-        <button
-          className={`page-item ${
-            pageRange[1] >= totalPages ? 'disabled' : ''
-          }`}
-          onClick={handleLastPageClick}
-        >
-          <LastPageIcon w="24px" h="24px" />
-        </button>
+        <IconButton
+          isDisabled={isDisabledNext}
+          onClick={onClickNextPageButton}
+          icon={<NextPageIcon w="24px" h="24px" />}
+          size="xs"
+          w="24px"
+          variant="unstyled"
+          aria-label={'next-page-button'}
+        />
+        <IconButton
+          isDisabled={isDisabledNext}
+          onClick={onClickLastPageButton}
+          icon={<LastPageIcon w="24px" h="24px" />}
+          size="xs"
+          w="24px"
+          variant="unstyled"
+          aria-label={'last-page-button'}
+        />
       </Flex>
     </Flex>
   );

@@ -36,24 +36,17 @@ function EmergencyStatusManagement({
   const queryClient = useQueryClient();
   const { openModal } = useModals();
 
-  const [emergencyList, setEmergencyList] = useState<WorkEmergencyType[]>([]);
-  const [page, setPage] = useState(1);
-  const [count, setCount] = useState<undefined | number>(0);
+  const [currentPage, setCurrentPage] = useState(0);
 
-  useWorkLogEmergencyRetrieveQuery({
-    variables: {
-      query: {
-        limit: 10,
-        offset: page * 10 - 10,
+  const { data: workLogEmergencyRetrieveData } =
+    useWorkLogEmergencyRetrieveQuery({
+      variables: {
+        query: {
+          limit: 10,
+          offset: currentPage * 10 - 10,
+        },
       },
-    },
-    options: {
-      onSuccess: (data) => {
-        setCount(data.count);
-        setEmergencyList(data.results ?? []);
-      },
-    },
-  });
+    });
 
   const { mutate: updateEmergencyOffMutate } =
     useWorkLogEmergencyReleaseUpdateMutation({
@@ -159,22 +152,23 @@ function EmergencyStatusManagement({
               borderBottom="1px solid"
               borderColor="gray.300"
             >
-              {emergencyList.map((emergency, index) => (
-                <EmergencyStatusItem
-                  key={emergency?.id}
-                  item={emergency}
-                  index={index}
-                  page={page}
-                  handleEmergencyOff={handleEmergencyOff}
-                />
-              ))}
+              {workLogEmergencyRetrieveData?.results?.map(
+                (emergency, index) => (
+                  <EmergencyStatusItem
+                    key={index}
+                    item={emergency}
+                    index={index}
+                    page={currentPage}
+                    handleEmergencyOff={handleEmergencyOff}
+                  />
+                ),
+              )}
             </Tbody>
           </CustomTable>
           <Pagination
-            totalItems={count}
-            currentPage={page}
-            itemsPerPage={10}
-            onChangePage={setPage}
+            totalItems={workLogEmergencyRetrieveData?.count}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
           />
         </TableContainer>
       }
