@@ -16,6 +16,7 @@ import { TOAST_DURATION } from '@constants/index';
 import { useQueryClient } from '@tanstack/react-query';
 
 import FooterControlWrapper from './_fragments/FooterControlWrapper';
+import MapTypeSelectWrapper from './_fragments/FooterControlWrapper/MapTypeSelectWrapper';
 import HomeNavigationBar from './_fragments/HomeNavigationBar';
 import RightFloatList from './_fragments/RightFloatList';
 import WorkMarker from './_fragments/WorkMarker';
@@ -45,6 +46,7 @@ function HomePageContent({ ...basisProps }: HomePageContentProps) {
 
   const [totalStatus, setTotalStatus] = useState<WorkStatusCountType>({});
   const [mapZoom, setMapZoom] = useState(11);
+  const [viewMapType, setViewMapType] = useState('satellite');
 
   // P_MEMO: 해당 목록은 페이지네이션이 아닌, 전체로 받아옴
   const { data: workListData, refetch: refetchWorkListData } = useWorkListQuery(
@@ -124,6 +126,10 @@ function HomePageContent({ ...basisProps }: HomePageContentProps) {
 
   return (
     <Box position="relative" {...basisProps}>
+      <MapTypeSelectWrapper
+        setViewMapType={setViewMapType}
+        viewMapType={viewMapType}
+      />
       <HomeNavigationBar
         isOpenNavbar={isOpenNavbar}
         onOpenNavbar={onOpenNavbar}
@@ -133,7 +139,7 @@ function HomePageContent({ ...basisProps }: HomePageContentProps) {
         <GoogleMapReact
           zoom={mapZoom}
           options={{
-            mapTypeId: 'satellite',
+            mapTypeId: viewMapType,
             disableDefaultUI: true,
           }}
           bootstrapURLKeys={{ key: CONFIG.GOOGLE_MAP_KEY as string }}
