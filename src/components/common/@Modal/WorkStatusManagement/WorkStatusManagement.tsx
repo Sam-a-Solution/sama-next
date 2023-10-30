@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 
 import dayjs from 'dayjs';
 
@@ -31,7 +31,10 @@ import Report from '../Report/Report';
 import WorkStatusManagementHeader from './WorkStatusManagementHeader';
 import WorkStatusManagementItem from './WorkStatusManagementItem';
 
-import { WorkLogType } from 'generated/apis/@types/data-contracts';
+import {
+  PaginatedWorkLogListType,
+  WorkLogType,
+} from 'generated/apis/@types/data-contracts';
 import {
   useWorkLogCheckUpdateMutation,
   useWorkLogListQuery,
@@ -44,24 +47,18 @@ function WorkStatusManagement({ ...props }: WorkStatusManagementProps) {
   const { openModal } = useModals();
   const queryClient = useQueryClient();
 
-  const [workLogList, setWorkLogList] = useState<WorkLogType[]>([]);
-  const [page, setPage] = useState(1);
-  const [count, setCount] = useState<undefined | number>(0);
+  const [currentPage, setCurrentPage] = useState(0);
 
-  useWorkLogListQuery({
+  const { data: workLogListData } = useWorkLogListQuery({
     variables: {
       query: {
         limit: 10,
-        offset: page * 10 - 10,
-      },
-    },
-    options: {
-      onSuccess: (data) => {
-        setCount(data?.count);
-        setWorkLogList(data?.results ?? []);
+        offset: currentPage * 10,
       },
     },
   });
+
+  console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@', workLogListData);
 
   const { mutate: checkUpdateMutate } = useWorkLogCheckUpdateMutation({
     options: {
@@ -78,7 +75,7 @@ function WorkStatusManagement({ ...props }: WorkStatusManagementProps) {
           {
             query: {
               limit: 10,
-              offset: page * 10 - 10,
+              offset: currentPage * 10 - 10,
             },
           },
         ]);
@@ -153,23 +150,22 @@ function WorkStatusManagement({ ...props }: WorkStatusManagementProps) {
           <CustomTable>
             <WorkStatusManagementHeader />
             <Tbody display="inline-block">
-              {workLogList?.map((item, index) => (
-                <WorkStatusManagementItem
-                  key={item.id}
-                  index={index}
-                  item={item}
-                  page={page}
-                  onClickOpenReportModal={onClickOpenReportModal}
-                  onClickManagerCheck={onClickManagerCheck}
-                  onClickOpenPauseLogModal={onClickOpenPauseLogModal}
-                />
-              ))}
+              {workLogListData?.results?.map((item, index) => {
+                return (
+                  <WorkStatusManagementItem
+                    key={index}
+                    item={item}
+                    onClickOpenReportModal={onClickOpenReportModal}
+                    onClickManagerCheck={onClickManagerCheck}
+                    onClickOpenPauseLogModal={onClickOpenPauseLogModal}
+                  />
+                );
+              })}
             </Tbody>
             <Pagination
-              totalItems={count}
-              currentPage={page}
-              itemsPerPage={10}
-              onChangePage={setPage}
+              totalItems={workLogListData?.count}
+              currentPage={currentPage}
+              setCurrentPage={setCurrentPage}
             />
           </CustomTable>
         </TableContainer>
