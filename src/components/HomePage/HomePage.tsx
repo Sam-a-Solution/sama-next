@@ -26,8 +26,14 @@ import {
   WorkStatusType,
   WorkType,
 } from 'generated/apis/@types/data-contracts';
-import { useWorkListQuery } from 'generated/apis/Work/Work.query';
-import { useWorkLogStatusCountRetrieveQuery } from 'generated/apis/WorkLog/WorkLog.query';
+import {
+  QUERY_KEY_WORK_API,
+  useWorkListQuery,
+} from 'generated/apis/Work/Work.query';
+import {
+  QUERY_KEY_WORK_LOG_API,
+  useWorkLogStatusCountRetrieveQuery,
+} from 'generated/apis/WorkLog/WorkLog.query';
 import { ToastEmergencyIcon } from 'generated/icons/MyIcons';
 
 export type HeavyEquipment = {
@@ -44,22 +50,14 @@ function HomePageContent({ ...basisProps }: HomePageContentProps) {
   const toast = useToast();
   const queryClient = useQueryClient();
 
-  const [totalStatus, setTotalStatus] = useState<WorkStatusCountType>({});
   const [mapZoom, setMapZoom] = useState(11);
   const [viewMapType, setViewMapType] = useState('satellite');
 
   // P_MEMO: 해당 목록은 페이지네이션이 아닌, 전체로 받아옴
-  const { data: workListData, refetch: refetchWorkListData } = useWorkListQuery(
-    {},
-  );
+  const { data: workListData } = useWorkListQuery({});
 
-  useWorkLogStatusCountRetrieveQuery({
-    options: {
-      onSuccess: (response) => {
-        setTotalStatus(response);
-      },
-    },
-  });
+  const { data: WorkLogStatusCountRetrieveData } =
+    useWorkLogStatusCountRetrieveQuery();
 
   // P_TODO: 가중치 계산 로직, 임시
   const getStatusWeight = (status: WorkStatusType) => {
@@ -116,6 +114,13 @@ function HomePageContent({ ...basisProps }: HomePageContentProps) {
       },
     });
   };
+
+  const refreshHomeData = useCallback(() => {
+    queryClient.invalidateQueries(QUERY_KEY_WORK_API.LIST());
+    queryClient.invalidateQueries(
+      QUERY_KEY_WORK_LOG_API.STATUS_COUNT_RETRIEVE(),
+    );
+  }, [queryClient]);
 
   useEmergencySocket({
     callback: (data: any) => {
@@ -175,14 +180,14 @@ function HomePageContent({ ...basisProps }: HomePageContentProps) {
         onOpenList={onOpenList}
         onCloseList={onCloseList}
         workListData={workListData as WorkType[]}
-        totalStatus={totalStatus}
+        totalStatus={WorkLogStatusCountRetrieveData}
       />
       {/* 하단 타이머, 컨트롤러 */}
       <FooterControlWrapper
         minutes={0}
         seconds={0}
         // P_MEMO: 타이머가 돌아갈 때 마다 전체 리랜더링을 막기 위해 컴포넌트 내에서 useTimer 선언, 사용 -> 핸들러가 아닌 refetch 자체를 넘겨줌
-        refetchWorkListData={refetchWorkListData}
+        refreshHomeData={refreshHomeData}
         onClickMinusZoom={onClickMinusZoom}
         onClickPlusZoom={onClickPlusZoom}
       />
