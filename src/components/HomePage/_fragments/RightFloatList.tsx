@@ -35,7 +35,7 @@ interface RightFloatListProps {
   isOpenList: boolean;
   onOpenList: () => void;
   onCloseList: () => void;
-  totalStatus: WorkStatusCountType;
+  totalStatus?: WorkStatusCountType;
   workListData: WorkType[];
 }
 
@@ -176,7 +176,7 @@ function RightFloatList({
               </Tr>
             </Thead>
             <Tbody>
-              {Object.keys(totalStatus).map((item, index) => {
+              {Object.keys(totalStatus ?? {}).map((item, index) => {
                 return (
                   <Tr key={`${item}-${index}`} h="36px">
                     <CustomTd
@@ -195,7 +195,7 @@ function RightFloatList({
                         textStyle="Text"
                         color="black"
                       >
-                        {totalStatus[item as keyof WorkStatusCountType]}
+                        {totalStatus?.[item as keyof WorkStatusCountType]}
                       </Text>
                     </CustomTd>
                   </Tr>

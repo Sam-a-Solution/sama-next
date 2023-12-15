@@ -12,7 +12,7 @@ import ZoomController, {
 } from './components/ZoomController';
 
 interface FooterControlWrapperProps extends ZoomControllerProps {
-  refetchWorkListData: () => void;
+  refreshHomeData: () => void;
   minutes: number;
   seconds: number;
 }
@@ -20,21 +20,21 @@ interface FooterControlWrapperProps extends ZoomControllerProps {
 const FooterControlWrapper = ({
   onClickMinusZoom,
   onClickPlusZoom,
-  refetchWorkListData,
+  refreshHomeData,
 }: FooterControlWrapperProps) => {
   const { ms, seconds, minutes, setUseTimer, stopTimer } = useTimer();
 
   const onClickRefreshWork = useCallback(() => {
     setUseTimer(REFRESH_TERM);
-    refetchWorkListData();
-  }, [refetchWorkListData, setUseTimer]);
+    refreshHomeData();
+  }, [refreshHomeData, setUseTimer]);
 
   useEffect(() => {
     if (ms === 0) {
       setUseTimer(REFRESH_TERM);
-      refetchWorkListData();
+      refreshHomeData();
     }
-  }, [ms, refetchWorkListData, setUseTimer, stopTimer]);
+  }, [ms, refreshHomeData, setUseTimer, stopTimer]);
 
   return (
     <Flex position="absolute" bottom="20px" left="50%" gap="12px">
